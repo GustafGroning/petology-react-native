@@ -1,0 +1,18 @@
+/**************************************************************/
+SCREENS:
+Login & Signup:
+    Login - CHECK (need to port over FlexBoxScreen as new LoginScreen)
+    SignUp - 
+
+Hundägare vyn:
+    doYouHaveDog -
+    registerDog (har hund) - 
+    willGetDog (ska skaffa hund) - 
+
+HomeScreen (första skärmen i MVP körningen) -
+
+
+listOfDogs (alla hundar användaren har) - 
+
+
+/**************************************************************/

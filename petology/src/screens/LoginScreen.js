@@ -1,6 +1,7 @@
 // screens/LoginScreen.js
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet } from "react-native";
+import { Button, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = ({ navigation }) => {
@@ -22,12 +23,19 @@ const LoginScreen = ({ navigation }) => {
       const data = await response.json();
       if (response.ok) {
         const { token } = data;
-        console.log(token);
         await AsyncStorage.setItem("userToken", token); // Store the token
         const storageToken = await AsyncStorage.getItem("userToken");
         console.log(storageToken);
-        // Inside your handleLogin function after successful login
-        navigation.navigate("Landing");
+
+        // TODO: should check if the user account already has at least 1 dog. Checks like this:
+        // If USER has 1+ dogs:
+        //    if dogID in asyncStorage (user has already a dog selected)
+        //          Navigate to Homescreen for the dog
+        //    Else
+        //      Navigate to SelectActiveDog
+        // Else
+        //    Navigate RegisterDog
+        navigation.navigate("RegisterDog");
       } else {
         // Handle login failure (e.g., show an error message)
       }
@@ -43,9 +51,15 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("SignUp");
   };
 
+  const navigateToFlexbox = () => {
+    setUsername(""); // Reset username
+    setPassword(""); // Reset password
+    navigation.navigate("Flexbox");
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Login</Text>
+      <Text variant="headlineMedium">Petology</Text>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -60,11 +74,13 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Login" onPress={handleLogin} />
-      <Button
-        title="Don't have an account? Sign Up"
-        onPress={navigateToSignUp}
-      />
+      <Button mode="contained" onPress={handleLogin}>
+        Sign in
+      </Button>
+      <Button onPress={navigateToSignUp}>
+        Don't have an account? Sign up{" "}
+      </Button>
+      <Button onPress={navigateToFlexbox}>Flexbox practice</Button>
     </View>
   );
 };

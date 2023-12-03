@@ -31,29 +31,38 @@ const LoginScreen = ({ navigation }) => {
       if (response.ok) {
         const { token } = data;
         await AsyncStorage.setItem("userToken", token); // Store the token
-        const storageToken = await AsyncStorage.getItem("userToken");
-        console.log(token);
-        console.log(storageToken);
 
-        // TODO: should check if the user account already has at least 1 dog. Checks like this:
-        // If USER has 1+ dogs:
-        //    if dogID in asyncStorage (user has already a dog selected)
-        //          Navigate to Homescreen for the dog
-        //    Else
-        //      Navigate to SelectActiveDog
-        // Else
-        //    Navigate RegisterDog
-        // navigation.navigate("RegisterDog");
-        navigation.navigate("protected");
+        // Fetch user's dogs
+        const dogsResponse = await fetch("http://localhost:8000/api/dog/all/", {
+          method: "GET",
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        });
+
+        const dogsData = await dogsResponse.json();
+        if (dogsResponse.ok && dogsData.dogs && dogsData.dogs.length > 0) {
+          const selectedDogId = await AsyncStorage.getItem("selectedDogId");
+          if (selectedDogId) {
+            // Navigate to Homescreen for the selected dog
+            navigation.navigate("Home", { dogId: selectedDogId });
+          } else {
+            // Navigate to SelectActiveDog screen
+            navigation.navigate("SelectActiveDog", { dogs: dogsData.dogs });
+          }
+        } else {
+          // Navigate to RegisterDog screen
+          navigation.navigate("DogIntroduction");
+        }
       } else {
         // Handle login failure (e.g., show an error message)
+        console.log("Login failed");
       }
     } catch (error) {
       console.error(error);
       // Handle network or other errors
     }
   };
-
   /**************************************************************/
   return (
     <View style={styles.container}>

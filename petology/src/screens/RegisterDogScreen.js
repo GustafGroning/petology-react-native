@@ -1,56 +1,82 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
-  Image,
 } from "react-native";
+import { Button } from "react-native-paper";
+import DateTimePicker from "@react-native-community/datetimepicker";
+// import { Picker } from "@react-native-picker/picker"; Fix this for hane/tik
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RegisterDogScreen = () => {
+  const [name, setName] = useState("");
+  const [breed, setBreed] = useState("");
+  const [birthday, setBirthday] = useState(new Date());
+  const [sex, setSex] = useState("Hane");
+  const [showDatePicker, setShowDatePicker] = useState(false);
   /**************************************************************/
-  // const storageToken = await AsyncStorage.getItem("userToken");
-  // TODO: fix token import, just to practice importing stuff from asyncStorage and displaying it.
 
+  const handleCreateDog = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await fetch("http://localhost:8000/api/dog/add/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `JWT ${token}`, // Adjust based on your token format
+        },
+        body: JSON.stringify({
+          name: name,
+          breed: breed,
+          birthday: birthday.toISOString().split("T")[0], // Format date to YYYY-MM-DD
+          sex: sex,
+        }),
+      });
+
+      if (response.ok) {
+        // Handle successful dog registration
+        Alert.alert("Success", "Dog created successfully");
+      } else {
+        // Handle error in dog registration
+        const errorData = await response.json();
+        Alert.alert("Error", errorData.message || "Failed to create dog");
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "An error occurred while creating the dog");
+    }
+  };
   /**************************************************************/
 
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || birthday;
+    setShowDatePicker(Platform.OS === "ios");
+    setBirthday(currentDate);
+  };
   /**************************************************************/
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Petology</Text>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Namn</Text>
-        <TextInput style={styles.input} placeholder="Fido" />
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Ras</Text>
-        <TextInput style={styles.input} placeholder="Labrador" />
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Födelsedatum</Text>
-        <TextInput style={styles.input} placeholder="ÅÅMMDD" />
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Kön</Text>
-        <TextInput style={styles.input} placeholder="Hane/Tik" />
-      </View>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Skapa hund</Text>
+      <Text>Petology</Text>
+      <TextInput placeholder="Fido" value={name} onChangeText={setName} />
+      <TextInput placeholder="Labrador" value={breed} onChangeText={setBreed} />
+      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <Text>{birthday.toLocaleDateString()}</Text>
       </TouchableOpacity>
-
-      <View style={styles.imageUpload}>
-        <TouchableOpacity>
-          {/* <Image source={require("path-to-your-image-icon.png")} /> */}
-        </TouchableOpacity>
-      </View>
+      {showDatePicker && (
+        <DateTimePicker
+          value={birthday}
+          mode="date"
+          display="default"
+          onChange={onDateChange}
+        />
+      )}
+      <TextInput placeholder="Tik" value={sex} onChangeText={setSex} />
+      {/* TODO: turn into ENUM, 1 = hane, 2 = tik */}
+      <Button onPress={handleCreateDog}>Lägg till hund</Button>
     </View>
   );
 };
@@ -58,38 +84,9 @@ const RegisterDogScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#FAFAD2", // Choose an appropriate color
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  formGroup: {
-    marginBottom: 10,
-  },
-  label: {
-    fontSize: 18,
-  },
-  input: {
-    borderColor: "gray",
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
-  },
-  button: {
-    backgroundColor: "#90EE90", // Choose an appropriate color
-    padding: 15,
-    borderRadius: 5,
-  },
-  buttonText: {
-    fontSize: 18,
-    textAlign: "center",
-  },
-  imageUpload: {
+    justifyContent: "center",
     alignItems: "center",
-    marginVertical: 20,
+    padding: 20,
   },
 });
 

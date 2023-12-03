@@ -3,13 +3,12 @@ import { View, Text, StyleSheet, Button } from "react-native";
 
 const DogIntroductionScreen = ({ navigation }) => {
   // Function to handle "Already Have a Dog" button press
-  const handleAlreadyHaveDog = () => {
-    // Navigate to the next screen or perform an action
-    // navigation.navigate('NextScreenName');
+  const handleHasDog = () => {
+    navigation.navigate("RegisterDog");
   };
 
   // Function to handle "Will Get a Dog Later" button press
-  const handleWillGetDogLater = () => {
+  const handleFutureDog = () => {
     // Perform actions for this choice
     // For now, this does nothing
   };
@@ -19,8 +18,8 @@ const DogIntroductionScreen = ({ navigation }) => {
       <Text style={styles.title}>
         Do you already have a dog, or will you get one later?
       </Text>
-      <Button title="Already Have a Dog" onPress={handleAlreadyHaveDog} />
-      <Button title="Will Get a Dog Later" onPress={handleWillGetDogLater} />
+      <Button title="Already Have a Dog" onPress={handleHasDog} />
+      <Button title="Will Get a Dog Later" onPress={handleFutureDog} />
     </View>
   );
 };

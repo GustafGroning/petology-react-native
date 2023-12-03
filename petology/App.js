@@ -6,6 +6,7 @@ import LoginScreen from "./src/screens/LoginScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import LandingPage from "./src/screens/LandingPage";
 import RegisterDogScreen from "./src/screens/RegisterDogScreen";
+import ProtectedTestScreen from "./src/screens/ProtectedTestScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ const App = () => {
           <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="Landing" component={LandingPage} />
           <Stack.Screen name="RegisterDog" component={RegisterDogScreen} />
+          <Stack.Screen name="protected" component={ProtectedTestScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

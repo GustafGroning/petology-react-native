@@ -5,8 +5,9 @@ Login & Signup:
     SignUp - 
 
 Hundägare vyn:
-    doYouHaveDog -
+    DogIntroductionScreen -
     registerDog (har hund) - 
+        Need to fix list of breeds in DB before registerDog can be built
     willGetDog (ska skaffa hund) - 
 
 HomeScreen (första skärmen i MVP körningen) -

@@ -32,6 +32,7 @@ const LoginScreen = ({ navigation }) => {
         const { token } = data;
         await AsyncStorage.setItem("userToken", token); // Store the token
         const storageToken = await AsyncStorage.getItem("userToken");
+        console.log(token);
         console.log(storageToken);
 
         // TODO: should check if the user account already has at least 1 dog. Checks like this:
@@ -42,7 +43,8 @@ const LoginScreen = ({ navigation }) => {
         //      Navigate to SelectActiveDog
         // Else
         //    Navigate RegisterDog
-        navigation.navigate("RegisterDog");
+        // navigation.navigate("RegisterDog");
+        navigation.navigate("protected");
       } else {
         // Handle login failure (e.g., show an error message)
       }

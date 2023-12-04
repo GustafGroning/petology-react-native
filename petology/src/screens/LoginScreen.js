@@ -48,7 +48,8 @@ const LoginScreen = ({ navigation }) => {
             navigation.navigate("Home", { dogId: selectedDogId });
           } else {
             // Navigate to SelectActiveDog screen
-            navigation.navigate("SelectActiveDog", { dogs: dogsData.dogs });
+            // navigation.navigate("SelectActiveDog", { dogs: dogsData.dogs });
+            navigation.navigate("DogIntroduction");
           }
         } else {
           // Navigate to RegisterDog screen

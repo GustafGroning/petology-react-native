@@ -67,32 +67,10 @@ const RegisterDogScreen = () => {
     setBirthday(currentDate);
   };
   /**************************************************************/
-
-  // return (
-    // <View style={styles.container}>
-    //   <Text>Petology</Text>
-    //   <TextInput placeholder="Fido" value={name} onChangeText={setName} />
-    //   <TextInput placeholder="Labrador" value={breed} onChangeText={setBreed} />
-    //   <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-    //     <Text>{birthday.toLocaleDateString()}</Text>
-    //   </TouchableOpacity>
-    //   {showDatePicker && (
-    //     <DateTimePicker
-    //       value={birthday}
-    //       mode="date"
-    //       display="default"
-    //       onChange={onDateChange}
-    //     />
-    //   )}
-    //   <TextInput placeholder="Tik" value={sex} onChangeText={setSex} />
-    //   {/* TODO: turn into ENUM, 1 = hane, 2 = tik */}
-    //   <Button onPress={handleCreateDog}>Lägg till hund</Button>
-    // </View>
-
-  // );
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
+        
         <View style={styles.section1}> 
         <Text variant="headlineLarge" style={styles.header}>
             Petology
@@ -104,15 +82,57 @@ const RegisterDogScreen = () => {
         </Text>
         <TextInput style={styles.FormInput} placeholder="Namn" placeholderTextColor={'black'}/>
         <DropDownPicker
-      open={open}
-      value={value}
-      items={items}
-      setOpen={setOpen}
-      setValue={setValue}
-      setItems={setItems}
+        style={{ 
+          height: '12%', 
+          width: '80%', 
+          borderColor: 'grey',  
+          borderWidth: 1,
+          borderRadius: 90,
+          backgroundColor: '#e8f5f5',
+        }}
+        containerStyle={{
+          alignItems: 'center', 
+          paddingBottom: 10,
+        }}
+        textStyle={{
+          textAlign: 'center',
+          paddingLeft: '9%',
+        }}
+        placeholder="Ras"
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
     />
-        <TextInput style={styles.FormInput} placeholder="Namn" placeholderTextColor={'black'}/>
-        <TextInput style={styles.FormInput} placeholder="Namn" placeholderTextColor={'black'}/>
+        <TextInput style={styles.FormInput} placeholder="Födelsedatum: YYYYMMDD" placeholderTextColor={'black'}/>
+        <DropDownPicker
+        style={{ 
+          height: '12%', 
+          width: '80%', 
+          borderColor: 'grey',  
+          borderWidth: 1,
+          borderRadius: 90,
+          backgroundColor: '#e8f5f5',
+        }}
+        containerStyle={{
+          alignItems: 'center', 
+          paddingBottom: 100,
+          marginBottom: 18,
+        }}
+        textStyle={{
+          textAlign: 'center',
+          paddingLeft: '9%',
+        }}
+        placeholder="Kön"
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+    />
         </View>
         <View style={styles.section} />
         <View style={styles.section} />
@@ -132,16 +152,16 @@ const styles = StyleSheet.create({
   },
   section1: {
     height: 150,
-    borderWidth: 1,
-    borderColor: 'black', 
+    // borderWidth: 1,
+    // borderColor: 'black', 
     alignItems: "center",
     paddingTop: 20,
   },
   section2: {
-    height: 400,
+    height: 300,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'black',
+    // borderWidth: 1,
+    // borderColor: 'black',
     paddingTop: 10,
   },
   section: {
@@ -156,23 +176,16 @@ const styles = StyleSheet.create({
     fontFamily: "Cochin",
     marginBottom: 15,
   },
-  formButtons: {
-    width: '80%',
-    backgroundColor: '#e8f5f5',
-    borderColor: 'black',  
-    marginBottom: 10,
-  },
   FormInput: {
     width: '80%',
-    height: '10%',
+    height: '12%',
     backgroundColor: '#e8f5f5',
     borderColor: 'grey',  
     borderWidth: 1,
     borderRadius: 90,
-    marginBottom: 10,
+    marginBottom: 18,
     textAlign: 'center',
-  }
-  
+  },
 });
 
 export default RegisterDogScreen;

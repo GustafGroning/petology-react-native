@@ -10,8 +10,14 @@ import { Button, Text } from "react-native-paper";
 // import { Picker } from "@react-native-picker/picker"; Fix this for hane/tik
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DropDownPicker from 'react-native-dropdown-picker';
+import { SelectList } from 'react-native-dropdown-select-list'
 
 
+
+
+
+
+/**************************************************************/
 const RegisterDogScreen = () => {
   const [name, setName] = useState("");
   const [breed, setBreed] = useState("");
@@ -28,7 +34,23 @@ const RegisterDogScreen = () => {
     {label: 'Banana', value: 'banana'}
   ]);
   /**************************************************************/
+  // NEW TRY AT DROPDOWN, LATEST
 
+  const [selected, setSelected] = React.useState("");
+    
+  const data = [
+      {key:'1', value:'Mobiles', disabled:true},
+      {key:'2', value:'Appliances'},
+      {key:'3', value:'Cameras'},
+      {key:'4', value:'Computers', disabled:true},
+      {key:'5', value:'Vegetables'},
+      {key:'6', value:'Diary Products'},
+      {key:'7', value:'Drinks'},
+      {key:'8', value:'Drinks'},
+      {key:'9', value:'Drinks'},
+        ]
+
+/**************************************************************/
   const handleCreateDog = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
@@ -81,62 +103,30 @@ const RegisterDogScreen = () => {
             Skapa hund
         </Text>
         <TextInput style={styles.FormInput} placeholder="Namn" placeholderTextColor={'black'}/>
-        <DropDownPicker
-        style={{ 
-          height: '12%', 
-          width: '80%', 
-          borderColor: 'grey',  
-          borderWidth: 1,
-          borderRadius: 90,
-          backgroundColor: '#e8f5f5',
-        }}
-        containerStyle={{
-          alignItems: 'center', 
-          paddingBottom: 10,
-        }}
-        textStyle={{
-          textAlign: 'center',
-          paddingLeft: '9%',
-        }}
+
+        <View style={styles.dropdownContainer}> 
+        <SelectList 
+        style={styles.FormInput}
+        setSelected={(val) => setSelected(val)} 
         placeholder="Ras"
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
-    />
-        <TextInput style={styles.FormInput} placeholder="Födelsedatum: YYYYMMDD" placeholderTextColor={'black'}/>
-        <DropDownPicker
-        style={{ 
-          height: '12%', 
-          width: '80%', 
-          borderColor: 'grey',  
-          borderWidth: 1,
-          borderRadius: 90,
-          backgroundColor: '#e8f5f5',
-        }}
-        containerStyle={{
-          alignItems: 'center', 
-          paddingBottom: 100,
-          marginBottom: 18,
-        }}
-        textStyle={{
-          textAlign: 'center',
-          paddingLeft: '9%',
-        }}
+        data={data} 
+        save="value"
+        boxStyles={{borderRadius:90, backgroundColor: '#e8f5f5', marginBottom: 18, width: '54%'}}
+      />
+      </View>
+      <View style={styles.dropdownContainer}> 
+        <SelectList 
+        setSelected={(val) => setSelected(val)} 
         placeholder="Kön"
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
-    />
+        data={data} 
+        save="value"
+        boxStyles={{borderRadius:90, backgroundColor: '#e8f5f5', marginBottom: 18}}
+      />
+      </View>
+      <TextInput style={styles.FormInput} placeholder="Födelsedatum: YYYYMMDD" placeholderTextColor={'black'}/>
         </View>
         <View style={styles.section} />
         <View style={styles.section} />
-        {/* Add more sections as needed */}
       </View>
     </ScrollView>
   );
@@ -158,7 +148,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   section2: {
-    height: 300,
+    height: 400,
     alignItems: 'center',
     // borderWidth: 1,
     // borderColor: 'black',
@@ -186,6 +176,11 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     textAlign: 'center',
   },
+  dropdownContainer: {
+    // borderWidth: 1,
+    // borderColor: 'black',
+    width: '80%'
+  }
 });
 
 export default RegisterDogScreen;

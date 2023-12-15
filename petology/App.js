@@ -8,7 +8,7 @@ import LandingPage from "./src/screens/LandingPage";
 import RegisterDogScreen from "./src/screens/RegisterDogScreen";
 import ProtectedTestScreen from "./src/screens/ProtectedTestScreen";
 import DogIntroductionScreen from "./src/screens/DogIntroductionScreen";
-
+import DogSelectionScreen from "./src/screens/DogSelectionScreen";
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -21,6 +21,7 @@ const App = () => {
           <Stack.Screen name="Landing" component={LandingPage} />
           <Stack.Screen name="RegisterDog" component={RegisterDogScreen} />
           <Stack.Screen name="protected" component={ProtectedTestScreen} />
+          <Stack.Screen name="DogSelection" component={DogSelectionScreen} />
           <Stack.Screen
             name="DogIntroduction"
             component={DogIntroductionScreen}

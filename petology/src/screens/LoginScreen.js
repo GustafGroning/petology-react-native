@@ -14,7 +14,6 @@ const LoginScreen = ({ navigation }) => {
     setPassword(""); // Reset password
     navigation.navigate("SignUp");
   };
-
   const handleLogin = async () => {
     try {
       const response = await fetch("http://localhost:8000/api-token-auth/", {
@@ -27,6 +26,7 @@ const LoginScreen = ({ navigation }) => {
           password: password,
         }),
       });
+
       const data = await response.json();
       if (response.ok) {
         const { token } = data;
@@ -44,12 +44,27 @@ const LoginScreen = ({ navigation }) => {
         if (dogsResponse.ok && dogsData.dogs && dogsData.dogs.length > 0) {
           const selectedDogId = await AsyncStorage.getItem("selectedDogId");
           if (selectedDogId) {
-            // Navigate to Homescreen for the selected dog
-            navigation.navigate("Home", { dogId: selectedDogId });
+            // Check if the selected dog exists
+            const checkDogResponse = await fetch(
+              `http://localhost:8000/api/dog/get/${selectedDogId}/`,
+              {
+                method: "GET",
+                headers: {
+                  Authorization: `JWT ${token}`,
+                },
+              }
+            );
+
+            if (checkDogResponse.ok) {
+              // Navigate to Homescreen for the selected dog
+              navigation.navigate("Landing", { dogId: selectedDogId });
+            } else {
+              // Navigate to DogSelection screen if dog not found
+              navigation.navigate("DogSelection");
+            }
           } else {
-            // Navigate to SelectActiveDog screen
-            // navigation.navigate("SelectActiveDog", { dogs: dogsData.dogs });
-            navigation.navigate("DogIntroduction");
+            // Navigate to DogSelection screen
+            navigation.navigate("DogSelection");
           }
         } else {
           // Navigate to RegisterDog screen
@@ -64,6 +79,7 @@ const LoginScreen = ({ navigation }) => {
       // Handle network or other errors
     }
   };
+
   /**************************************************************/
   return (
     <View style={styles.container}>

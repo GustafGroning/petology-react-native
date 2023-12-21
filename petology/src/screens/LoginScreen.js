@@ -4,14 +4,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, Text } from "react-native-paper";
 
 const LoginScreen = ({ navigation }) => {
-  /**************************************************************/
+  /**********************************************************************************/
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  /**************************************************************/
+  /**********************************************************************************/
   const navigateToSignUp = () => {
-    setEmail(""); // Reset username
-    setPassword(""); // Reset password
+    setEmail("");
+    setPassword("");
     navigation.navigate("SignUp");
   };
   const handleLogin = async () => {
@@ -80,7 +80,7 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  /**************************************************************/
+  /**********************************************************************************/
   return (
     <View style={styles.container}>
       <View style={styles.headerBox}>

@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DropDownPicker from "react-native-dropdown-picker";
 import { SelectList } from "react-native-dropdown-select-list";
 
-/**************************************************************/
+/**********************************************************************************/
 const RegisterDogScreen = ({ navigation }) => {
   // State for form fields
   const [name, setName] = useState("");
@@ -25,15 +25,14 @@ const RegisterDogScreen = ({ navigation }) => {
     { label: "Apple", value: "apple" },
     { label: "Banana", value: "banana" },
   ]);
-  /**************************************************************/
-  // NEW TRY AT DROPDOWN, LATEST
-
+  /**********************************************************************************/
+  // NEW TRY AT DROPDOWN
   const data = [
     { key: "1", value: "Hane" },
     { key: "2", value: "Tik" },
   ];
 
-  /**************************************************************/
+  /**********************************************************************************/
   const handleCreateDog = async () => {
     // Ensure all fields are filled
     if (!name || !selectedBreed || !birthday || !selectedSex) {
@@ -77,14 +76,14 @@ const RegisterDogScreen = ({ navigation }) => {
       Alert.alert("Error", "An error occurred while creating the dog");
     }
   };
-  /**************************************************************/
+  /**********************************************************************************/
 
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || birthday;
     setShowDatePicker(Platform.OS === "ios");
     setBirthday(currentDate);
   };
-  /**************************************************************/
+  /**********************************************************************************/
   const [breedData, setBreedData] = useState([]);
 
   const fetchBreeds = useCallback(async () => {
@@ -114,10 +113,7 @@ const RegisterDogScreen = ({ navigation }) => {
     fetchBreeds();
   }, [fetchBreeds]);
 
-  /**************************************************************/
-  /**************************************************************/
-  /**************************************************************/
-  /**************************************************************/
+  /**********************************************************************************/
 
   return (
     <ScrollView style={styles.scrollView}>

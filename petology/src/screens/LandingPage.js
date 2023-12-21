@@ -5,11 +5,13 @@ import {
   StyleSheet,
   Button,
   ScrollView,
-  ImageBackground,
+  ImageBackground, TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PieChart from "react-native-pie-chart";
 import DogImage from "../../assets/doggo.jpg"; // Adjust the path to where your image is located
+import Footer from '../components/Footer';
+
 
 const LandingPage = ({ navigation }) => {
   /**********************************************************************************/
@@ -31,6 +33,36 @@ const LandingPage = ({ navigation }) => {
   }, []);
 
   /**********************************************************************************/
+  // CUSTOM CHECKBOX IMPLEMENTATION
+  //TODO: just a placeholder for now, build the function
+  const CustomCheckbox = () => {
+    const [isChecked, setIsChecked] = useState(false);
+  
+    const toggleCheck = () => {
+      setIsChecked(!isChecked);
+    };
+  
+    return (
+      <TouchableOpacity onPress={toggleCheck} style={[
+        styles.checkboxBase,
+        isChecked && styles.checkboxChecked
+      ]} />
+    );
+  };
+
+  const mockTasks = [
+    { id: '1', description: 'Task 1' },
+    { id: '2', description: 'Task 2' },
+    { id: '3', description: 'Task 3' },
+    { id: '4', description: 'Task 4' },
+    { id: '5', description: 'Task 5' },
+  ];
+
+  /**********************************************************************************/
+  
+
+
+
   const fetchSelectedDogDetails = async () => {
     try {
       const dogId = await AsyncStorage.getItem("selectedDogId");
@@ -59,6 +91,7 @@ const LandingPage = ({ navigation }) => {
   /**********************************************************************************/
 
   return (
+    <View style={styles.container}> 
     <ScrollView style={styles.scrollView}>
       <View style={styles.headerSection}>
         <Text style={styles.headerText}> Petology </Text>
@@ -94,6 +127,19 @@ const LandingPage = ({ navigation }) => {
           {/* Add content here if needed */}
         </ImageBackground>
       </View>
+      <View style={styles.tasksListSection}>
+  <View style={styles.taskListBox}>
+    <Text style={styles.taskListBoxHeader}> Uppgifter </Text>
+    {mockTasks.map(task => (
+  <View key={task.id} style={styles.taskItem}>
+    <CustomCheckbox />
+    <Text>{task.description}</Text>
+  </View>
+))}
+
+  </View>
+</View>
+
 
       {selectedDogName && (
         <View style={styles.dogDetailsSection}>
@@ -106,12 +152,19 @@ const LandingPage = ({ navigation }) => {
       </View>
 
       {/* Additional sections can be added here */}
+      
+
     </ScrollView>
+    <Footer navigation={navigation} />
+    </View>
   );
 };
 
 /**********************************************************************************/
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   scrollView: {
     backgroundColor: "#92cdca",
   },
@@ -158,24 +211,71 @@ const styles = StyleSheet.create({
   },
   motivationTextSection: {
     flex: 1,
-    height: 50,
+    height: 90,
     justifyContent: "center",
     alignItems: "center",
   },
   activeDogPictureSection: {
+    // TODO: finish up image, weird as hell right now
     flex: 1,
     height: 120,
-    borderColor: "black",
-    borderWidth: 1,
-  },
-  dogImageStyle: {
-    width: "100%", // Container width
-    height: "100%", // Container height, adjust as needed
+    // borderColor: "black",
+    // borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
   },
+  dogImageStyle: {
+    width: "95%", // Container width
+    height: "95%", // Container height, adjust as needed
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  tasksListSection: {
+    flex: 1,
+    height: 225,
+    // backgroundColor: 'gold',
+    // borderColor: "black",
+    // borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  taskListBox: {
+    backgroundColor: '#afe0de',
+    height: '90%',
+    width: '80%',
+    borderRadius: 20,
+    // alignItems: 'center',
+    // overflow: 'hidden',
+  },
+  taskListBoxHeader: {
+    marginTop: 14,
+    marginLeft: 120,
+    fontSize: 24,
+    fontFamily: "Cochin",
+  },
+  taskItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 4,
+  },
 
-  tasksListSection: {},
+  /**********************************************************************************/
+  // CHECKBOX STYLES
+  checkboxBase: {
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'black',
+    backgroundColor: 'transparent',
+  },
+  checkboxChecked: {
+    backgroundColor: 'black',
+  },
 
   /**********************************************************************************/
   dogDetailsSection: {

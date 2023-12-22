@@ -4,9 +4,10 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
+  TouchableOpacity, ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DogListItem from '../components/DogSelectionScreenComponents/DogListItem';
 
 const DogSelectionScreen = ({ navigation }) => {
   const [dogs, setDogs] = useState([]);
@@ -14,7 +15,7 @@ const DogSelectionScreen = ({ navigation }) => {
   useEffect(() => {
     fetchDogs();
   }, []);
-
+  /**********************************************************************************/
   const fetchDogs = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
@@ -25,7 +26,9 @@ const DogSelectionScreen = ({ navigation }) => {
         },
       });
       const data = await response.json();
+      console.log("Fetched dogs data:", data); // Logging the entire data object
       if (response.ok) {
+        console.log("Dogs array:", data.dogs); // Specifically logging the dogs array
         setDogs(data.dogs);
       } else {
         console.error("Failed to fetch dogs");
@@ -35,41 +38,102 @@ const DogSelectionScreen = ({ navigation }) => {
     }
   };
 
-  const handleSelectDog = async (dogId) => {
-    await AsyncStorage.setItem("selectedDogId", dogId.toString());
-    navigation.navigate("Landing", { dogId: dogId });
+  /**********************************************************************************/
+  const navigateToRegisterDog = () => {
+    navigation.navigate('RegisterDog');
   };
-
+  /**********************************************************************************/
+  const handleSelectDog = async (dogId) => {
+    try {
+      await AsyncStorage.setItem("selectedDogId", dogId.toString());
+      navigation.navigate("Landing", { dogId: dogId });
+    } catch (error) {
+      console.error("Error setting selected dog ID:", error);
+    }
+  };
+  
+  /**********************************************************************************/
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Select Your Dog</Text>
-      <FlatList
-        data={dogs}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.listItem}
-            onPress={() => handleSelectDog(item.id)}
-          >
-            <Text style={styles.itemText}>{item.name}</Text>
-          </TouchableOpacity>
-        )}
-      />
+      <View style={styles.headerSection}> 
+        <Text style={styles.headerText}> Petology </Text> 
+      </View>
+
+      <View style={styles.subHeaderSection}>
+        <Text style={styles.subHeaderText}> Mina hundar </Text>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={navigateToRegisterDog}
+        >
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+
+      </View>
+
+      <View style={styles.dogListSection}>
+      <ScrollView contentContainerStyle={styles.dogListScrollView}>
+      {
+  dogs.map((dog) => (
+    <DogListItem 
+      key={dog.id} 
+      name={dog.name} 
+      breed={dog.breed} 
+      birthday={dog.birthday}
+      // navigation={navigation}
+      onPress={() => handleSelectDog(dog.id)}
+    />
+  ))
+}
+
+
+      </ScrollView>
     </View>
+  </View>
   );
 };
-
+  /**********************************************************************************/
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
+    backgroundColor: "#92cdca",
     alignItems: "center",
-    justifyContent: "center",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+  headerSection: {
+    paddingTop: 5,
+    height: 75,
+    width: '100%',
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  headerText: {
+    fontSize: 36,
+    fontFamily: "Cochin",
+    opacity: 0.6,
+  },
+  subHeaderSection: {
+    flexDirection: 'row',
+    height: 40,
+    width: '80%',
+    // borderColor: "black",
+    // borderWidth: 1,
+    justifyContent: "center",
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  subHeaderText: {
+    fontSize: 26,
+    fontFamily: "Cochin",
+    marginLeft: 30,
+  },
+  dogListSection: {
+    height: 500,
+    width: '100%',
+    borderColor: "black",
+    borderWidth: 1, // REMOVE
+  },
+  dogListScrollView: {
+    alignItems: 'center',
   },
   listItem: {
     padding: 15,
@@ -80,6 +144,23 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 18,
   },
+  addButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 28,
+    height: 28,
+    borderRadius: 14, // Half of width/height to make it round
+    borderWidth: 1,
+    backgroundColor: '#92cdca', // Or any color you prefer
+    left: 30, // Adjust as needed
+
+  },
+  addButtonText: {
+    color: 'black',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  
 });
 
 export default DogSelectionScreen;

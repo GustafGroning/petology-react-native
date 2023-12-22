@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useFocusEffect } from '@react-navigation/native';
+
 import {
   View,
   Text,
@@ -9,8 +11,8 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PieChart from "react-native-pie-chart";
-import DogImage from "../../assets/doggo.jpg"; // Adjust the path to where your image is located
-import Footer from '../components/Footer';
+import DogImage from "../../assets/doggo.jpg"; // TODO: fix real imports instead
+import Footer from '../components/common/Footer';
 
 
 const LandingPage = ({ navigation }) => {
@@ -28,9 +30,12 @@ const LandingPage = ({ navigation }) => {
   const [selectedDogName, setSelectedDogName] = useState(null);
 
   /**********************************************************************************/
-  useEffect(() => {
-    fetchSelectedDogDetails();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchSelectedDogDetails();
+    }, [])
+  );
+  
 
   /**********************************************************************************/
   // CUSTOM CHECKBOX IMPLEMENTATION
@@ -67,7 +72,8 @@ const LandingPage = ({ navigation }) => {
     try {
       const dogId = await AsyncStorage.getItem("selectedDogId");
       const token = await AsyncStorage.getItem("userToken");
-
+      console.log('BACK IN LANDING!');
+      console.log(AsyncStorage.getItem("selectedDogId"));
       if (dogId && token) {
         const response = await fetch(
           `http://localhost:8000/api/dog/get/${dogId}/`,
@@ -175,7 +181,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 36,
     fontFamily: "Cochin",
     opacity: 0.7,
   },

@@ -170,9 +170,11 @@ const LandingPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 40,
+    backgroundColor: "#92cdca",
   },
   scrollView: {
-    backgroundColor: "#92cdca",
+    // backgroundColor: "#92cdca",
   },
   headerSection: {
     flex: 1,

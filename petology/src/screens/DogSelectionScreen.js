@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DogListItem from '../components/DogSelectionScreenComponents/DogListItem';
+import Footer from '../components/common/Footer';
+
 
 const DogSelectionScreen = ({ navigation }) => {
   const [dogs, setDogs] = useState([]);
@@ -55,49 +57,42 @@ const DogSelectionScreen = ({ navigation }) => {
   /**********************************************************************************/
   return (
     <View style={styles.container}>
-      <View style={styles.headerSection}> 
-        <Text style={styles.headerText}> Petology </Text> 
+      <View style={{ flex: 1, }}>
+        <View style={styles.headerSection}>
+          <Text style={styles.headerText}> Petology </Text>
+        </View>
+        <View style={styles.subHeaderSection}>
+          <Text style={styles.subHeaderText}> Mina hundar </Text>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={navigateToRegisterDog}
+          >
+            <Text style={styles.addButtonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView contentContainerStyle={styles.dogListScrollView}>
+          {dogs.map((dog) => (
+            <DogListItem 
+              key={dog.id} 
+              name={dog.name} 
+              breed={dog.breed} 
+              birthday={dog.birthday}
+              onPress={() => handleSelectDog(dog.id)}
+            />
+          ))}
+        </ScrollView>
       </View>
-
-      <View style={styles.subHeaderSection}>
-        <Text style={styles.subHeaderText}> Mina hundar </Text>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={navigateToRegisterDog}
-        >
-          <Text style={styles.addButtonText}>+</Text>
-        </TouchableOpacity>
-
-      </View>
-
-      <View style={styles.dogListSection}>
-      <ScrollView contentContainerStyle={styles.dogListScrollView}>
-      {
-  dogs.map((dog) => (
-    <DogListItem 
-      key={dog.id} 
-      name={dog.name} 
-      breed={dog.breed} 
-      birthday={dog.birthday}
-      // navigation={navigation}
-      onPress={() => handleSelectDog(dog.id)}
-    />
-  ))
-}
-
-
-      </ScrollView>
+      <Footer navigation={navigation}/>
     </View>
-  </View>
-  );
+  );  
 };
   /**********************************************************************************/
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 60,
     backgroundColor: "#92cdca",
-    alignItems: "center",
+    justifyContent: "center",
   },
   headerSection: {
     paddingTop: 5,
@@ -129,8 +124,8 @@ const styles = StyleSheet.create({
   dogListSection: {
     height: 500,
     width: '100%',
-    borderColor: "black",
-    borderWidth: 1, // REMOVE
+    // borderColor: "black",
+    // borderWidth: 1, // REMOVE
   },
   dogListScrollView: {
     alignItems: 'center',

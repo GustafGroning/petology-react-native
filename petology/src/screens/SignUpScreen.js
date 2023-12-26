@@ -30,7 +30,7 @@ const SignUpScreen = ({ navigation }) => {
       if (response.ok) {
         console.log("Registration successful", data.token);
         await AsyncStorage.setItem("userToken", data.token); // Store the token
-        navigation.navigate("RegisterDog"); // Navigate to RegisterDog screen
+        navigation.navigate("Login"); // Navigate to RegisterDog screen
       } else {
         console.log("Registration failed", data.error);
         // Handle registration failure (e.g., show an error message)
@@ -73,14 +73,15 @@ const SignUpScreen = ({ navigation }) => {
           style={{ borderRadius: 2, width: "85%" }}
           onPress={handleSignUp}
         >
-          Sign Up
+          Create account
         </Button>
-        <Button
-          onPress={() => navigation.navigate("Login")}
-          style={{ marginTop: 10 }}
-        >
-          Already have an account? Login
-        </Button>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+          <Text> Already have an account?</Text>
+          <Button 
+            onPress={() => navigation.navigate("Login")}> 
+            Login
+            </Button>
+        </View>
       </View>
       <View style={styles.boxFour}></View>
     </View>
@@ -107,6 +108,7 @@ const styles = StyleSheet.create({
     flex: 3,
     alignItems: "center",
     justifyContent: "center",
+    width: '100%', // Add width to make sure it takes the full width
   },
   input: {
     width: "85%",

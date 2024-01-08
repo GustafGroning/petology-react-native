@@ -227,8 +227,6 @@ const styles = StyleSheet.create({
     // TODO: finish up image, weird as hell right now
     flex: 1,
     height: 120,
-    // borderColor: "black",
-    // borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -9,12 +9,11 @@ const Footer = ({ navigation }) => {
   };
 
   return (
-    // onPress={() => navigation.navigate("Login")}
     <View style={styles.footer}>
       <TouchableOpacity onPress={() => navigateToScreen('Landing')}>
       <FontAwesome name="home" size={20} color="#000" />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigateToScreen('Screen2')}>
+      <TouchableOpacity onPress={() => navigateToScreen('Calendar')}>
       <FontAwesome name="calendar" size={20} color="#000" />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigateToScreen('DogSelection')}>

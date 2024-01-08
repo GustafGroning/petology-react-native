@@ -9,6 +9,10 @@ import RegisterDogScreen from "./src/screens/RegisterDogScreen";
 import ProtectedTestScreen from "./src/screens/ProtectedTestScreen";
 import DogIntroductionScreen from "./src/screens/DogIntroductionScreen";
 import DogSelectionScreen from "./src/screens/DogSelectionScreen";
+import CalendarScreen from "./src/screens/CalenderScreen";
+import CreateTaskScreen from "./src/screens/CreateTaskScreen";
+
+/**************************************************************/
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -28,6 +32,8 @@ const App = () => {
             name="DogIntroduction"
             component={DogIntroductionScreen}
           />
+          <Stack.Screen name="Calendar" component={CalendarScreen} />
+          <Stack.Screen name="CreateTask" component={CreateTaskScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

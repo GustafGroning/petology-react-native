@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-paper";
 import DatePicker from '../components/CreateTaskScreenComponents/DatePicker';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { Animated } from 'react-native';
 
 
 
@@ -33,6 +34,27 @@ const CreateTaskScreen = ({ navigation }) => {
     const [reminder, setReminder] = useState('');
     const [notes, setNotes] = useState('');
 
+    const [marginTop, setMarginTop] = useState(new Animated.Value(0));
+
+
+/**********************************************************************************/
+const onDropdownOpen = () => {
+    setOpen(true);
+    Animated.timing(marginTop, {
+        toValue: 200, // Adjust as needed
+        duration: 500,
+        useNativeDriver: false,
+    }).start();
+};
+
+const onDropdownClose = () => {
+    setOpen(false);
+    Animated.timing(marginTop, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false,
+    }).start();
+};
 /**********************************************************************************/
 const [startDate, setStartDate] = useState(new Date());
 const [startTime, setStartTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)))
@@ -84,6 +106,7 @@ const handleCreateTask = async () => {
         const formattedStartTime = `${startDate.toISOString().split('T')[0]}T${startTime.toISOString().split('T')[1]}`;
         const formattedEndTime = `${stopDate.toISOString().split('T')[0]}T${stopTime.toISOString().split('T')[1]}`;
 
+        console.log(dog, taskName, location, formattedStartTime, formattedEndTime);
         const response = await fetch("http://localhost:8000/api/tasks/add/", {
             method: "POST",
             headers: {
@@ -91,19 +114,30 @@ const handleCreateTask = async () => {
               Authorization: `JWT ${token}`,
             },
             body: JSON.stringify({
-                dog: dog, // Use the selected dog ID
+                dog: value, // Use the selected dog ID
                 name: taskName,
                 location: location,
                 start_time: formattedStartTime,
                 end_time: formattedEndTime,
+                notes: notes
                 // category, reminder, and notes can be added similarly
             }),
         });
 
         if (response.ok) {
             const data = await response.json();
-            console.log("Task created:", data);
+
+            setTaskName("");
+            setLocation("");
+            setNotes("");
+            setStartDate(new Date());
+            setStopDate(new Date());
+            setStartTime(new Date(new Date().setHours(0, 0, 0, 0)));
+            setStopTime(new Date(new Date().setHours(0, 0, 0, 0)));
+
             Alert.alert("Success", "Task created successfully");
+
+
         } else {
             console.error("Failed to create task");
             Alert.alert("Error", "Failed to create task");
@@ -116,7 +150,7 @@ const handleCreateTask = async () => {
 
 /**********************************************************************************/
 return (
-    <View style={open ? styles.adjustedContainer : styles.container}>
+    <View style={styles.container}>
         {/* WORKING ON THIS RIGHT NOW */}
             <View style={styles.headerSection}>
                 <Text style={styles.headerText}>Lägg till en aktivitet</Text>
@@ -132,47 +166,22 @@ return (
 
             <View style={styles.inputSection}>
             <View style={styles.dogList}> 
-            {/* <SelectList
-                onOpen={() => setIsDropdownOpen(true)}
-                onClose={() => setIsDropdownOpen(false)}
-                setSelected={setDog}
-                data={dogList}
-                placeholder='hund'
-                boxStyles={{
-                    borderRadius: 20,
-                    backgroundColor: '#b7dbd9',
-                    backfaceVisibility: 'hidden',
-                    opacity: 1,
-                }}
-                inputStyles={{
-                    color: 'black',
-                    fontSize: 16,
-                }}
-                dropdownStyles={{
-                    backgroundColor: '#e6e6e6',
-                    backfaceVisibility: 'hidden',
-                    opacity: 1,
-                }}
-                dropdownItemStyles={{
-                    padding: 500,
-                    zIndex: 1,
-                    opacity: 1,
-                }}
-                dropdownTextStyles={{
-
-                }}
-            /> */}
                   <DropDownPicker
         open={open}
         value={value}
         items={items}
-        setOpen={setOpen}
+        setOpen={setOpen ? onDropdownOpen : onDropdownClose}
         setValue={setValue}
         setItems={setItems}
+        onOpen={onDropdownOpen}
+        onClose={onDropdownClose}
       />
             
             </View>
-            <View style={styles.inputContainer}>
+            {/* <View style={[styles.inputContainer, {marginTop : extraMarginTop}]}> */}
+            <Animated.View style={[styles.inputContainer, { marginTop }]}>
+
+            {/* style={open ? styles.adjustedContainer : styles.container} */}
                 <Text style={styles.label}></Text>
                 <TextInput
                     editable={!open}
@@ -181,7 +190,7 @@ return (
                     value={taskName}
                     onChangeText={setTaskName}
                 />
-            </View>
+            </Animated.View>
 
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -213,7 +222,7 @@ return (
                     <TextInput
                         style={styles.input}
                         placeholder="anteckningar"
-                        value={location}
+                        value={notes}
                         onChangeText={setNotes}
                     />
                 </View>
@@ -262,6 +271,7 @@ container: {
 },
 adjustedContainer: {
     marginTop: 200,
+    marginBottom: 200,
 },
 headerSection: {
     marginTop: 60,

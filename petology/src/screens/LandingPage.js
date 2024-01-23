@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useFocusEffect } from '@react-navigation/native';
+import Config from 'react-native-config';
+
 
 import {
   View,
@@ -69,14 +71,17 @@ const LandingPage = ({ navigation }) => {
 
 
   const fetchSelectedDogDetails = async () => {
+
     try {
+      const apiUrl = Config.API_URL;
+      console.log('apiUrl ', apiUrl);
+      console.log('tja ', process.env.EXPO_PUBLIC_API_URL);
       const dogId = await AsyncStorage.getItem("selectedDogId");
       const token = await AsyncStorage.getItem("userToken");
-      console.log('BACK IN LANDING!');
       console.log(AsyncStorage.getItem("selectedDogId"));
       if (dogId && token) {
         const response = await fetch(
-          `http://localhost:8000/api/dog/get/${dogId}/`,
+          `${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/get/${dogId}/`,
           {
             method: "GET",
             headers: {

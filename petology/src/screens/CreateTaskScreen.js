@@ -67,6 +67,10 @@ const [stopTime, setStopTime] = useState(new Date(new Date().setHours(0, 0, 0, 0
         navigation.navigate('Calendar');
     };
 /**********************************************************************************/
+const handleDateTimeChange = (newDateTime, setDate) => {
+    setDate(newDateTime); // Update the date with the new date-time
+};
+/**********************************************************************************/
 useEffect(() => {
     fetchDogs();
   }, []);
@@ -74,7 +78,7 @@ useEffect(() => {
 const fetchDogs = async () => {
     try {
         const token = await AsyncStorage.getItem("userToken");
-        const response = await fetch("http://localhost:8000/api/dog/all/", {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/all/`, {
             headers: {
                 Authorization: `JWT ${token}`,
             },
@@ -102,12 +106,26 @@ const handleCreateTask = async () => {
     try {
         const token = await AsyncStorage.getItem("userToken");
 
-        // Format the dates and times
-        const formattedStartTime = `${startDate.toISOString().split('T')[0]}T${startTime.toISOString().split('T')[1]}`;
-        const formattedEndTime = `${stopDate.toISOString().split('T')[0]}T${stopTime.toISOString().split('T')[1]}`;
+        console.log("Start Date:", startDate);
+        console.log("Stop Date:", stopDate);
+        console.log("Start Time:", startTime);
+        console.log("Stop Time:", stopTime);
+
+        // Ensure that startTime and stopTime are Date objects and have valid time
+        if (!(startTime instanceof Date && !isNaN(startTime)) || !(stopTime instanceof Date && !isNaN(stopTime))) {
+            console.error("Invalid startTime or stopTime");
+            Alert.alert("Error", "Invalid start time or stop time");
+            return;
+        }
+
+        const formattedStartTime = startDate.toISOString();
+        const formattedEndTime = stopDate.toISOString();
+        
+        console.log("Formatted Start Time:", formattedStartTime);
+        console.log("Formatted End Time:", formattedEndTime);
 
         console.log(dog, taskName, location, formattedStartTime, formattedEndTime);
-        const response = await fetch("http://localhost:8000/api/tasks/add/", {
+        const response = await fetch(`http://localhost:8000/api/tasks/add/`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -136,8 +154,6 @@ const handleCreateTask = async () => {
             setStopTime(new Date(new Date().setHours(0, 0, 0, 0)));
 
             Alert.alert("Success", "Task created successfully");
-
-
         } else {
             console.error("Failed to create task");
             Alert.alert("Error", "Failed to create task");
@@ -147,6 +163,7 @@ const handleCreateTask = async () => {
         Alert.alert("Error", "An error occurred while creating the task");
     }
 };
+
 
 /**********************************************************************************/
 return (
@@ -203,19 +220,15 @@ return (
                 </View>
                 <View style={styles.datePickerContainer}>
                 <DatePicker
-                    title={"start"}
-                    date={startDate}
-                    time={startTime}
-                    onDateChange={setStartDate}
-                    onTimeChange={setStartTime}
-                />
-                <DatePicker
-                    title={"end"}
-                    date={stopDate}
-                    time={stopTime}
-                    onDateChange={setStopDate}
-                    onTimeChange={setStopTime}
-                />
+  title={"start"}
+  date={startDate}
+  onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStartDate, setStartTime)}
+/>
+<DatePicker
+  title={"end"}
+  date={stopDate}
+  onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStopDate, setStopTime)}
+/>
 
                 </View>
                 <View style={styles.inputContainer}>

@@ -16,6 +16,7 @@ const CalendarScreen = ({ navigation }) => {
   const [currentSpanIndex, setCurrentSpanIndex] = useState(0); // Initial span index
   const timespans = ['dagens uppgifter', 'veckans uppgifter']; // Define available timespans
 
+  const [filteredTasks, setFilteredTasks] = useState([]);
   // List of all users tasks.
   const [listOfTasks, setListOfTasks] = useState([]);
 
@@ -34,11 +35,10 @@ const [selected, setSelected] = useState('');
 
 
 
-
 /**********************************************************************************/
     // Define the start and end dates based on the selected time span
-    const startDate = new Date();
-    const endDate = new Date();
+    let startDate = new Date();
+    let endDate = new Date();
     if (currentSpanIndex === 0) {
       // For "dagens uppgifter," use the current date as both start and end
       startDate.setHours(0, 0, 0, 0);
@@ -81,42 +81,94 @@ const [selected, setSelected] = useState('');
   };
   
 /**********************************************************************************/
-  const filterTasksByDate = (tasks, currentSpanIndex) => {
-    const today = new Date();
-    const endDate = new Date();
-    
-    // Adjust for the user's timezone offset
-    const timezoneOffset = today.getTimezoneOffset() * 60000; // Offset in milliseconds
-  
-    if (currentSpanIndex === 0) {
-      // For "dagens uppgifter," use the current date as the start, and the end of the same day
-      today.setHours(0, 0, 0, 0);
-      endDate.setHours(23, 59, 59, 999);
-    } else if (currentSpanIndex === 1) {
-      // For "veckans uppgifter," use the current date and 7 days later as end date
-      endDate.setDate(endDate.getDate() + 7);
-      endDate.setHours(23, 59, 59, 999);
+const listOfDatesWithTasks = (tasks) => {
+  const uniqueDates = new Set(); // Use a Set to avoid duplicate dates
+  tasks.forEach((task) => {
+    if (task.start_time) { // Ensure start_time is not null
+      const date = task.start_time.split('T')[0]; // Extract the date part
+      uniqueDates.add(date); // Add to the Set
     }
-  
-    const filteredTasks = tasks.filter((task) => {
-      if (task.start_time) {
-        const taskStartDateUTC = new Date(task.start_time);
-        const taskStartDateLocal = new Date(taskStartDateUTC.getTime() + timezoneOffset);
-  
-        return taskStartDateLocal >= today && taskStartDateLocal <= endDate;
-      }
-      return false;
-    });
-  
-    return filteredTasks;
-  };  
+  });
+  return Array.from(uniqueDates); // Convert the Set to an Array
+};
+
+/**********************************************************************************/
+const filterTasksByDate = (tasks, currentSpanIndex, selectedDate) => {
+  let startDate = new Date();
+  let endDate = new Date();
+
+  const timezoneOffset = startDate.getTimezoneOffset() * 60000; // Offset in milliseconds
+
+  console.log(`Current Span Index: ${currentSpanIndex}`);
+  console.log(`Selected Date: ${selectedDate}`);
+  console.log(`Initial Start Date: ${startDate.toISOString()} and End Date: ${endDate.toISOString()}`);
+
+  if (selectedDate) {
+    startDate = new Date(selectedDate);
+    endDate = new Date(selectedDate);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+    console.log('Date selected. Adjusted Start Date:', startDate.toISOString(), 'Adjusted End Date:', endDate.toISOString());
+  } else if (currentSpanIndex === 0) {
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+    console.log('Dagens uppgifter. Adjusted Start Date:', startDate.toISOString(), 'Adjusted End Date:', endDate.toISOString());
+  } else if (currentSpanIndex === 1) {
+    endDate.setDate(endDate.getDate() + 7);
+    endDate.setHours(23, 59, 59, 999);
+    console.log('Veckans uppgifter. Adjusted Start Date:', startDate.toISOString(), 'Adjusted End Date:', endDate.toISOString());
+  }
+
+  const filteredTasks = tasks.filter((task) => {
+    if (task.start_time) {
+      const taskStartDateUTC = new Date(task.start_time);
+      const taskStartDateLocal = new Date(taskStartDateUTC.getTime() + timezoneOffset);
+
+      const isWithinRange = taskStartDateLocal >= startDate && taskStartDateLocal <= endDate;
+      console.log(`Task Start Time (Local): ${taskStartDateLocal.toISOString()}, Within Range: ${isWithinRange}`);
+      return isWithinRange;
+    }
+    return false;
+  });
+
+  console.log(`Filtered Tasks: ${filteredTasks.length}`);
+  filteredTasks.forEach(task => console.log(`Task ID: ${task.id}, Start Time: ${task.start_time}`, task.name));
+
+  return filteredTasks;
+};
+
+const datesWithTasks = listOfDatesWithTasks(listOfTasks);
+
+const getMarkedDates = () => {
+  const marked = {};
+
+  datesWithTasks.forEach((date) => {
+    marked[date] = { marked: true, dotColor: 'black' };
+  });
+
+  if (selected) {
+    marked[selected] = { ...marked[selected], selected: true, disableTouchEvent: true, selectedColor: 'green' };
+  }
+
+  return marked;
+};
+
+const markedDates = getMarkedDates();
+
   
 
-  const filteredTasks = filterTasksByDate(listOfTasks, currentSpanIndex);
 /**********************************************************************************/
   useEffect(() => {
     fetchUserTasks();
   }, []);
+  useEffect(() => {
+    const newFilteredTasks = filterTasksByDate(listOfTasks, currentSpanIndex, selected);
+    setFilteredTasks(newFilteredTasks);
+  }, [listOfTasks, currentSpanIndex, selected]); // Add this useEffect hook
+  
+  
+
+  
 /**********************************************************************************/
   useFocusEffect(
     React.useCallback(() => {
@@ -146,7 +198,7 @@ const updateTaskCompletion = async (taskId, completed) => {
           return response.json();
       })
       .then(data => {
-          console.log("Task updated:", data);
+          // console.log("Task updated:", data);
           fetchUserTasks(); // Re-fetch tasks to update the list
       })
       .catch(error => console.error("Error updating task:", error));
@@ -194,9 +246,17 @@ const updateTaskCompletion = async (taskId, completed) => {
               setSelected(day.dateString); // YYYY-MM-DD format
               console.log(day.dateString);
             }}
-            markedDates={{
-              [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
-            }}
+            // markedDates={{
+            //   [selected]: {selected: true, disableTouchEvent: true, 
+            //     selectedDotColor: 'DOES_NOTHING', selectedColor: 'blue'},
+            //     datesWithTasks: { marked: true, dotColor: 'green'},
+            //     // this should be replaced with a list object in YYYY-MM-DD format
+            //     // that we will get from listOfDatesWithTasks
+            //     '2024-02-15': { marked: true, dotColor: 'green'},
+
+            // }}
+            markedDates={markedDates}
+
           />
         </View>
 

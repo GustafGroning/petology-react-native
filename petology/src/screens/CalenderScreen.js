@@ -165,10 +165,6 @@ const markedDates = getMarkedDates();
     const newFilteredTasks = filterTasksByDate(listOfTasks, currentSpanIndex, selected);
     setFilteredTasks(newFilteredTasks);
   }, [listOfTasks, currentSpanIndex, selected]); // Add this useEffect hook
-  
-  
-
-  
 /**********************************************************************************/
   useFocusEffect(
     React.useCallback(() => {

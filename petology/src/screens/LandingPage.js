@@ -18,7 +18,7 @@ import Footer from '../components/common/Footer';
 
 
 const LandingPage = ({ navigation }) => {
-  /**********************************************************************************/
+/**********************************************************************************/
   // Pie chart vars
   // TODO: actually get the values from DB
   // TODO: add percentage as text in the middle of diagram
@@ -28,10 +28,10 @@ const LandingPage = ({ navigation }) => {
   // const sliceColor = ["#fbd203", "#ffb300", "#ff9100", "#ff6c00", "#ff3c00"];
   const sliceColor = ["#eff8f7", "#a55671"];
 
-  /**********************************************************************************/
+/**********************************************************************************/
   const [selectedDogName, setSelectedDogName] = useState(null);
 
-  /**********************************************************************************/
+/**********************************************************************************/
   useFocusEffect(
     React.useCallback(() => {
       fetchSelectedDogDetails();
@@ -39,7 +39,7 @@ const LandingPage = ({ navigation }) => {
   );
   
 
-  /**********************************************************************************/
+/**********************************************************************************/
   // CUSTOM CHECKBOX IMPLEMENTATION
   //TODO: just a placeholder for now, build the function
   const CustomCheckbox = () => {
@@ -65,7 +65,7 @@ const LandingPage = ({ navigation }) => {
     { id: '5', description: 'Task 5' },
   ];
 
-  /**********************************************************************************/
+/**********************************************************************************/
   
 
 
@@ -99,7 +99,7 @@ const LandingPage = ({ navigation }) => {
       console.error("Error fetching dog details:", error);
     }
   };
-  /**********************************************************************************/
+/**********************************************************************************/
 
   return (
     <View style={styles.container}> 
@@ -157,6 +157,10 @@ const LandingPage = ({ navigation }) => {
           <Text style={styles.dogText}>Selected Dog: {selectedDogName}</Text>
         </View>
       )}
+
+      <TouchableOpacity style={styles.articlesContainer} onPress={() => navigation.navigate("ArticleList")}>
+        <Text> Tjabba </Text>
+      </TouchableOpacity>
 
       <View style={styles.buttonSection}>
         <Button title="Log Out" onPress={() => navigation.navigate("Login")} />
@@ -272,7 +276,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
 
-  /**********************************************************************************/
+/**********************************************************************************/
   // CHECKBOX STYLES
   checkboxBase: {
     width: 20,
@@ -288,7 +292,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
 
-  /**********************************************************************************/
+/**********************************************************************************/
   dogDetailsSection: {
     flex: 1,
     borderColor: "black",
@@ -309,6 +313,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     height: 100,
   },
+/**********************************************************************************/
+  articlesContainer: {
+    backgroundColor: 'red',
+  }
 });
 
 export default LandingPage;

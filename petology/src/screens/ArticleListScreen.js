@@ -13,7 +13,7 @@ import ArticleItem from "../components/ArticleComponents/ArticleItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Footer from '../components/common/Footer';
 
-const ArticleListView = ({ navigation }) => {
+const ArticleListScreen = ({ navigation }) => {
   const [articles, setArticles] = useState([]);
 
   const fetchArticles = async () => {
@@ -45,13 +45,6 @@ const ArticleListView = ({ navigation }) => {
     fetchArticles();
   }, []);
 
-  const DEV_SERVER_IP = '10.33.12.160:8000';
-
-  const getImageFullUrl = (imageUrl) => {
-    return imageUrl; // Return the imageUrl as is
-  };
-  
-
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -65,7 +58,7 @@ const ArticleListView = ({ navigation }) => {
         <View style={styles.articleContainer}> 
         {articles.length > 0 ? (
           articles.map((article, index) => (
-            <ArticleItem key={index} article={article} />
+            <ArticleItem key={index} article={article} navigation={navigation}/>
           ))
           ) : (
             <Text>Loading articles...</Text>
@@ -147,4 +140,4 @@ articleItem: {
 /**********************************************************************************/
 });
 
-export default ArticleListView;
+export default ArticleListScreen;

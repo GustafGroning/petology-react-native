@@ -1,9 +1,19 @@
 import React from "react";
-import { View, Text, ImageBackground, StyleSheet } from "react-native";
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from "react-native";
 
-const ArticleItem = ({ article }) => {
+const ArticleItem = ({ navigation, article, id}) => {
+  
+  const navigateToScreen = (screenName) => {
+    navigation.navigate('ArticleScreen', { articleId: article.id });
+  };
+
+  // return (
+  //   <View style={styles.footer}>
+  //     <TouchableOpacity onPress={() => navigateToScreen('Landing')}></TouchableOpacity>
   return (
-    <View style={styles.articleItem}>
+    <TouchableOpacity style={styles.articleItem} 
+    
+      onPress={() => navigateToScreen('ArticleScreen')}>
       <ImageBackground
         source={{ uri: article.image }}
         resizeMode="cover"
@@ -14,9 +24,10 @@ const ArticleItem = ({ article }) => {
         <View style={styles.articleItemFooter}>
             <Text style={styles.articleTitle}>{article.title}</Text>
             <Text numberOfLines={2} style={styles.articleSummary}>{article.summary}</Text> 
+            <Text> id = {article.id}</Text>
         </View>
       </ImageBackground>
-    </View>
+    </TouchableOpacity>
   );
 };
 

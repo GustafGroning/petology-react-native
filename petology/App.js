@@ -11,7 +11,8 @@ import DogIntroductionScreen from "./src/screens/DogIntroductionScreen";
 import DogSelectionScreen from "./src/screens/DogSelectionScreen";
 import CalendarScreen from "./src/screens/CalenderScreen";
 import CreateTaskScreen from "./src/screens/CreateTaskScreen";
-import ArticleListView from "./src/screens/ArticleListView";
+import ArticleListScreen from "./src/screens/ArticleListScreen";
+import ArticleScreen from "./src/screens/ArticleScreen";
 
 /**************************************************************/
 const Stack = createNativeStackNavigator();
@@ -32,8 +33,8 @@ const App = () => {
           <Stack.Screen name="DogIntroduction" component={DogIntroductionScreen} />
           <Stack.Screen name="Calendar" component={CalendarScreen} />
           <Stack.Screen name="CreateTask" component={CreateTaskScreen} />
-          <Stack.Screen name="ArticleList" component={ArticleListView} />
-          {/* Article view (single article) */}
+          <Stack.Screen name="ArticleList" component={ArticleListScreen} />
+          <Stack.Screen name="ArticleScreen" component={ArticleScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

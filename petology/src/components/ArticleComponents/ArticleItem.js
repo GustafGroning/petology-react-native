@@ -4,7 +4,7 @@ import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from "react
 const ArticleItem = ({ navigation, article, id}) => {
   
   const navigateToScreen = (screenName) => {
-    navigation.navigate('ArticleScreen', { articleId: article.id });
+    navigation.navigate('ArticleScreen', { article: article });
   };
 
   // return (
@@ -24,7 +24,6 @@ const ArticleItem = ({ navigation, article, id}) => {
         <View style={styles.articleItemFooter}>
             <Text style={styles.articleTitle}>{article.title}</Text>
             <Text numberOfLines={2} style={styles.articleSummary}>{article.summary}</Text> 
-            <Text> id = {article.id}</Text>
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -39,7 +38,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 165,
     width: "85%",
-    position: "relative",
+    marginBottom: 25,
+    // position: "relative",
   },
   articleTitle: {
     // Your styles for article title here

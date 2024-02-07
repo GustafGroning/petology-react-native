@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { Button, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import DropDownPicker from "react-native-dropdown-picker";
 import { SelectList } from "react-native-dropdown-select-list";
 
 /**********************************************************************************/
@@ -112,17 +111,29 @@ const RegisterDogScreen = ({ navigation }) => {
   useEffect(() => {
     fetchBreeds();
   }, [fetchBreeds]);
-
-  /**********************************************************************************/
+/**********************************************************************************/
+  const navigateToDogSelection = () => {
+    navigation.navigate('DogSelection');
+};
+/**********************************************************************************/
 
   return (
+    <View style={styles.container}>
     <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        <View style={styles.section1}>
+        <View style={styles.headerSection}>
           <Text variant="headlineLarge" style={styles.header}>
             Petology
           </Text>
+          <View style={styles.closeButtonContainer}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={navigateToDogSelection}
+            >
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+          </View>
         </View>
+
         <View style={styles.section2}>
           <Text variant="headlineMedium" style={styles.headerSmall}>
             Skapa hund
@@ -168,49 +179,46 @@ const RegisterDogScreen = ({ navigation }) => {
             placeholder="Födelsedatum: YYYYMMDD"
             placeholderTextColor={"black"}
           />
-        </View>
-        <View style={styles.submitSection}>
-          <Button
-            mode="contained"
-            onPress={handleCreateDog}
-            style={{ width: "60%", height: "30%" }}
-            buttonColor="#4a8483"
-          >
-            Skapa hund
-          </Button>
-        </View>
-        <View style={styles.section} />
-      </View>
-    </ScrollView>
+          
+          <View style={styles.submitSection}>
+            <Button
+              mode="contained"
+              onPress={handleCreateDog}
+              style={{ width: "80%", height: "30%" }}
+              buttonColor="#4a8483"
+            > Skapa hund </Button>
+          </View>
+        </View>  
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-    backgroundColor: "#92cdca",
-  },
-  container: {
-    // flex: 1,
-  },
-  section1: {
-    height: 150,
-    // borderWidth: 1,
-    // borderColor: 'black',
-    alignItems: "center",
-    paddingTop: 20,
-  },
+/**********************************************************************************/
+container: {
+  flex: 1,
+  paddingTop: 40,
+  backgroundColor: "#92cdca",
+},
+scrollView: {},
+/**********************************************************************************/
+headerSection: {
+  flex: 1,
+  alignItems: "center",
+  height: 80,
+  padding: 20,
+},
+headerText: {
+  fontSize: 36,
+  fontFamily: "Cochin",
+  opacity: 0.7,
+},
+/**********************************************************************************/
   section2: {
     height: 400,
     alignItems: "center",
-    // borderWidth: 1,
-    // borderColor: 'black',
     paddingTop: 10,
-  },
-  section: {
-    height: 300,
-    borderWidth: 1,
-    borderColor: "black",
   },
   header: {
     fontFamily: "Cochin",
@@ -230,16 +238,31 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   dropdownContainer: {
-    // borderWidth: 1,
-    // borderColor: 'black',
     width: "80%",
   },
   submitSection: {
     height: 150,
-    borderWidth: 1,
-    borderColor: "black",
+    width: '75%',
+
     alignItems: "center",
   },
+  closeButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 30,
+    height: 30,
+},
+closeButtonText: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+},
+closeButtonContainer: {
+  position: 'absolute',
+  // backgroundColor: 'gold',
+  top: 28,
+  left: 320,
+},
 });
 
 export default RegisterDogScreen;

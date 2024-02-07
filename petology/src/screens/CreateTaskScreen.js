@@ -1,27 +1,24 @@
 import { Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { SelectList } from 'react-native-dropdown-select-list';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-paper";
 import DatePicker from '../components/CreateTaskScreenComponents/DatePicker';
-import DropDownPicker from 'react-native-dropdown-picker';
+
+import { SelectList } from 'react-native-dropdown-select-list';
+
 import { Animated } from 'react-native';
-
-
 
 
 const CreateTaskScreen = ({ navigation }) => {
 /**********************************************************************************/
-    
+// SelectList handlers
+    const [dogList, setDogList] = useState([]);
+
+/**********************************************************************************/
     const [items, setItems] = useState([]);
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
-
-
-
-    // List of all user dogs, used for dropdown
-    const [dogList, setDogList] = useState([]);
 
     // Chosen dog, ID will be used for task
     const [dog, setDog] = useState('');
@@ -38,23 +35,23 @@ const CreateTaskScreen = ({ navigation }) => {
 
 
 /**********************************************************************************/
-const onDropdownOpen = () => {
-    setOpen(true);
-    Animated.timing(marginTop, {
-        toValue: 200, // Adjust as needed
-        duration: 500,
-        useNativeDriver: false,
-    }).start();
-};
+// const onDropdownOpen = () => {
+//     setOpen(true);
+//     Animated.timing(marginTop, {
+//         toValue: 200, // Adjust as needed
+//         duration: 500,
+//         useNativeDriver: false,
+//     }).start();
+// };
 
-const onDropdownClose = () => {
-    setOpen(false);
-    Animated.timing(marginTop, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: false,
-    }).start();
-};
+// const onDropdownClose = () => {
+//     setOpen(false);
+//     Animated.timing(marginTop, {
+//         toValue: 0,
+//         duration: 500,
+//         useNativeDriver: false,
+//     }).start();
+// };
 /**********************************************************************************/
 const [startDate, setStartDate] = useState(new Date());
 const [startTime, setStartTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)))
@@ -92,6 +89,13 @@ const fetchDogs = async () => {
                 value: dog.id.toString()
             }));
             setItems(formattedDogs);
+
+            // NEW CODE 
+            setDogList(
+                data.dogs.map((dogs) => ({key: dogs.id, value: dogs.name}))
+            );
+            console.log('dogList ', dogList)
+
         } else {
             console.error("Failed to fetch dogs or 'dogs' is not an array");
         }
@@ -167,58 +171,48 @@ const handleCreateTask = async () => {
 
 /**********************************************************************************/
 return (
-    <View style={styles.container}>
-        {/* WORKING ON THIS RIGHT NOW */}
-            <View style={styles.headerSection}>
-                <Text style={styles.headerText}>Lägg till en aktivitet</Text>
-                <View style={styles.closeButtonSection}>
-                <TouchableOpacity
-                    style={styles.closeButton}
-                    onPress={navigateToCalendar}
-                >
-                    <Text style={styles.closeButtonText}>X</Text>
-                </TouchableOpacity>
-            </View>
+<View style={styles.container}>
+    <ScrollView style={styles.scrollView}>
+        <View style={styles.headerSection}>
+            <Text style={styles.headerText}>Lägg till en aktivitet</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={navigateToCalendar}>
+                <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+        </View>
+        <View style={styles.inputSection}>
+            <View style={styles.dogList}>
+                <SelectList
+                    placeholder='Mina hundar'
+                    data={dogList}
+                    setSelected={setValue} // Use the function that updates the state with the selected item
+                    // Other SelectList props as needed
+                    boxStyles={{
+                        borderRadius: 90,
+                        backgroundColor: "#e8f5f5",
+                        marginBottom: 18,
+                        width: "100%", // Adjust if necessary to match your design
+                    }}
+                />
             </View>
 
-            <View style={styles.inputSection}>
-            <View style={styles.dogList}> 
-                  <DropDownPicker
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen ? onDropdownOpen : onDropdownClose}
-        setValue={setValue}
-        setItems={setItems}
-        onOpen={onDropdownOpen}
-        onClose={onDropdownClose}
-      />
-            
-            </View>
-            {/* <View style={[styles.inputContainer, {marginTop : extraMarginTop}]}> */}
-            <Animated.View style={[styles.inputContainer, { marginTop }]}>
-
-            {/* style={open ? styles.adjustedContainer : styles.container} */}
-                <Text style={styles.label}></Text>
+            <View style={styles.inputContainer}>
                 <TextInput
-                    editable={!open}
                     style={styles.input}
                     placeholder="Titel"
                     value={taskName}
                     onChangeText={setTaskName}
                 />
-            </Animated.View>
-
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        editable={!open}
+            </View>
+            <View style={styles.inputContainer}>
+                <TextInput
                         style={styles.input}
                         placeholder="Plats"
                         value={location}
                         onChangeText={setLocation}
                     />
                 </View>
-                <View style={styles.datePickerContainer}>
+
+            <View style={styles.datePickerContainer}>
                 <DatePicker
   title={"start"}
   date={startDate}
@@ -231,57 +225,38 @@ return (
 />
 
                 </View>
+
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
-                        placeholder="anteckningar"
-                        value={notes}
-                        onChangeText={setNotes}
-                    />
-                </View>
-            </View>
-            
-            {/* <View style={styles.section}>
-                <Text style={styles.label}>Category</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Category"
-                    value={category}
-                    onChangeText={setCategory}
+                    placeholder="Anteckningar"
+                    value={notes}
+                    onChangeText={setNotes}
                 />
-            </View> */}
-
-            {/* <View style={styles.section}>
-                <Text style={styles.label}>Reminder</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Reminder"
-                    value={reminder}
-                    onChangeText={setReminder}
-                />
-            </View> */}
-
-
-
-            <View style={styles.submitButtonSecion}>
-                <Button
-                    mode="contained"
-                    onPress={handleCreateTask}
-                    style={styles.addButtonStyle}
-                    buttonColor="#4a8483"
-                >
-                    Lägg till
-                </Button>
             </View>
-
         </View>
+
+        <View style={styles.submitButtonSection}>
+            <Button mode="contained" onPress={handleCreateTask} style={styles.addButtonStyle}>
+                Lägg till
+            </Button>
+        </View>
+    </ScrollView>
+</View>
 );
+
+
 };
 
 const styles = StyleSheet.create({
+/**********************************************************************************/
 container: {
     flex: 1,
-},
+    paddingTop: 40,
+    // backgroundColor: "#92cdca",
+  },
+scrollView: {},
+/**********************************************************************************/
 adjustedContainer: {
     marginTop: 200,
     marginBottom: 200,
@@ -306,7 +281,6 @@ inputSection: {
 },
 dogList: {
     width: '40%',
-    height: 100,
 },
 inputContainer: {
     borderBottomWidth: 1, // Only underline
@@ -346,9 +320,6 @@ closeButtonText: {
 },
 datePickerContainer: {
     width: '88%',
-    // alignItems: 'center',
-    // borderWidth: 1,
-    // borderColor: 'black',
 },
 addButtonStyle: {
     width: '50%', // Adjust the width as needed
@@ -356,7 +327,7 @@ addButtonStyle: {
     justifyContent: 'center',
     // Add any other styling you want for the button
 },
-submitButtonSecion: {
+submitButtonSection: {
     alignItems: 'center',
     marginTop: 80,
 },

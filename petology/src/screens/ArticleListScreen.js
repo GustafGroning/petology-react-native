@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
 /**********************************************************************************/
 articleContainer: {
     alignItems: 'center',
+    
 },
 /**********************************************************************************/
 // all of this should be turned into a ArticleItem component instead

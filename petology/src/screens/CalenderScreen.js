@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { useFocusEffect } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import Task from '../components/common/Task';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -141,22 +142,16 @@ const datesWithTasks = listOfDatesWithTasks(listOfTasks);
 
 const getMarkedDates = () => {
   const marked = {};
-
   datesWithTasks.forEach((date) => {
     marked[date] = { marked: true, dotColor: 'black' };
   });
-
   if (selected) {
     marked[selected] = { ...marked[selected], selected: true, disableTouchEvent: true, selectedColor: 'green' };
   }
-
   return marked;
 };
 
 const markedDates = getMarkedDates();
-
-  
-
 /**********************************************************************************/
   useEffect(() => {
     fetchUserTasks();
@@ -206,11 +201,8 @@ const updateTaskCompletion = async (taskId, completed) => {
 /**********************************************************************************/
   return (
     <View style={styles.outerContainer}>
-
       <View style={styles.container}>
-        <View style={styles.headerSection}>
-          <Text style={styles.headerText}>Petology</Text>
-        </View>
+        <Header/>
         <View style={styles.calendarHeaderSection}>
           <TouchableOpacity
             style={styles.addTaskButton}
@@ -223,8 +215,6 @@ const updateTaskCompletion = async (taskId, completed) => {
         <View style={styles.calendarSection}>
           <Calendar
             style={{
-              // borderWidth: 1,
-              // borderColor: 'gray',
               height: 320,
               width: '100%',
               backgroundColor: '#92cdca',
@@ -242,17 +232,7 @@ const updateTaskCompletion = async (taskId, completed) => {
               setSelected(day.dateString); // YYYY-MM-DD format
               console.log(day.dateString);
             }}
-            // markedDates={{
-            //   [selected]: {selected: true, disableTouchEvent: true, 
-            //     selectedDotColor: 'DOES_NOTHING', selectedColor: 'blue'},
-            //     datesWithTasks: { marked: true, dotColor: 'green'},
-            //     // this should be replaced with a list object in YYYY-MM-DD format
-            //     // that we will get from listOfDatesWithTasks
-            //     '2024-02-15': { marked: true, dotColor: 'green'},
-
-            // }}
             markedDates={markedDates}
-
           />
         </View>
 
@@ -294,7 +274,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', // This will push the footer to the bottom
   },
   /**********************************************************************************/
-
   /******* Main Container *******/
   container: {
     flex: 1,
@@ -302,25 +281,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10, // Add some bottom padding to separate the footer
     alignItems: 'center',
   },
-  /**********************************************************************************/
-
-  /******* Header Section *******/
-  headerSection: {
-    alignItems: 'center',
-    height: 80,
-    padding: 20,
-  },
-  headerText: {
-    fontSize: 36,
-    fontFamily: 'Cochin',
-    opacity: 0.7,
-  },
-  /**********************************************************************************/
-
+/**********************************************************************************/
   /******* Calendar Header Section *******/
   calendarHeaderSection: {
-    // borderColor: 'black',
-    // borderWidth: 1,
     width: '100%',
     height: 40,
     justifyContent: 'center',

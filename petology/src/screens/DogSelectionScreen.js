@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DogListItem from '../components/DogSelectionScreenComponents/DogListItem';
+import Header from "../components/common/Header";
 import Footer from '../components/common/Footer';
 
 
@@ -58,9 +59,7 @@ const DogSelectionScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={{ flex: 1, }}>
-        <View style={styles.headerSection}>
-          <Text style={styles.headerText}> Petology </Text>
-        </View>
+        <Header/>
         <View style={styles.subHeaderSection}>
           <Text style={styles.subHeaderText}> Mina hundar </Text>
           <TouchableOpacity

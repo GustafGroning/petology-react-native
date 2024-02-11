@@ -15,6 +15,7 @@ import DogImage from "../../assets/doggo.jpg"; // TODO: fix real imports instead
 import Footer from '../components/common/Footer';
 import Header  from '../components/common/Header';
 import Task from '../components/common/Task';
+import SubHeader from "../components/common/SubHeader";
 
 const LandingPage = ({ navigation }) => {
 /**********************************************************************************/
@@ -140,31 +141,44 @@ const updateTaskCompletion = async (taskId, completed) => {
         <Text> Pepp Pepp Hurra </Text>
       </View>
       <View style={styles.activeDogPictureSection}>
-        <ImageBackground source={DogImage} style={styles.dogImageStyle}/>
+        <ImageBackground
+          source={ DogImage }
+          resizeMode="cover"
+          style={styles.articleImageStyle}
+          imageStyle={{ borderRadius: 20}}
+        />
       </View>
 
           <View style={styles.tasksListSection}>
-  <View style={styles.taskListBox}>
-      {tasksToday && tasksToday.map((task) => (
-        <Task
-          key={task.id}
-          taskName={task.name}
-          startTime={task.start_time}
-          notes={task.notes}
-          dogName={task.dog_name}
-          isCompleted={task.completed}
-          onCheckChange={(newCheckState) => updateTaskCompletion(task.id, newCheckState)}
-        />
-      ))}
-    </View>
-    </View>
-      <TouchableOpacity style={styles.articlesContainer} onPress={() => navigation.navigate("ArticleList")}>
-        <Text> Tjabba </Text>
+            <View style={styles.taskListBoxHeader}>
+              <SubHeader headerText={'Uppgifter'}/>
+            </View>
+            <View style={styles.taskListBox}>
+                {tasksToday && tasksToday.map((task) => (
+                  <Task
+                    key={task.id}
+                    taskName={task.name}
+                    startTime={task.start_time}
+                    notes={task.notes}
+                    dogName={task.dog_name}
+                    isCompleted={task.completed}
+                    onCheckChange={(newCheckState) => updateTaskCompletion(task.id, newCheckState)}
+                  />
+                ))}
+              </View>
+          </View>
+      <TouchableOpacity style={styles.offeringContainer} onPress={() => navigation.navigate("ArticleList")}>
+        <SubHeader headerText={'Erbjudande'}/>
       </TouchableOpacity>
-
-      <View style={styles.buttonSection}>
-        <Button title="Log Out" onPress={() => navigation.navigate("Login")} />
-      </View>      
+      
+      <View style={styles.newsContainer}>
+        <SubHeader headerText={'Nyheter'}/>
+        <Text style={styles.motivationTextSection}> Petology 1.0 har precis släppts! </Text>
+      </View>
+      <TouchableOpacity style={styles.articlesContainer} onPress={() => navigation.navigate("ArticleList")}>
+        <SubHeader headerText={'Artiklar'}/>
+      </TouchableOpacity>
+      <View style={styles.emptyContainer}></View>
 
     </ScrollView>
     <Footer navigation={navigation} />
@@ -218,47 +232,40 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+/**********************************************************************************/
   activeDogPictureSection: {
-    // TODO: finish up image, weird as hell right now
-    flex: 1,
-    height: 120,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  dogImageStyle: {
-    width: "95%", // Container width
-    height: "95%", // Container height, adjust as needed
-    justifyContent: "center",
-    alignItems: "center",
+    alignContent: "center",
     borderRadius: 20,
-    overflow: 'hidden',
+    height: '15%',
+    width: "95%",
+    marginBottom: 25,
+    left: 10, // bad solution but can't figure it out dynamically right now
   },
+  articleImageStyle: {
+    height: "100%",
+    width: "100%",
+    justifyContent: "flex-end", // Align content at the bottom
+    borderRadius: 20,
+  },
+/**********************************************************************************/
   tasksListSection: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 2,
+    paddingBottom: 15,
   },
   taskListBox: {
-    // borderWidth: 2,
     backgroundColor: '#afe0de',
     minHeight: 200, // Set a minimum height to ensure it's visible
     width: '90%',
     // borderRadius: 2,
-  },
-  
-  taskListBoxHeader: {
-    marginTop: 14,
-    marginLeft: 120,
-    fontSize: 24,
-    fontFamily: "Cochin",
-  },
+  },  
+  taskListBoxHeader: {},
   taskItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 4,
   },
-
 /**********************************************************************************/
   // CHECKBOX STYLES
   checkboxBase: {
@@ -298,8 +305,32 @@ const styles = StyleSheet.create({
   },
 /**********************************************************************************/
   articlesContainer: {
-    backgroundColor: 'red',
-  }
+    paddingTop: 40,
+    height: 200,
+    width: '90%',
+    borderWidth: 2,
+    left: 20,
+    borderRadius: 20,
+    backgroundColor: 'lightgreen',
+  },
+  offeringContainer: {
+    paddingTop: 40,
+    height: 200,
+    width: '90%',
+    borderWidth: 2,
+    left: 20,
+    borderRadius: 20,
+    backgroundColor: 'green',
+    marginBottom: 30,
+  },
+  newsContainer: {
+    alignItems: 'center',
+    height: 80,
+  },
+  emptyContainer: {
+    height: 300,
+    // backgroundColor: 'gold',
+  },
 });
 
 export default LandingPage;

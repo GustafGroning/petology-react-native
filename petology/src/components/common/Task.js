@@ -79,8 +79,8 @@ return (
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        padding: 10,
-        borderBottomWidth: 1,
+        padding: 6,
+        // borderBottomWidth: 1,
         borderBottomColor: '#ddd',
         backgroundColor: '#92cdca',
         alignItems: 'center', // Align items vertically in the center
@@ -100,19 +100,15 @@ const styles = StyleSheet.create({
         color: '#666',
     },
     checkBoxContainer: {
-        justifyContent: 'center', // Center the checkbox vertically
+        // justifyContent: 'center', // Center the checkbox vertically
         // borderColor: 'black',
         // borderWidth: 1,
         // paddingHorizontal: 5, // Add some horizontal padding
         // marginRight: 5, // Space between checkbox and text
     },
     textContainer: {
-        // backgroundColor: 'gold',
         flexDirection: 'column',
-        // borderWidth: 1,
-        // borderColor: 'black',
         width: 75,
-        // alignItems: 'center',
         flex: 2, // Take available space
     },
     timeContainer: {

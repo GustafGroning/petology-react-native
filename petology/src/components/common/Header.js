@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const Header = ({ navigation }) => {
+const Header = () => {
     return (
         <View style={styles.headerSection}>
             <Text style={styles.headerText}> Petology </Text>

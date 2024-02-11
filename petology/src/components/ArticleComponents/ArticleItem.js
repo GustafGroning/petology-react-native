@@ -6,10 +6,6 @@ const ArticleItem = ({ navigation, article, id}) => {
   const navigateToScreen = (screenName) => {
     navigation.navigate('ArticleScreen', { article: article });
   };
-
-  // return (
-  //   <View style={styles.footer}>
-  //     <TouchableOpacity onPress={() => navigateToScreen('Landing')}></TouchableOpacity>
   return (
     <TouchableOpacity style={styles.articleItem} 
     

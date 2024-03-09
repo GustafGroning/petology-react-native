@@ -8,6 +8,11 @@ import Footer from '../components/common/Footer';
 import Task from '../components/common/Task';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+// TODO: fix views. Today seems to be working, but "this week" is a bit weird.
+// TODO: fix specific-day view. Seems to work, but users can't go back to the
+// today/this week view after clicking on a day.
+// TODO: Fix calender to start on monday, currently starts on sunday.
+
 const CalendarScreen = ({ navigation }) => {
 /**********************************************************************************/
   // create an ENUM that decides the current timespan
@@ -308,6 +313,7 @@ const styles = StyleSheet.create({
   /******* Calendar Section *******/
   calendarSection: {
     width: '90%',
+    paddingBottom: 18,
     // borderColor: 'black',
     // borderWidth: 1,
   },

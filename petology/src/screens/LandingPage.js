@@ -12,6 +12,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PieChart from "react-native-pie-chart";
 import DogImage from "../../assets/doggo.jpg"; // TODO: fix real imports instead
+
+import offeringImage from "../../assets/offering.jpg";
 import Footer from '../components/common/Footer';
 import Header  from '../components/common/Header';
 import Task from '../components/common/Task';
@@ -34,6 +36,7 @@ const [completedTasksToday, setCompletedTasksToday] = useState(0);
   // const sliceColor = ["#fbd203", "#ffb300", "#ff9100", "#ff6c00", "#ff3c00"];
   const sliceColor = ["#eff8f7", "#a55671"];
 /**********************************************************************************/
+// TODO: this seems to be getting more tasks than just today, fix.
   const fetchAndFilterTasksForToday = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
@@ -149,6 +152,7 @@ const updateTaskCompletion = async (taskId, completed) => {
         />
       </View>
 
+          {/* TODO: gotta fix the layout of tasks, and also add some message when there are no tasks for the day. */}
           <View style={styles.tasksListSection}>
             <View style={styles.taskListBoxHeader}>
               <SubHeader headerText={'Uppgifter'}/>
@@ -168,7 +172,13 @@ const updateTaskCompletion = async (taskId, completed) => {
               </View>
           </View>
       <TouchableOpacity style={styles.offeringContainer} onPress={() => navigation.navigate("ArticleList")}>
-        <SubHeader headerText={'Erbjudande'}/>
+      <ImageBackground
+          source={ offeringImage }
+          resizeMode="cover"
+          style={styles.offeringImageStyle}
+          imageStyle={{ borderRadius: 20}}
+        />
+        <SubHeader style={styles.offeringHeaderStyle} headerText={'Erbjudande'}/>
       </TouchableOpacity>
       
       <View style={styles.newsContainer}>
@@ -244,7 +254,6 @@ const styles = StyleSheet.create({
   articleImageStyle: {
     height: "100%",
     width: "100%",
-    justifyContent: "flex-end", // Align content at the bottom
     borderRadius: 20,
   },
 /**********************************************************************************/
@@ -255,8 +264,8 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   taskListBox: {
-    backgroundColor: '#afe0de',
-    minHeight: 200, // Set a minimum height to ensure it's visible
+    // backgroundColor: '#afe0de',
+    // minHeight: 200, // Set a minimum height to ensure it's visible
     width: '90%',
     // borderRadius: 2,
   },  
@@ -314,14 +323,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgreen',
   },
   offeringContainer: {
-    paddingTop: 40,
     height: 200,
     width: '90%',
     borderWidth: 2,
     left: 20,
     borderRadius: 20,
-    backgroundColor: 'green',
     marginBottom: 30,
+  },
+  offeringImageStyle: {
+    height: "100%",
+    width: "100%",
+  },
+  offeringHeaderStyle: {
+
   },
   newsContainer: {
     alignItems: 'center',

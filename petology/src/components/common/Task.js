@@ -79,11 +79,13 @@ return (
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        padding: 6,
-        // borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
+        padding: 3,
+        borderWidth: 1,
+        borderRadius: 10,
+        // borderBottomColor: '#ddd',
         backgroundColor: '#92cdca',
         alignItems: 'center', // Align items vertically in the center
+        marginBottom: 8,
     },
     taskName: {
         fontSize: 16,

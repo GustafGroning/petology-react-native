@@ -33,30 +33,13 @@ const CreateTaskScreen = ({ navigation }) => {
 
     const [marginTop, setMarginTop] = useState(new Animated.Value(0));
 
-
-/**********************************************************************************/
-// const onDropdownOpen = () => {
-//     setOpen(true);
-//     Animated.timing(marginTop, {
-//         toValue: 200, // Adjust as needed
-//         duration: 500,
-//         useNativeDriver: false,
-//     }).start();
-// };
-
-// const onDropdownClose = () => {
-//     setOpen(false);
-//     Animated.timing(marginTop, {
-//         toValue: 0,
-//         duration: 500,
-//         useNativeDriver: false,
-//     }).start();
-// };
 /**********************************************************************************/
 const [startDate, setStartDate] = useState(new Date());
+startDate.setHours(0, 0, 0, 0);
 const [startTime, setStartTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)))
 
 const [stopDate, setStopDate] = useState(new Date()); 
+stopDate.setHours(0, 0, 0, 0);
 const [stopTime, setStopTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)))
 
 /**********************************************************************************/
@@ -182,7 +165,7 @@ return (
         <View style={styles.inputSection}>
             <View style={styles.dogList}>
                 <SelectList
-                    placeholder='Mina hundar'
+                    placeholder='Välj hund'
                     data={dogList}
                     setSelected={setValue} // Use the function that updates the state with the selected item
                     // Other SelectList props as needed
@@ -211,18 +194,17 @@ return (
                         onChangeText={setLocation}
                     />
                 </View>
-
             <View style={styles.datePickerContainer}>
                 <DatePicker
-  title={"start"}
-  date={startDate}
-  onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStartDate, setStartTime)}
-/>
-<DatePicker
-  title={"end"}
-  date={stopDate}
-  onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStopDate, setStopTime)}
-/>
+                    title={"Startar"}
+                    date={startDate}
+                    onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStartDate, setStartTime)}
+                />
+                {/* <DatePicker
+                    title={"end"}
+                    date={stopDate}
+                    onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStopDate, setStopTime)}
+                /> */}
 
                 </View>
 
@@ -276,8 +258,6 @@ headerText: {
 inputSection: {
     marginTop: 10,
     alignItems: 'center',
-    // borderWidth: 1,
-    // borderColor: 'black',
 },
 dogList: {
     width: '40%',
@@ -325,6 +305,7 @@ addButtonStyle: {
     width: '50%', // Adjust the width as needed
     height: 50,
     justifyContent: 'center',
+    backgroundColor: '#4a8483',
     // Add any other styling you want for the button
 },
 submitButtonSection: {

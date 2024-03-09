@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }) => {
   };
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api-token-auth/", {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api-token-auth/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

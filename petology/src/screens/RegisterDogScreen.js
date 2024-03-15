@@ -27,8 +27,10 @@ const RegisterDogScreen = ({ navigation }) => {
   /**********************************************************************************/
   // NEW TRY AT DROPDOWN
   const data = [
-    { key: "1", value: "Hane" },
-    { key: "2", value: "Tik" },
+    { key: "1", value: "Okastrerad hane" },
+    { key: "2", value: "Kastrerad hane" },
+    { key: "3", value: "Okastrerad tik" },
+    { key: "4", value: "Kastrerad tik" },
   ];
 
   /**********************************************************************************/

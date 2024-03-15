@@ -102,6 +102,7 @@ const LoginScreen = ({ navigation }) => {
           placeholder="password"
           value={password}
           onChangeText={setPassword}
+          secureTextEntry
           autoCapitalize="none"
           textAlign={"center"}
         />

@@ -89,6 +89,7 @@ const fetchDogs = async () => {
 
 
 /**********************************************************************************/
+// TODO: remove everything relating to TIME from API call, just do dates for now.
 const handleCreateTask = async () => {
     try {
         const token = await AsyncStorage.getItem("userToken");

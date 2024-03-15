@@ -1,0 +1,118 @@
+****************************************
+CURRENT
+****************************************
+* 
+
+****************************************
+BACKLOG FÖR MVP
+****************************************
+
+********************
+Login and signup: 
+********************
+* Inloggningsknapp
+* Skapa konto knapp
+* Glömt lösenord? knapp, måste kunna skicka ett mail med password reset länk. 
+
+********************
+Användaruppgifter 
+********************
+Inmatning av basic info (design på sidan ska uppdateras)
+”Har hund” knapp som tar en vidare till skapa hund
+
+********************
+Skapa hund
+********************
+* Fri text namn 
+* ras-dropdown med alla SKK’s registrerade raser + vanliga blandraser (typ labradoodle, cavapoo etc) 
+* Födelsedatum: gärna att det ploppar upp en kalenderform när man klickar 
+* Kön: Hane kastrerad/okastrerad, tik kastrerad/okastrerad
+* Nuvarande sjukdomar: kan välja mellan MMVD och HCM- Övriga sjukdomar skrivs in i 
+    fri text (gärna att dessa loggas någonstans så vi kan räkna på vilka sjukdomar som finns)
+
+********************
+Startsida
+********************
+* Uppgiftsstatistik
+* Dagens uppgifter
+* (Plats för erbjudande – har inte börjat sälja ännu, men gärna så att det kan inkorporeras enkelt jag säljer annonsplatser)
+* Nyheter
+* Highlighta aktuella artiklar (VAD ÄR EN AKTUELL ARTIKEL?)
+
+********************
+Bibliotek
+********************
+* Artiklar
+* FAQ
+* Kontakta oss
+* Policy
+* Om Petology
+
+********************
+Artiklar
+********************
+* Sökfunktion
+* ”Månadens tema”: utvalda artiklar som hamnar högst upp
+* Övriga artiklar hamnar under
+
+********************
+Kalender
+********************
+* Översiktskalender
+* To do list
+* Möjlighet att lägga till/ta bort/redigera uppgifter/aktiviteter
+* Vy för dagens uppgifter
+* vy för veckans uppgifter
+* vy för viss dag när användaren trycker på den
+
+********************
+Mina hundar
+********************
+* Översikt över hundar
+* Möjlighet att lägga till fler hundar
+
+********************
+Andetagsmonitorering
+********************
+* Välj hund bland dina hundar
+* Knapp som startar nedräkning (30 sek) samt räknar antal tryck (andetag). 
+    Avslutar nedräkningen automatiskt och slutar då räkna antal tryck. Visar resultatet, som sparas.
+* Resultatsida (ska designas) (ÄR DET HÄR SÅ VIKTIGT? DET VIKTIGA ÄR VÄL POTENTIEL VARNINGSTEXT?)
+* Varningstext kommer upp om andetag per minut överstiger 40
+
+********************
+Översikt hundprofil
+********************
+* Översikt spindeldiagram
+* Översikt Information
+* Översikt uppgifter
+
+********************
+Dagens undersökning (Health Index)
+******************** 
+* Fråga och svar enl separata instruktioner
+* Resultat som Spindeldiagram
+
+********************
+Information hundprofil
+********************
+* Information (input fr djurägare)
+* Vaccinationer
+* Mediciner
+* Nuvarande sjukdomar
+* Tidigare sjukdomar (flyttas automatiskt hit från nuvarande sjukdomar när djuret markeras som friskförklarad av djurägare)
+
+********************
+Lägg till behandling
+********************
+* Mest fritext input enl kategorier (VILKA KATEGORIER)
+
+********************
+Lägg till sjukdom
+********************
+* Fri text input enl kategorier i Figma
+
+********************
+Spindelnät/Petology index
+********************
+* Räknas ut efter dagens undersökningar (KAN ÄVEN SES FRÅN HUNDPROFILEN?)

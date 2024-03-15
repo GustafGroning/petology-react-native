@@ -5,8 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const DatePicker = ({ title, date, onDateTimeChange }) => {
 
-const defaultDate = new Date();
-defaultDate.setHours(0, 0, 0, 0); // Sets hours, minutes, seconds, and milliseconds to 0
+
 
     return (
       <View style={styles.container}>

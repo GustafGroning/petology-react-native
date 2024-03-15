@@ -4,18 +4,33 @@ import { Button, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignUpScreen = ({ navigation }) => {
-  /**************************************************************/
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  /**************************************************************/
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSignUp = async () => {
     try {
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setErrorMessage("Invalid email address");
+        return;
+      }
+
+      if (password.length < 8) {
+        setErrorMessage("Password must be at least 8 characters long");
+        return;
+      }
+
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]*$/;
+      if (!passwordRegex.test(password)) {
+        setErrorMessage("Password must contain at least one letter and one number");
+        return;
+      }
+
       const response = await fetch(
         "http://localhost:8000/api/users/register/",
         {
-          // Make sure this URL matches your Django registration endpoint
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -29,19 +44,19 @@ const SignUpScreen = ({ navigation }) => {
       const data = await response.json();
       if (response.ok) {
         console.log("Registration successful", data.token);
-        await AsyncStorage.setItem("userToken", data.token); // Store the token
-        navigation.navigate("Login"); // Navigate to RegisterDog screen
+        await AsyncStorage.setItem("userToken", data.token);
+        navigation.navigate("Login");
       } else {
-        console.log("Registration failed", data.error);
-        // Handle registration failure (e.g., show an error message)
+        if (response.status === 400 && data.error === "Email already in use") {
+          setErrorMessage("Email already in use");
+        } else {
+          setErrorMessage("Registration failed");
+        }
       }
     } catch (error) {
       console.error("Network or server error", error);
-      // Handle network or other errors
     }
   };
-
-  /**************************************************************/
 
   return (
     <View style={styles.container}>
@@ -68,6 +83,7 @@ const SignUpScreen = ({ navigation }) => {
           autoCapitalize="none"
           textAlign={"center"}
         />
+        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
         <Button
           mode="contained"
           style={{ borderRadius: 2, width: "85%" }}
@@ -80,7 +96,7 @@ const SignUpScreen = ({ navigation }) => {
           <Button 
             onPress={() => navigation.navigate("Login")}> 
             Login
-            </Button>
+          </Button>
         </View>
       </View>
       <View style={styles.boxFour}></View>
@@ -108,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 3,
     alignItems: "center",
     justifyContent: "center",
-    width: '100%', // Add width to make sure it takes the full width
+    width: '100%',
   },
   input: {
     width: "85%",
@@ -121,6 +137,10 @@ const styles = StyleSheet.create({
   boxFour: {
     flex: 3,
     padding: 10,
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
   },
 });
 

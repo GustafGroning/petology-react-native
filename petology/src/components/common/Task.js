@@ -53,9 +53,9 @@ const CollapsedView = () => (
                 {dogName} - {notes}
             </Text>
         </View>
-        <View style={styles.timeContainer}> 
+        {/* <View style={styles.timeContainer}> 
             <Text style={styles.startTime}> Klockan {extractTimeFromStartTime(startTime)}</Text>
-        </View>
+        </View> */}
     </View>
 );
 

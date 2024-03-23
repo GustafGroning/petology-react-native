@@ -4,20 +4,17 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 const DatePicker = ({ title, date, onDateTimeChange }) => {
-
-
-
     return (
       <View style={styles.container}>
         <Text style={styles.titleStyle}>{title}</Text>
         <View style={styles.datePickerContainer}>
           <DateTimePicker
             value={date}
-            mode="datetime"
+            mode="date"
             locale="sv-SE"
             onChange={(event, selectedDateTime) => {
               if (selectedDateTime) {
-                onDateTimeChange(selectedDateTime); // Pass the selected date and time back to the parent component
+                onDateTimeChange(selectedDateTime); // Pass back to the parent component
               }
             }}
           />

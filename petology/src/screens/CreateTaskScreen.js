@@ -23,24 +23,14 @@ const CreateTaskScreen = ({ navigation }) => {
     // Chosen dog, ID will be used for task
     const [dog, setDog] = useState('');
 
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
     const [taskName, setTaskName] = useState('');
     const [location, setLocation] = useState('');
     const [category, setCategory] = useState('');
     const [reminder, setReminder] = useState('');
     const [notes, setNotes] = useState('');
 
-    const [marginTop, setMarginTop] = useState(new Animated.Value(0));
-
 /**********************************************************************************/
 const [startDate, setStartDate] = useState(new Date());
-startDate.setHours(0, 0, 0, 0);
-const [startTime, setStartTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)))
-
-const [stopDate, setStopDate] = useState(new Date()); 
-stopDate.setHours(0, 0, 0, 0);
-const [stopTime, setStopTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)))
 
 /**********************************************************************************/
     const navigateToCalendar = () => {
@@ -86,45 +76,26 @@ const fetchDogs = async () => {
         console.error("Error fetching dogs:", error);
     }
 };
-
-
 /**********************************************************************************/
 // TODO: remove everything relating to TIME from API call, just do dates for now.
 const handleCreateTask = async () => {
     try {
         const token = await AsyncStorage.getItem("userToken");
+        // Format the startDate to exclude the time component
+        const startDateWithoutTime = startDate.toISOString().split('T')[0];
 
-        console.log("Start Date:", startDate);
-        console.log("Stop Date:", stopDate);
-        console.log("Start Time:", startTime);
-        console.log("Stop Time:", stopTime);
-
-        // Ensure that startTime and stopTime are Date objects and have valid time
-        if (!(startTime instanceof Date && !isNaN(startTime)) || !(stopTime instanceof Date && !isNaN(stopTime))) {
-            console.error("Invalid startTime or stopTime");
-            Alert.alert("Error", "Invalid start time or stop time");
-            return;
-        }
-
-        const formattedStartTime = startDate.toISOString();
-        const formattedEndTime = stopDate.toISOString();
-        
-        console.log("Formatted Start Time:", formattedStartTime);
-        console.log("Formatted End Time:", formattedEndTime);
-
-        console.log(dog, taskName, location, formattedStartTime, formattedEndTime);
         const response = await fetch(`http://localhost:8000/api/tasks/add/`, {
             method: "POST",
             headers: {
-              "Content-Type": "application/json",
-              Authorization: `JWT ${token}`,
+                "Content-Type": "application/json",
+                Authorization: `JWT ${token}`,
             },
             body: JSON.stringify({
                 dog: value, // Use the selected dog ID
                 name: taskName,
                 location: location,
-                start_time: formattedStartTime,
-                end_time: formattedEndTime,
+                start_time: startDateWithoutTime, // Use the formatted date
+                // end_time: formattedEndTime,
                 notes: notes
                 // category, reminder, and notes can be added similarly
             }),
@@ -137,9 +108,6 @@ const handleCreateTask = async () => {
             setLocation("");
             setNotes("");
             setStartDate(new Date());
-            setStopDate(new Date());
-            setStartTime(new Date(new Date().setHours(0, 0, 0, 0)));
-            setStopTime(new Date(new Date().setHours(0, 0, 0, 0)));
 
             Alert.alert("Success", "Task created successfully");
         } else {
@@ -151,6 +119,9 @@ const handleCreateTask = async () => {
         Alert.alert("Error", "An error occurred while creating the task");
     }
 };
+
+
+
 
 
 /**********************************************************************************/
@@ -199,7 +170,7 @@ return (
                 <DatePicker
                     title={"Startar"}
                     date={startDate}
-                    onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStartDate, setStartTime)}
+                    onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStartDate)}
                 />
                 {/* <DatePicker
                     title={"end"}

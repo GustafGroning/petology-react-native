@@ -265,6 +265,7 @@ closeButtonContainer: {
   top: 28,
   left: 320,
 },
+
 });
 
 export default RegisterDogScreen;

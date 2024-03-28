@@ -16,7 +16,7 @@ import DogImage from "../../assets/doggo.jpg"; // TODO: fix real imports instead
 import offeringImage from "../../assets/offering.jpg";
 import Footer from '../components/common/Footer';
 import Header  from '../components/common/Header';
-import Task from '../components/common/Task';
+import Task from '../components/common/task/Task';
 import SubHeader from "../components/common/SubHeader";
 
 const LandingPage = ({ navigation }) => {

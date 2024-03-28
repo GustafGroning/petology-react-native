@@ -5,9 +5,11 @@ import { Calendar } from 'react-native-calendars';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
-import Task from '../components/common/Task';
+import Task from '../components/common/task/Task';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Button } from "react-native-paper";
+
+import getUserTasks from '../api_calls/user/getUserTasks';
 
 const CalendarScreen = ({ navigation }) => {
   const [currentSpanIndex, setCurrentSpanIndex] = useState(0);
@@ -24,32 +26,9 @@ const CalendarScreen = ({ navigation }) => {
     navigation.navigate('CreateTask');
   };
 /**********************************************************************************/
-  const fetchUserTasks = async () => {
-    try {
-      const token = await AsyncStorage.getItem("userToken");
-      if (token) {
-        const response = await fetch(
-          `${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/all/`, // Replace with your API endpoint
-          {
-            method: "GET",
-            headers: {
-              Authorization: `JWT ${token}`,
-            },
-          }
-        );
-  
-        if (response.ok) {
-          const data = await response.json();
-          setAllTasks(data);
-        } else {
-          console.error("Error fetching user tasks:", response.status);
-        }
-      } else {
-        console.error("User token not found.");
-      }
-    } catch (error) {
-      console.error("Error fetching user tasks:", error);
-    }
+  const getAllUserTasksHandler = async () => {
+    const tasks = await getUserTasks();
+    setAllTasks(tasks);
   };
 /**********************************************************************************/
 // Creates dots on the calendar for each date which has tasks. 
@@ -140,6 +119,12 @@ tasks for that specific date.
   setFilteredTasks(tasksForDates); // Update filteredTasks state
 };
 /**********************************************************************************/
+  // Callback function to handle task deletion
+  const handleDeleteTask = (taskId) => {
+    // Update state to remove the deleted task
+    setAllTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+  };
+/**********************************************************************************/
 const updateTaskListHeader = () => {
   if (selected === 0) {
     setTaskListHeader('idag');
@@ -171,14 +156,14 @@ const updateTaskListHeader = () => {
             return response.json();
         })
         .then(data => {
-            fetchUserTasks();
+          getAllUserTasksHandler();
         })
         .catch(error => console.error("Error updating task:", error));
     }
   };
 /**********************************************************************************/
   useEffect(() => {
-    fetchUserTasks();
+    getAllUserTasksHandler();
   }, []);
   useEffect(() => {
     calculateMarkedDates();
@@ -189,7 +174,7 @@ const updateTaskListHeader = () => {
   }, [selected, allTasks, currentSpanIndex]);
   useFocusEffect(
     React.useCallback(() => {
-      fetchUserTasks();
+      getAllUserTasksHandler();
     }, [])
 /**********************************************************************************/
   );
@@ -237,17 +222,19 @@ const updateTaskListHeader = () => {
           </View>
 
           <ScrollView style={styles.taskSection}>
-              {filteredTasks.map((task) => (
-                  <Task
-                      key={task.id}
-                      taskName={task.name}
-                      startTime={task.start_time}
-                      notes={task.notes}
-                      dogName={task.dog_name}
-                      isCompleted={task.completed}
-                      onCheckChange={(newCheckState) => updateTaskCompletion(task.id, newCheckState)}
-                  />
-              ))}
+            {filteredTasks.map((task) => (
+              <Task
+                key={task.id}
+                taskId={task.id}
+                taskName={task.name}
+                startTime={task.start_time}
+                notes={task.notes}
+                dogName={task.dog_name}
+                isCompleted={task.completed}
+                onCheckChange={(newCheckState) => updateTaskCompletion(task.id, newCheckState)}
+                onDeleteTask={handleDeleteTask}
+              />
+            ))}
           </ScrollView>
         </View>
       <Footer navigation={navigation} />

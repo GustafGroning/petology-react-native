@@ -13,6 +13,7 @@ import CalendarScreen from "./src/screens/CalenderScreen";
 import CreateTaskScreen from "./src/screens/CreateTaskScreen";
 import ArticleListScreen from "./src/screens/ArticleListScreen";
 import ArticleScreen from "./src/screens/ArticleScreen";
+import LibraryScreen from "./src/screens/Library/LibraryScreen";
 
 /**************************************************************/
 const Stack = createNativeStackNavigator();
@@ -35,6 +36,7 @@ const App = () => {
           <Stack.Screen name="CreateTask" component={CreateTaskScreen} />
           <Stack.Screen name="ArticleList" component={ArticleListScreen} />
           <Stack.Screen name="ArticleScreen" component={ArticleScreen} />
+          <Stack.Screen name="LibraryScreen" component={LibraryScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

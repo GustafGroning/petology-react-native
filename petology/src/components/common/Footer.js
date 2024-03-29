@@ -22,7 +22,7 @@ const Footer = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigateToScreen('Screen4')}>
       <FontAwesome name="heart" size={20} color="#000" />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigateToScreen('Screen5')}>
+      <TouchableOpacity onPress={() => navigateToScreen('LibraryScreen')}>
       <FontAwesome name="exclamation-circle" size={20} color="#000" />
       </TouchableOpacity>
     </View>

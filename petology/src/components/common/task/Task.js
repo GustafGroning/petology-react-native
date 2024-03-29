@@ -1,5 +1,5 @@
 // Components
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Button, TextInput } from 'react-native';
 import { CheckBox, Icon } from '@rneui/themed';
 import DatePicker from '../../CreateTaskScreenComponents/DatePicker';
@@ -23,15 +23,13 @@ const Task = ({ taskId, taskName, location, notes, dogName, isCompleted, onCheck
       name: editedTaskName,
       location: editedLocation,
       notes: editedNotes,
+      dog: dogName,
       // Add other fields here if needed
     };
-  
-    console.log('updatedTask inside Task.js ', updatedTask);
-  
+    console.log('updatedTask ', updatedTask);
     // Call the updateTask API with the updated task object
     const response = await updateTask(taskId, updatedTask);
     if (response && response.id) {
-      console.log('Task updated successfully:', response);
       onUpdateTask(taskId, response);
     } else {
       // Handle error if needed
@@ -41,28 +39,16 @@ const Task = ({ taskId, taskName, location, notes, dogName, isCompleted, onCheck
     // Close the modal
     setIsModalVisible(false);
   };
-  
-  
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
   const handleCheckboxPress = () => {
+    console.log('Checkbox pressed');
     const newCheckState = !check;
     setCheck(newCheckState);
     onCheckChange(newCheckState); // Call the function passed from parent component
-  };
-
-  const handleTaskPress = () => {
-    toggleModal(); // Toggles modal visibility
-  };
-
-  const handleEdit = () => {
-    // Implement editing functionality here
-
-    console.log('Edit task');
-    setIsModalVisible(false);
   };
 
   const deleteTaskHandler = async () => {
@@ -76,15 +62,21 @@ const Task = ({ taskId, taskName, location, notes, dogName, isCompleted, onCheck
     setIsModalVisible(false);
   };
 
+  useEffect(() => {
+    console.log('isCompleted:', isCompleted);
+    console.log('check:', check);
+  }, [isCompleted, check]);
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleCheckboxPress}>
+      <TouchableOpacity>
         <View style={styles.checkBoxContainer}> 
           <CheckBox
             center
             checkedIcon={<Icon name="radio-button-checked" type="material" color="black" size={30} />}
             uncheckedIcon={<Icon name="radio-button-unchecked" type="material" color="black" size={30} />}
             checked={check}
+            onPress={handleCheckboxPress}
             containerStyle={{ backgroundColor: '#92cdca', justifyContent: 'center' }}
           />
         </View>
@@ -98,32 +90,35 @@ const Task = ({ taskId, taskName, location, notes, dogName, isCompleted, onCheck
         </View>
       </TouchableOpacity>
       <Modal visible={isModalVisible} animationType="slide">
-        <View style={styles.modalContainer}>
-          <Text style={styles.dogName}>{dogName}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Task Name"
-            value={editedTaskName}
-            onChangeText={setEditedTaskName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Location"
-            value={editedLocation}
-            onChangeText={setEditedLocation}
-          />
-          <TextInput
-            style={[styles.input, styles.notesInput]} // Apply styles for multiline input
-            placeholder="Notes"
-            value={editedNotes}
-            onChangeText={setEditedNotes}
-            multiline={true} // Enable multiline
-            numberOfLines={4} // Set the maximum number of lines
-          />
-          <Button title="Save" onPress={saveChanges} />
-          <Button title="Cancel" onPress={toggleModal} />
-        </View>
-      </Modal>
+  <View style={styles.modalContainer}>
+    <Text style={styles.dogName}>{dogName}</Text>
+    <TextInput
+      style={styles.input}
+      placeholder="Task Name"
+      value={editedTaskName}
+      onChangeText={setEditedTaskName}
+    />
+    <TextInput
+      style={styles.input}
+      placeholder="Location"
+      value={editedLocation}
+      onChangeText={setEditedLocation}
+    />
+    <TextInput
+      style={[styles.input, styles.notesInput]} // Apply styles for multiline input
+      placeholder="Notes"
+      value={editedNotes}
+      onChangeText={setEditedNotes}
+      multiline={true} // Enable multiline
+      numberOfLines={4} // Set the maximum number of lines
+    />
+    <Button title="Save" onPress={saveChanges} />
+    <TouchableOpacity style={styles.deleteButton} onPress={deleteTaskHandler}>
+      <Text style={styles.deleteButtonText}>Delete</Text>
+    </TouchableOpacity>
+    <Button title="Cancel" onPress={toggleModal} />
+  </View>
+</Modal>
     </View>
   );
 };
@@ -197,7 +192,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
-  }
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
 

@@ -79,6 +79,7 @@ const fetchDogs = async () => {
 /**********************************************************************************/
 // TODO: remove everything relating to TIME from API call, just do dates for now.
 const handleCreateTask = async () => {
+    console.log('value (should be dog_id) ', value);
     try {
         const token = await AsyncStorage.getItem("userToken");
         // Format the startDate to exclude the time component
@@ -91,13 +92,11 @@ const handleCreateTask = async () => {
                 Authorization: `JWT ${token}`,
             },
             body: JSON.stringify({
-                dog: value, // Use the selected dog ID
+                dog: value, // Use the selected dog ID directly
                 name: taskName,
                 location: location,
                 start_time: startDateWithoutTime, // Use the formatted date
-                // end_time: formattedEndTime,
                 notes: notes
-                // category, reminder, and notes can be added similarly
             }),
         });
 
@@ -124,6 +123,7 @@ const handleCreateTask = async () => {
 
 
 
+
 /**********************************************************************************/
 return (
 <View style={styles.container}>
@@ -136,18 +136,19 @@ return (
         </View>
         <View style={styles.inputSection}>
             <View style={styles.dogList}>
-                <SelectList
-                    placeholder='Välj hund'
-                    data={dogList}
-                    setSelected={setValue} // Use the function that updates the state with the selected item
-                    // Other SelectList props as needed
-                    boxStyles={{
-                        borderRadius: 90,
-                        backgroundColor: "#e8f5f5",
-                        marginBottom: 18,
-                        width: "100%", // Adjust if necessary to match your design
-                    }}
-                />
+            <SelectList
+                placeholder='Välj hund'
+                data={dogList}
+                setSelected={setValue} // Use the function that updates the state with the selected item
+                selectedValue={value} // Pass the selected value to SelectList
+                // Other SelectList props as needed
+                boxStyles={{
+                    borderRadius: 90,
+                    backgroundColor: "#e8f5f5",
+                    marginBottom: 18,
+                    width: "100%", // Adjust if necessary to match your design
+                }}
+            />
             </View>
 
             <View style={styles.inputContainer}>

@@ -16,7 +16,7 @@ const CalendarScreen = ({ navigation }) => {
   const timespans = ['dagens uppgifter', 'veckans uppgifter'];
 
   const [taskListHeader, setTaskListHeader] = useState(['idag'])
-  const [allTasks, setAllTasks] = useState([]); // Maintain all tasks
+  const [allTasks, setAllTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [selected, setSelected] = useState(0);
   const [markedDates, setMarkedDates] = useState({});
@@ -241,7 +241,7 @@ const updateTaskListHeader = () => {
                 startTime={task.start_time}
                 notes={task.notes}
                 location={task.location}
-                dogName={task.dog_name}
+                dogName={task.dog}
                 isCompleted={task.completed}
                 onCheckChange={(newCheckState) => updateTaskCompletion(task.id, newCheckState)}
                 onDeleteTask={handleDeleteTask}

@@ -125,6 +125,17 @@ tasks for that specific date.
     setAllTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
   };
 /**********************************************************************************/
+const handleUpdateTask = async (taskId, updatedTask) => {
+  try {
+    // Update the task in the allTasks state
+    setAllTasks(prevTasks => prevTasks.map(task => (task.id === taskId ? updatedTask : task)));
+  } catch (error) {
+    // Handle error if needed
+    console.error("Error updating task:", error);
+  }
+};
+
+/**********************************************************************************/
 const updateTaskListHeader = () => {
   if (selected === 0) {
     setTaskListHeader('idag');
@@ -229,10 +240,12 @@ const updateTaskListHeader = () => {
                 taskName={task.name}
                 startTime={task.start_time}
                 notes={task.notes}
+                location={task.location}
                 dogName={task.dog_name}
                 isCompleted={task.completed}
                 onCheckChange={(newCheckState) => updateTaskCompletion(task.id, newCheckState)}
                 onDeleteTask={handleDeleteTask}
+                onUpdateTask={handleUpdateTask}
               />
             ))}
           </ScrollView>

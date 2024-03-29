@@ -3,8 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const API_URL = `${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/update/`;
 
 const updateUserTask = async (task_id, data, method) => {
-    console.log('updateUserTask - taskId: ', task_id);
-    console.log('updateUserTask - data: ', data);
   try {
     const token = await AsyncStorage.getItem("userToken");
     if (token) {

@@ -66,10 +66,6 @@ const [completedTasksToday, setCompletedTasksToday] = useState(0);
 
       setTasksToday(tasksForToday); // Set the total number of tasks for today
       setCompletedTasksToday(completedTasksToday); // Set the number of completed tasks for today
-  
-      console.log('tasksForToday ', tasksForToday);
-      console.log('tasksForToday ', tasksForToday.length);
-      console.log('completedTasksToday ', completedTasksToday);
 
       return tasksForToday;
     } catch (error) {

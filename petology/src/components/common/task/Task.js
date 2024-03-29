@@ -9,16 +9,15 @@ import { updateTask } from '../../../api_calls/task/updateTask';
 
 
 
-const Task = ({ taskId, taskName, startTime, notes, dogName, isCompleted, onCheckChange, onDeleteTask }) => {
+const Task = ({ taskId, taskName, location, notes, dogName, isCompleted, onCheckChange, onDeleteTask, onUpdateTask }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [check, setCheck] = useState(isCompleted);
   const [editedTaskName, setEditedTaskName] = useState(taskName);
-  const [editedLocation, setEditedLocation] = useState('');
+  const [editedLocation, setEditedLocation] = useState(location);
   const [editedNotes, setEditedNotes] = useState(notes);
 
   const saveChanges = async () => {
     // Construct the updated task object with the edited fields
-    console.log('taskId in saveChanges ', taskId);
     const updatedTask = {
       id: taskId,
       name: editedTaskName,
@@ -26,18 +25,24 @@ const Task = ({ taskId, taskName, startTime, notes, dogName, isCompleted, onChec
       notes: editedNotes,
       // Add other fields here if needed
     };
-
+  
+    console.log('updatedTask inside Task.js ', updatedTask);
+  
     // Call the updateTask API with the updated task object
     const response = await updateTask(taskId, updatedTask);
-    if (response.ok) {
-      // Handle success if needed
+    if (response && response.id) {
+      console.log('Task updated successfully:', response);
+      onUpdateTask(taskId, response);
     } else {
       // Handle error if needed
+      console.error('Error updating task:', response);
     }
-
+  
     // Close the modal
     setIsModalVisible(false);
   };
+  
+  
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);

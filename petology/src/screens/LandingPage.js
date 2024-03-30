@@ -202,7 +202,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#92cdca",
   },
   scrollView: {
-    // backgroundColor: "#92cdca",
   },
   dayStatSection: {
     flex: 1,

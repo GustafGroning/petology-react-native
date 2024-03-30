@@ -9,6 +9,8 @@ import {
 import { Button, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SelectList } from "react-native-dropdown-select-list";
+import DatePicker from "../components/CreateTaskScreenComponents/DatePicker";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 /**********************************************************************************/
 const RegisterDogScreen = ({ navigation }) => {
@@ -16,17 +18,9 @@ const RegisterDogScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [selectedBreed, setSelectedBreed] = useState(null); // State for selected breed
   const [birthday, setBirthday] = useState(new Date());
-  const [selectedSex, setSelectedSex] = useState(""); // State for selected sex
-
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: "Apple", value: "apple" },
-    { label: "Banana", value: "banana" },
-  ]);
+  const [selectedSex, setSelectedSex] = useState("");
   /**********************************************************************************/
-  // NEW TRY AT DROPDOWN
-  const data = [
+  const sexValues = [
     { key: "1", value: "Okastrerad hane" },
     { key: "2", value: "Kastrerad hane" },
     { key: "3", value: "Okastrerad tik" },
@@ -57,7 +51,7 @@ const RegisterDogScreen = ({ navigation }) => {
           name: name,
           breed: selectedBreed, // Use the selected breed's ID
           birthday: formattedDate, // Format date to YYYY-MM-DD
-          sex: selectedSex === "Hane" ? 1 : 2, // Convert to integer value if required
+          sex: selectedSex,
         }),
       });
 
@@ -78,15 +72,7 @@ const RegisterDogScreen = ({ navigation }) => {
     }
   };
   /**********************************************************************************/
-
-  const onDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || birthday;
-    setShowDatePicker(Platform.OS === "ios");
-    setBirthday(currentDate);
-  };
-  /**********************************************************************************/
   const [breedData, setBreedData] = useState([]);
-
   const fetchBreeds = useCallback(async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
@@ -164,7 +150,7 @@ const RegisterDogScreen = ({ navigation }) => {
             <SelectList
               setSelected={setSelectedSex}
               placeholder="Kön"
-              data={data}
+              data={sexValues}
               save="value"
               boxStyles={{
                 borderRadius: 90,
@@ -173,15 +159,19 @@ const RegisterDogScreen = ({ navigation }) => {
               }}
             />
           </View>
-          {/* TODO: fix birthday, hardcoded for now.
-          Also needs a better field for handling this instead of
-          pure text. */}
-          <TextInput
-            style={styles.FormInput}
-            placeholder="Födelsedatum: YYYYMMDD"
-            placeholderTextColor={"black"}
-          />
-          
+                <Text> Födelsedatum:</Text>
+                <DateTimePicker
+                    value={birthday}
+                    mode="date"
+                    locale="sv-SE"
+                    onChange={(event, selectedDateTime) => {
+                      if (selectedDateTime) {
+                        setBirthday(selectedDateTime);
+                        console.log(birthday);
+                      }
+                    }}
+                    style={{marginBottom: 20}}
+                  />
           <View style={styles.submitSection}>
             <Button
               mode="contained"

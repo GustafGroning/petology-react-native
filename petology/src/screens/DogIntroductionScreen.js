@@ -41,13 +41,14 @@ const DogIntroductionScreen = ({ navigation }) => {
         </Button>
         <Button
           mode="contained"
-          onPress={() => console.log("Pressed")}
-          style={{ width: "44%" }}
+          // onPress={() => console.log("Pressed")}
+          style={{ width: "44%", opacity: 0.6 }}
           buttonColor="#4a8483"
         >
           Ska skaffa hund
         </Button>
       </View>
+      <Text style={styles.disabledButtonStyle}> Kommer snart! </Text>
       <View style={styles.boxThree}></View>
 
       {/* <Button title="Already Have a Dog" onPress={handleHasDog} />
@@ -109,7 +110,11 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: "blue",
   },
-  // Add additional styles here
+  disabledButtonStyle: {
+    bottom: 150,
+    left: 265,
+    color: 'green',
+  },
 });
 
 export default DogIntroductionScreen;

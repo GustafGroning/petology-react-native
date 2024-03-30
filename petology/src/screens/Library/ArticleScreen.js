@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { ImageBackground, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Footer from '../components/common/Footer';
+import Footer from '../../components/common/Footer';
 
 const ArticleScreen = ({ route, navigation }) => {
   const { article } = route.params;

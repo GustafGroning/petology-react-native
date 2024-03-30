@@ -181,6 +181,8 @@ useEffect(() => {
         <SubHeader headerText={'Nyheter'}/>
         <Text style={styles.motivationTextSection}> Petology 1.0 har precis släppts! </Text>
       </View>
+      {/* Looks in articleListScreen like entire articles are sent to render articles, which means
+      the chosen article needs to be loaded here on LandingPage in order to have featured articles. */}
       <TouchableOpacity style={styles.articlesContainer} onPress={() => navigation.navigate("ArticleList")}>
         <SubHeader headerText={'Artiklar'}/>
       </TouchableOpacity>

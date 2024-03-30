@@ -1,12 +1,22 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity } from "react-native";
 import Footer from "../../components/common/Footer";
 import offeringImage from '../../../assets/offering.jpg'
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const LibraryScreen = ({ navigation }) => {
+/**********************************************************************************/
+  const navigateToScreen = (screenName) => {
+    navigation.navigate(screenName);
+    // console.log("Navigate to:", screenName); // Replace with actual navigation
+  };
+/**********************************************************************************/
   return (
+    
+
+    
     <View style={styles.container}>
+      <TouchableOpacity />
       <ScrollView style={styles.scrollView}>
         <View style={styles.headerSection}>
           <Text style={styles.headerText}>Bibliotek</Text>
@@ -28,13 +38,17 @@ const LibraryScreen = ({ navigation }) => {
                 Läs våra artiklar om specifika sjukdomstillstånd och hur du tar hand om din hund på bästa sätt! 
               </Text>
             </View>
-            <View style={styles.sectionItemArrow}>
-
-            </View>
-            
+              <TouchableOpacity
+               style={styles.sectionItemArrow}
+               onPress={() => navigateToScreen('ArticleList')}>
+                  <FontAwesome
+                    style={styles.navigationArrowStyle}
+                    name="arrow-right" 
+                    size={45} 
+                    color="#000" />
+              </TouchableOpacity>
           </View>
         </View>
-        {/* Courses Section */}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Kurser</Text>
           <View style={styles.sectionItem}>
@@ -51,13 +65,17 @@ const LibraryScreen = ({ navigation }) => {
                 Våra kurser är perfekta för dig som vill utvecklas inom ett specifikt område.
               </Text>
             </View>
-            <View style={styles.sectionItemArrow}>
-
-            </View>
-            
+            <TouchableOpacity
+               style={styles.sectionItemArrow}
+               onPress={() => navigateToScreen('ArticleList')}>
+                  <FontAwesome
+                    style={styles.navigationArrowStyle}
+                    name="arrow-right" 
+                    size={45} 
+                    color="#000" />
+              </TouchableOpacity>
           </View>
         </View>
-        {/* Instructional Videos Section */}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Instruktioner</Text>
           <View style={styles.sectionItem}>
@@ -74,15 +92,32 @@ const LibraryScreen = ({ navigation }) => {
                 Se instruktionsfilmer om olika undersökningar och behandlingar.
               </Text>
             </View>
-            <View style={styles.sectionItemArrow}>
-
-            </View>
-            
+            <TouchableOpacity
+               style={styles.sectionItemArrow}
+               onPress={() => navigateToScreen('ArticleList')}>
+                  <FontAwesome
+                    style={styles.navigationArrowStyle}
+                    name="arrow-right" 
+                    size={45} 
+                    color="#000" />
+              </TouchableOpacity>
           </View>
         </View>
         {/* Additional Links Section */}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Petology</Text>
+          <TouchableOpacity onPress={() => navigateToScreen('FrequentlyAskedQuestionsScreen')}>
+            <Text> FaQ </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigateToScreen('ContactUsScreen')}>
+            <Text> Contact Us </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigateToScreen('AboutUsScreen')}>
+            <Text> About Petology </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigateToScreen('PolicyScreen')}>
+            <Text> Policy </Text>
+          </TouchableOpacity>
           {/* Add TouchableOpacity for navigating to additional links */}
         </View>
       </ScrollView>
@@ -90,7 +125,7 @@ const LibraryScreen = ({ navigation }) => {
     </View>
   );
 };
-
+/**********************************************************************************/
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -115,7 +150,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   sectionHeader: {
-    right: 125,
+    right: 140,
     fontSize: 22,
     fontFamily: "Cochin",
   },
@@ -137,13 +172,16 @@ const styles = StyleSheet.create({
   },  
   sectionItemArrow: {
     flex: 2,
-    backgroundColor: 'yellow',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageStyle: {
     height: "95%",
     width: "90%",
     top: 2,
     left: 1,
+  },
+  navigationArrowStyle: {
   },
 });
 

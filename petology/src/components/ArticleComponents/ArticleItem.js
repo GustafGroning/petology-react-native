@@ -3,7 +3,8 @@ import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from "react
 
 const ArticleItem = ({ navigation, article, id}) => {
   
-  const navigateToScreen = (screenName) => {
+  const navigateToScreen = () => {
+    console.log('ARTICLE FOR NAV ', article);
     navigation.navigate('ArticleScreen', { article: article });
   };
   return (

@@ -49,7 +49,7 @@ const DogSelectionScreen = ({ navigation }) => {
   const handleSelectDog = async (dogId) => {
     try {
       await AsyncStorage.setItem("selectedDogId", dogId.toString());
-      navigation.navigate("Landing", { dogId: dogId });
+      navigation.navigate("DogMainScreen", { dogId: dogId });
     } catch (error) {
       console.error("Error setting selected dog ID:", error);
     }

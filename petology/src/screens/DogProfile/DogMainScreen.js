@@ -1,77 +1,138 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// API's
 import getDogById from "../../api_calls/dog/getDogById";
+import getTasksForDog from "../../api_calls/task/getTaskForDog";
+// STYLING
 import Footer from "../../components/common/Footer";
-import Header from "../../components/common/Header";
+import Task from "../../components/common/task/Task";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const DogMainScreen = ({ navigation, route }) => {
   const [selectedDog, setSelectedDog] = useState(null);
-  const { dogId } = route.params; // Extracting dogId from navigation params
+  const [dogTasks, setDogTasks] = useState([]);
+
+  const { dogId } = route.params;
 
   useEffect(() => {
     fetchSelectedDog();
+    fetchDogTasks(); // Call fetchDogTasks when the component mounts
   }, []);
+  
+  useEffect(() => {
+    if (selectedDog?.birthday) {
+      const age = calculateAge(selectedDog.birthday);
+      console.log('Age:', age);
+    }
+  }, [selectedDog]);
+  
 
   const fetchSelectedDog = async () => {
     try {
-      const dogDetails = await getDogById(dogId); // Fetch dog details using the dogId from navigation params
+      const dogDetails = await getDogById(dogId);
       setSelectedDog(dogDetails);
+      console.log('selectedDog: ', selectedDog);
     } catch (error) {
       console.error("Error fetching selected dog:", error);
     }
   };
 
-  const getSexLabel = (sex) => {
-    switch (sex) {
-      case 1:
-        return "Okastrerad hane";
-      case 2:
-        return "Kastrerad hane";
-      case 3:
-        return "Okastrerad tik";
-      case 4:
-        return "Kastrerad tik";
-      default:
-        return "Unknown";
+  const fetchDogTasks = async () => {
+    try {
+      const tasks = await getTasksForDog(dogId); // Call getTasksForDog with dogId
+      setDogTasks(tasks);
+    } catch (error) {
+      console.error("Error fetching dog tasks HURDUR:", error);
     }
+  };
+
+  const calculateAge = (birthday) => {
+    const monthsDiff = (new Date().getFullYear() - new Date(birthday).getFullYear()) * 12 + new Date().getMonth() - new Date(birthday).getMonth();
+    console.log(monthsDiff);
   };
 
   return (
     <View style={styles.container}> 
-    <ScrollView>
-      <View style={styles.dogHeaderContainer}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>{selectedDog?.name}</Text>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.dogHeaderContainer}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>{selectedDog?.name}</Text>
+          </View>
         </View>
-      </View>
-      
-      <View style={styles.diagramContainer}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}> Status </Text>
-        </View>
-      </View>
 
-      <View style={styles.dogInfoContainer}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}> Information </Text>
+        <View style={styles.diagramContainer}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}> Status </Text>
+          </View>
         </View>
-        
-        <Text style={styles.dogInfoText}>Ras: {selectedDog?.breed}</Text>
-        <Text style={styles.dogInfoText}>Födelsedag: {selectedDog?.birthday}</Text>
-        <Text style={styles.dogInfoText}>Kön: {getSexLabel(selectedDog?.sex)}</Text>
 
-      </View>
-    </ScrollView>
-    <Footer navigation={navigation} />
+        <View style={styles.dogInfoContainer}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}> Information </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.editInformationButton}
+            onPress={() => console.log('go to information add')}
+          >
+            <FontAwesome name="arrow-right" size={20} color="#000" />
+          </TouchableOpacity>
+          
+          <Text style={styles.dogInfoText}>Stamtavlenamn: {selectedDog?.pedigree_name}</Text>
+          <Text style={styles.dogInfoText}>Ras: {selectedDog?.breed}</Text>
+          <Text style={styles.dogInfoText}>Födelsedag: {selectedDog?.birthday}</Text>
+          <Text style={styles.dogInfoText}>Kön: {selectedDog?.sex}</Text>
+          <Text style={styles.dogInfoText}>Färg: {selectedDog?.color}</Text>
+
+          {/* leave blank space between here */}
+
+          <Text style={styles.dogInfoText}>ID-nummer: {selectedDog?.id_number}</Text>
+          <Text style={styles.dogInfoText}>Registreringsnummer: {selectedDog?.registration_number}</Text>
+          <Text style={styles.dogInfoText}>Passnummber: {selectedDog?.passport_number}</Text>
+
+          {/* leave blank space between here */}
+
+          <Text style={styles.dogInfoText}>Försäkringsbolag: {selectedDog?.insurance_company}</Text>
+          <Text style={styles.dogInfoText}>Försäkringsnummer: {selectedDog?.insurance_number}</Text>
+
+          {/* leave blank space between here */}
+
+          <Text style={styles.dogInfoText}>Foder: {selectedDog?.feed}</Text>
+          <Text style={styles.dogInfoText}>Eventuella foderintoleranser: {selectedDog?.possible_feed_intolerance}</Text>
+
+        </View>
+        <View style={styles.taskListContainer}>
+          <Text style={styles.taskListHeader}>Dog's Tasks:</Text>
+          {dogTasks.map(task => (
+            <Task
+              key={task.id}
+              taskId={task.id}
+              taskName={task.name}
+              startTime={task.start_time}
+              notes={task.notes}
+              location={task.location}
+              dogName={task.dog}
+              isCompleted={task.completed}
+              onCheckChange={(newCheckState) => {/* Handle task completion */}}
+              onDeleteTask={(taskId) => {/* Handle task deletion */}}
+              onUpdateTask={(taskId, updatedTask) => {/* Handle task update */}}
+            />
+          ))}
+        </View>
+      </ScrollView>
+      <Footer navigation={navigation} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: "#92cdca",
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 80, // Adjust this value as needed to ensure the Footer is visible
   },
   dogHeaderContainer: {
     marginTop: 150,
@@ -100,6 +161,36 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontFamily: "Cochin",
     opacity: 0.7,
+  },
+  taskListContainer: {
+    // padding: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+
+    // marginTop: 20,
+    height: 200,
+  },
+  taskListHeader: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+
+  editInformationButton: {
+    zIndex: 1, // Set a higher zIndex for the button
+    position: 'absolute', // Position the button absolutely
+    top: 28, // Adjust the top position as needed
+    right: 30, // Adjust the right position as needed
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 28,
+    height: 28,
+  },
+  
+
+  editInformationButtonText: {
+    color: 'black',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });
 

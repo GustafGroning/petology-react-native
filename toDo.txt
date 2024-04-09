@@ -1,98 +1,47 @@
-****************************************
+***********
 CURRENT
-****************************************
-* 
+***********
+* HUND PROFIL -  Översikt Information
+    * Skapa 
 
-****************************************
-BACKLOG FÖR MVP
-****************************************
 
 ********************
-Login and signup: 
+ALLMÄNT
 ********************
-* Inloggningsknapp
-* Skapa konto knapp
-* Glömt lösenord? knapp, måste kunna skicka ett mail med password reset länk. 
-
-********************
-Användaruppgifter 
-********************
-Inmatning av basic info (design på sidan ska uppdateras)
-”Har hund” knapp som tar en vidare till skapa hund
-
+HOME SCREEN - om uppgifter inte finns, displaya ändå allt, men ha cirkeln redan ifylld.
+* När nytt konto loggar in första gången, gå till en sida som tar in basic info, innan man skapar hund
+* Inmatning av basic info (förnamn, efternamn, något mer?)
+* Länka från basic info till skapa hund
+* ARTIKLAR - skapa en tag för refs till andra artiklar
+    t.ex <ref articleID=17> TEXT_SOM_SKA_VA_BLÅ </ref>
 ********************
 Skapa hund
 ********************
-* Fri text namn 
-* ras-dropdown med alla SKK’s registrerade raser + vanliga blandraser (typ labradoodle, cavapoo etc) 
-* Födelsedatum: gärna att det ploppar upp en kalenderform när man klickar 
-* Kön: Hane kastrerad/okastrerad, tik kastrerad/okastrerad
+* REGISTER DOG - ras-dropdown med alla SKK’s registrerade raser + 
+vanliga blandraser (typ labradoodle, cavapoo etc).
+    * Börjat göra fixtures i django för detta, men måste få tag på en
+    total lista av raser för att kunna färdigställa.
+    * Måste bygga om RegisterDogScreen så att den hämtar från DBn, 
+    just nu är raser hårdkodade i screenen.
 * Nuvarande sjukdomar: kan välja mellan MMVD och HCM- Övriga sjukdomar skrivs in i 
     fri text (gärna att dessa loggas någonstans så vi kan räkna på vilka sjukdomar som finns)
-
 ********************
 Startsida
 ********************
-* Uppgiftsstatistik
-* Dagens uppgifter
-* (Plats för erbjudande – har inte börjat sälja ännu, men gärna så att det kan inkorporeras enkelt jag säljer annonsplatser)
-* Nyheter
-* Highlighta aktuella artiklar (VAD ÄR EN AKTUELL ARTIKEL?)
-
-********************
-Bibliotek
-********************
-* Artiklar
-* FAQ
-* Kontakta oss
-* Policy
-* Om Petology
-
-********************
-Artiklar
-********************
-* Sökfunktion
-* ”Månadens tema”: utvalda artiklar som hamnar högst upp
-* Övriga artiklar hamnar under
-
-********************
-Kalender
-********************
-* Översiktskalender
-* To do list
-* Möjlighet att lägga till/ta bort/redigera uppgifter/aktiviteter
-* Vy för dagens uppgifter
-* vy för veckans uppgifter
-* vy för viss dag när användaren trycker på den
-
-********************
-Mina hundar
-********************
-* Översikt över hundar
-* Möjlighet att lägga till fler hundar
-
-********************
-Andetagsmonitorering
-********************
-* Välj hund bland dina hundar
-* Knapp som startar nedräkning (30 sek) samt räknar antal tryck (andetag). 
-    Avslutar nedräkningen automatiskt och slutar då räkna antal tryck. Visar resultatet, som sparas.
-* Resultatsida (ska designas) (ÄR DET HÄR SÅ VIKTIGT? DET VIKTIGA ÄR VÄL POTENTIEL VARNINGSTEXT?)
-* Varningstext kommer upp om andetag per minut överstiger 40
-
+* STARTSIDA - (Plats för erbjudande – har inte börjat sälja ännu, men gärna så att det kan inkorporeras enkelt när jag säljer annonsplatser)
+    * Erbjudande går just nu till artiklar, gör en sida för erbjudanden. Bör finnas Figma design.
+* STARTSIDA - Tasks är lite trasiga, om en task checkas av på en annan sida 
+    * (typ Calender) så reflekteras det inte på Landing
+* Både Landing och Calender visa Dog_id istället för namnet på hunden i taskList
 ********************
 Översikt hundprofil
 ********************
-* Översikt spindeldiagram
-* Översikt Information
-* Översikt uppgifter
-
+* HUND PROFIL - Översikt spindeldiagram
 ********************
 Dagens undersökning (Health Index)
 ******************** 
 * Fråga och svar enl separata instruktioner
 * Resultat som Spindeldiagram
-
 ********************
 Information hundprofil
 ********************
@@ -101,18 +50,38 @@ Information hundprofil
 * Mediciner
 * Nuvarande sjukdomar
 * Tidigare sjukdomar (flyttas automatiskt hit från nuvarande sjukdomar när djuret markeras som friskförklarad av djurägare)
-
 ********************
 Lägg till behandling
 ********************
-* Mest fritext input enl kategorier (VILKA KATEGORIER)
-
+* Mest fritext input enl kategorier (Kategorierna finns i Figma!)
 ********************
 Lägg till sjukdom
 ********************
 * Fri text input enl kategorier i Figma
-
 ********************
 Spindelnät/Petology index
 ********************
-* Räknas ut efter dagens undersökningar (KAN ÄVEN SES FRÅN HUNDPROFILEN?)
+* Räknas ut efter dagens undersökningar
+********************
+Andetagsmonitorering
+********************
+* Välj hund bland dina hundar
+* Knapp som startar nedräkning (30 sek) samt räknar antal tryck (andetag).
+    Avslutar nedräkningen automatiskt och slutar då räkna antal tryck. Visar resultatet, som sparas.
+* Resultatsida (ska designas)
+* Varningstext kommer upp om andetag per minut överstiger 40
+********************
+Login and signup:
+********************
+* Glömt lösenord? knapp, måste kunna skicka ett mail med password reset länk.
+********************
+****************************************
+BACKLOG ALLMÄNT
+****************************************
+* Skapa dockerFile för back-end
+* Deploya back-end
+* Färdigställa lista på all data som måste in i fixtures (database population vid start)
+    * hundraser måste in
+    * Vissa sjukdomar kanske borde in
+* Bygg CI/CD för back-end
+* Mer research om Postgres, förstå hur servern funkar och få tilltro till att den kommer klara sig

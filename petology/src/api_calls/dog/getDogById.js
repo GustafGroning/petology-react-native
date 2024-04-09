@@ -17,7 +17,16 @@ const getDogById = async (dogId) => {
         name: data.name,
         breed: data.breed,
         birthday: data.birthday,
-        sex: data.sex
+        sex: data.sex,
+        pedigree_name: data.pedigree_name,
+        color: data.color,
+        insurance_company: data.insurance_company,
+        insurance_number: data.insurance_number,
+        feed: data.feed,
+        possible_feed_intolerance: data.possible_feed_intolerance,
+        id_number: data.id_number,
+        registration_number: data.registration_number,
+        passport_number: data.passport_number
       };
       return dogData;
     } else {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import {
   View,
   Text,
@@ -10,7 +10,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DogListItem from '../components/DogSelectionScreenComponents/DogListItem';
 import Header from "../components/common/Header";
 import Footer from '../components/common/Footer';
-
+import getDogsForUser from "../api_calls/dog/getDogsForUser";
+import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect hook
 
 const DogSelectionScreen = ({ navigation }) => {
   const [dogs, setDogs] = useState([]);
@@ -18,24 +19,26 @@ const DogSelectionScreen = ({ navigation }) => {
   useEffect(() => {
     fetchDogs();
   }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchDogs();
+    }, [])
+  );
+
   /**********************************************************************************/
   const fetchDogs = async () => {
     try {
-      const token = await AsyncStorage.getItem("userToken");
-      const response = await fetch("http://localhost:8000/api/dog/all/", {
-        method: "GET",
-        headers: {
-          Authorization: `JWT ${token}`,
-        },
-      });
-      const data = await response.json();
+      const data = await getDogsForUser();
       console.log("Fetched dogs data:", data); // Logging the entire data object
-      if (response.ok) {
-        console.log("Dogs array:", data.dogs); // Specifically logging the dogs array
-        setDogs(data.dogs);
+      if (data) {
+        console.log("Dogs array:", data); // Specifically logging the dogs array
+        setDogs(data);
       } else {
         console.error("Failed to fetch dogs");
       }
+      
+      // setDogs(getAllDogsForUser());
+      console.log('dogs: ', dogs);
     } catch (error) {
       console.error("Error fetching dogs", error);
     }

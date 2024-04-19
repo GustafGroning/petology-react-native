@@ -9,7 +9,7 @@ import {
 import { Button, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SelectList } from "react-native-dropdown-select-list";
-import DatePicker from "../components/CreateTaskScreenComponents/DatePicker";
+import createDog from "../api_calls/dog/createDog";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 /**********************************************************************************/
@@ -36,35 +36,12 @@ const RegisterDogScreen = ({ navigation }) => {
     }
 
     try {
-      const token = await AsyncStorage.getItem("userToken");
-      const formattedDate = `${birthday.getFullYear()}-${
-        birthday.getMonth() + 1
-      }-${birthday.getDate()}`;
+      const result = await createDog(name, selectedBreed, birthday, selectedSex);
 
-      const response = await fetch("http://localhost:8000/api/dog/add/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `JWT ${token}`,
-        },
-        body: JSON.stringify({
-          name: name,
-          breed: selectedBreed, // Use the selected breed's ID
-          birthday: formattedDate, // Format date to YYYY-MM-DD
-          sex: selectedSex,
-        }),
-      });
-
-      if (response.ok) {
-        // Handle successful dog registration
-        const jsonResponse = await response.json();
-        const newDogId = jsonResponse.dog_id;
-        await AsyncStorage.setItem("selectedDogId", newDogId.toString()); // Store the new dog's ID
-        navigation.navigate("Landing");
+      if (result.success) {
+        navigation.navigate("DogSelection");
       } else {
-        // Handle error in dog registration
-        const errorData = await response.json();
-        Alert.alert("Error", errorData.message || "Failed to create dog");
+        Alert.alert("Error", result.message || "Failed to create dog");
       }
     } catch (error) {
       console.error(error);

@@ -32,7 +32,6 @@ const DogMainScreen = ({ navigation, route }) => {
     try {
       const dogDetails = await getDogById(dogId);
       setSelectedDog(dogDetails);
-      console.log('selectedDog: ', selectedDog);
     } catch (error) {
       console.error("Error fetching selected dog:", error);
     }
@@ -43,7 +42,7 @@ const DogMainScreen = ({ navigation, route }) => {
       const tasks = await getTasksForDog(dogId); // Call getTasksForDog with dogId
       setDogTasks(tasks);
     } catch (error) {
-      console.error("Error fetching dog tasks HURDUR:", error);
+      console.error("Error fetching dog tasks:", error);
     }
   };
 
@@ -73,7 +72,7 @@ const DogMainScreen = ({ navigation, route }) => {
           </View>
           <TouchableOpacity
             style={styles.editInformationButton}
-            onPress={() => console.log('go to information add')}
+            onPress={() => navigation.navigate("DogDetailsScreen", { dogId: dogId })}
           >
             <FontAwesome name="arrow-right" size={20} color="#000" />
           </TouchableOpacity>
@@ -84,18 +83,18 @@ const DogMainScreen = ({ navigation, route }) => {
           <Text style={styles.dogInfoText}>Kön: {selectedDog?.sex}</Text>
           <Text style={styles.dogInfoText}>Färg: {selectedDog?.color}</Text>
 
-          {/* leave blank space between here */}
+          <View style={styles.spaceBetweenFields}></View>
 
           <Text style={styles.dogInfoText}>ID-nummer: {selectedDog?.id_number}</Text>
           <Text style={styles.dogInfoText}>Registreringsnummer: {selectedDog?.registration_number}</Text>
           <Text style={styles.dogInfoText}>Passnummber: {selectedDog?.passport_number}</Text>
 
-          {/* leave blank space between here */}
+          <View style={styles.spaceBetweenFields}></View>
 
           <Text style={styles.dogInfoText}>Försäkringsbolag: {selectedDog?.insurance_company}</Text>
           <Text style={styles.dogInfoText}>Försäkringsnummer: {selectedDog?.insurance_number}</Text>
 
-          {/* leave blank space between here */}
+          <View style={styles.spaceBetweenFields}></View>
 
           <Text style={styles.dogInfoText}>Foder: {selectedDog?.feed}</Text>
           <Text style={styles.dogInfoText}>Eventuella foderintoleranser: {selectedDog?.possible_feed_intolerance}</Text>
@@ -185,13 +184,15 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
   },
-  
-
   editInformationButtonText: {
     color: 'black',
     fontSize: 15,
     fontWeight: 'bold',
   },
+
+  spaceBetweenFields: {
+    marginBottom: 20,
+  }
 });
 
 export default DogMainScreen;

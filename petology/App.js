@@ -13,6 +13,8 @@ import DogSelectionScreen from "./src/screens/DogSelectionScreen";
 import CalendarScreen from "./src/screens/CalenderScreen";
 import CreateTaskScreen from "./src/screens/CreateTaskScreen";
 import DogMainScreen from "./src/screens/DogProfile/DogMainScreen";
+import DogDetailsScreen from "./src/screens/DogProfile/DogDetailsScreen";
+import UpdateDogDetailsScreen from "./src/screens/DogProfile/UpdateDogDetailsScreen";
 
 // LIBRARY SCREENS
 import ArticleListScreen from "./src/screens/Library/ArticleListScreen";
@@ -41,7 +43,8 @@ const App = () => {
           <Stack.Screen name="Calendar" component={CalendarScreen} />
           <Stack.Screen name="CreateTask" component={CreateTaskScreen} />
           <Stack.Screen name="DogMainScreen" component={DogMainScreen} />
-          
+          <Stack.Screen name="DogDetailsScreen" component={DogDetailsScreen} />
+          <Stack.Screen name="UpdateDogDetailsScreen" component={UpdateDogDetailsScreen} />
           
           
           <Stack.Screen name="ArticleList" component={ArticleListScreen} />

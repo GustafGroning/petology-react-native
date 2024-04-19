@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from "react-native";
 import getDogById from "../../api_calls/dog/getDogById";
 import { partialUpdateDog } from "../../api_calls/dog/updateDogDetails";
 import { SelectList } from 'react-native-dropdown-select-list';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const UpdateDogDetailsScreen = ({ route, navigation }) => {
   const { dogId } = route.params;
@@ -11,7 +12,7 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
   const [dogInfo, setDogInfo] = useState({
     pedigree_name: { current: "", original: "" },
     breed: { current: "", original: "" },
-    birthday: { current: "", original: "" },
+    birthday: { current: new Date(), original: "" }, // Initialize with a Date object
     sex: { current: "", original: "" },
     color: { current: "", original: "" },
     id_number: { current: "", original: "" },
@@ -40,7 +41,7 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
           ...prevState,
           pedigree_name: { current: dogDetails.pedigree_name, original: dogDetails.pedigree_name },
           breed: { current: dogDetails.breed, original: dogDetails.breed },
-          birthday: { current: dogDetails.birthday, original: dogDetails.birthday },
+          birthday: { current: new Date(dogDetails.birthday), original: dogDetails.birthday }, // Convert to Date object
           sex: { current: dogDetails.sex, original: dogDetails.sex },
           color: { current: dogDetails.color, original: dogDetails.color },
           id_number: { current: dogDetails.id_number, original: dogDetails.id_number },
@@ -80,17 +81,22 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
   };
 
   const handleChange = (name, value) => {
+    // If the name is 'breed', find the corresponding breed name
+    const newValue = name === 'breed' ? breeds.find(breed => breed.key === value).value : value;
+    
     setDogInfo(prevState => {
       return {
         ...prevState,
-        [name]: { current: value, original: prevState[name].original }
+        [name]: { current: newValue, original: prevState[name].original }
       };
     });
+  
     // Add the field to changedFields array if it's not already there
     if (!changedFields.includes(name)) {
       setChangedFields(prevState => [...prevState, name]);
     }
   };
+  
 
   const handleSubmit = async () => {
     console.log('inside handleSubmit: ', dogInfo);
@@ -131,10 +137,16 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
           style={styles.input}
         />
         <Text style={styles.formLabel}>Birthday:</Text>
-        <TextInput
-          style={styles.input}
+        <DateTimePicker
           value={dogInfo.birthday.current}
-          onChangeText={(text) => handleChange("birthday", text)}
+          mode="date"
+          locale="sv-SE"
+          onChange={(event, selectedDateTime) => {
+            if (selectedDateTime) {
+              handleChange("birthday", selectedDateTime);
+            }
+          }}
+          style={{ marginBottom: 20 }}
         />
         <Text style={styles.formLabel}>Sex:</Text>
         <TextInput

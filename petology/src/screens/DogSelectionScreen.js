@@ -29,16 +29,11 @@ const DogSelectionScreen = ({ navigation }) => {
   const fetchDogs = async () => {
     try {
       const data = await getDogsForUser();
-      console.log("Fetched dogs data:", data); // Logging the entire data object
       if (data) {
-        console.log("Dogs array:", data); // Specifically logging the dogs array
         setDogs(data);
       } else {
         console.error("Failed to fetch dogs");
       }
-      
-      // setDogs(getAllDogsForUser());
-      console.log('dogs: ', dogs);
     } catch (error) {
       console.error("Error fetching dogs", error);
     }

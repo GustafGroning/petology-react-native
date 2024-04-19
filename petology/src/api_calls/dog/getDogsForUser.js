@@ -9,7 +9,6 @@ const getDogsForUser = async () => {
       },
     });
     const data = await response.json();
-    console.log("Response data:", data);
 
     if (response.ok && Array.isArray(data.dogs)) {
       const formattedDogs = data.dogs.map((dog) => ({
@@ -28,7 +27,6 @@ const getDogsForUser = async () => {
         registration_number: dog.registration_number,
         passport_number: dog.passport_number
       }));
-      console.log('HERES FORMATTED DOGS ', formattedDogs);
       return formattedDogs;
     } else {
       console.error("Failed to fetch dogs or 'dogs' is not an array");

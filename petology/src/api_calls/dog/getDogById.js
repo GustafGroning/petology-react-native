@@ -9,8 +9,6 @@ const getDogById = async (dogId) => {
       },
     });
     const data = await response.json();
-    console.log("Response data:", data);
-
     if (response.ok) {
       const dogData = {
         id: data.id,

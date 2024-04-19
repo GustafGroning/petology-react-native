@@ -9,16 +9,18 @@ import {
 import { Button, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SelectList } from "react-native-dropdown-select-list";
-import createDog from "../api_calls/dog/createDog";
 import DateTimePicker from '@react-native-community/datetimepicker';
+// APIs
+import createDog from "../api_calls/dog/createDog";
+import getAllBreeds from "../api_calls/breed/getAllBreeds";
 
-/**********************************************************************************/
 const RegisterDogScreen = ({ navigation }) => {
   // State for form fields
   const [name, setName] = useState("");
   const [selectedBreed, setSelectedBreed] = useState(null); // State for selected breed
   const [birthday, setBirthday] = useState(new Date());
   const [selectedSex, setSelectedSex] = useState("");
+  const [breedData, setBreedData] = useState([]);
   /**********************************************************************************/
   const sexValues = [
     { key: "1", value: "Okastrerad hane" },
@@ -34,7 +36,6 @@ const RegisterDogScreen = ({ navigation }) => {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-
     try {
       const result = await createDog(name, selectedBreed, birthday, selectedSex);
 
@@ -49,32 +50,24 @@ const RegisterDogScreen = ({ navigation }) => {
     }
   };
   /**********************************************************************************/
-  const [breedData, setBreedData] = useState([]);
   const fetchBreeds = useCallback(async () => {
     try {
-      const token = await AsyncStorage.getItem("userToken");
-      const response = await fetch("http://localhost:8000/api/dog/breeds/", {
-        method: "GET",
-        headers: {
-          Authorization: `JWT ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setBreedData(
-          data.breeds.map((breed) => ({ key: breed.id, value: breed.name }))
-        );
-      } else {
-        // Handle errors
-        console.error("Failed to fetch breeds", data);
+      const query = await getAllBreeds();
+
+      if (query.success){
+        console.log('succeeded! ', query.data);
+        setBreedData(query.data.breeds); // Update breedData with fetched breeds
+        console.log(breedData);
       }
     } catch (error) {
       console.error("Error fetching breeds", error);
     }
   }, []);
 
+
   useEffect(() => {
     fetchBreeds();
+    
   }, [fetchBreeds]);
 /**********************************************************************************/
   const navigateToDogSelection = () => {
@@ -82,85 +75,85 @@ const RegisterDogScreen = ({ navigation }) => {
 };
 /**********************************************************************************/
 
-  return (
-    <View style={styles.container}>
-    <ScrollView style={styles.scrollView}>
-        <View style={styles.headerSection}>
-          <Text variant="headlineLarge" style={styles.header}>
-            Petology
-          </Text>
-          <View style={styles.closeButtonContainer}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={navigateToDogSelection}
-            >
-              <Text style={styles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-          </View>
+return (
+  <View style={styles.container}>
+  <ScrollView style={styles.scrollView}>
+      <View style={styles.headerSection}>
+        <Text variant="headlineLarge" style={styles.header}>
+          Petology
+        </Text>
+        <View style={styles.closeButtonContainer}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={navigateToDogSelection}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
         </View>
+      </View>
 
-        <View style={styles.section2}>
-          <Text variant="headlineMedium" style={styles.headerSmall}>
-            Skapa hund
-          </Text>
-          <TextInput
-            style={styles.FormInput}
-            placeholder="Namn"
-            placeholderTextColor={"black"}
-            onChangeText={setName}
+      <View style={styles.section2}>
+        <Text variant="headlineMedium" style={styles.headerSmall}>
+          Skapa hund
+        </Text>
+        <TextInput
+          style={styles.FormInput}
+          placeholder="Namn"
+          placeholderTextColor={"black"}
+          onChangeText={setName}
+        />
+        <View style={styles.dropdownContainer}>
+          <SelectList
+            setSelected={setSelectedBreed}
+            placeholder="Ras"
+            data={breedData.map(breed => breed.name)} // Transform array of objects to array of strings
+            save="value"
+            boxStyles={{
+              borderRadius: 90,
+              backgroundColor: "#e8f5f5",
+              marginBottom: 18,
+              width: "100%",
+            }}
           />
-          <View style={styles.dropdownContainer}>
-            <SelectList
-              setSelected={setSelectedBreed}
-              placeholder="Ras"
-              data={breedData}
-              save="value"
-              boxStyles={{
-                borderRadius: 90,
-                backgroundColor: "#e8f5f5",
-                marginBottom: 18,
-                width: "100%",
-              }}
-            />
-          </View>
-          <View style={styles.dropdownContainer}>
-            <SelectList
-              setSelected={setSelectedSex}
-              placeholder="Kön"
-              data={sexValues}
-              save="value"
-              boxStyles={{
-                borderRadius: 90,
-                backgroundColor: "#e8f5f5",
-                marginBottom: 18,
-              }}
-            />
-          </View>
-                <Text> Födelsedatum:</Text>
-                <DateTimePicker
-                    value={birthday}
-                    mode="date"
-                    locale="sv-SE"
-                    onChange={(event, selectedDateTime) => {
-                      if (selectedDateTime) {
-                        setBirthday(selectedDateTime);
-                        console.log(birthday);
-                      }
-                    }}
-                    style={{marginBottom: 20}}
-                  />
-          <View style={styles.submitSection}>
-            <Button
-              mode="contained"
-              onPress={handleCreateDog}
-              style={{ width: "80%", height: "30%" }}
-              buttonColor="#4a8483"
-            > Skapa hund </Button>
-          </View>
-        </View>  
-      </ScrollView>
-    </View>
-  );
+        </View>
+        <View style={styles.dropdownContainer}>
+          <SelectList
+            setSelected={setSelectedSex}
+            placeholder="Kön"
+            data={sexValues}
+            save="value"
+            boxStyles={{
+              borderRadius: 90,
+              backgroundColor: "#e8f5f5",
+              marginBottom: 18,
+            }}
+          />
+        </View>
+              <Text> Födelsedatum:</Text>
+              <DateTimePicker
+                  value={birthday}
+                  mode="date"
+                  locale="sv-SE"
+                  onChange={(event, selectedDateTime) => {
+                    if (selectedDateTime) {
+                      setBirthday(selectedDateTime);
+                      console.log(birthday);
+                    }
+                  }}
+                  style={{marginBottom: 20}}
+                />
+        <View style={styles.submitSection}>
+          <Button
+            mode="contained"
+            onPress={handleCreateDog}
+            style={{ width: "80%", height: "30%" }}
+            buttonColor="#4a8483"
+          > Skapa hund </Button>
+        </View>
+      </View>  
+    </ScrollView>
+  </View>
+);
 };
 
 const styles = StyleSheet.create({

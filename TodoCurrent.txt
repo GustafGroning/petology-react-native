@@ -1,0 +1,39 @@
+***********
+CURRENT
+***********
+* STARTSIDA - (Plats för erbjudande – har inte börjat sälja ännu, men gärna så att det kan inkorporeras enkelt när jag säljer annonsplatser)
+    * Erbjudande går just nu till artiklar, gör en sida för erbjudanden. Bör finnas Figma design.
+* STARTSIDA - Tasks är lite trasiga, om en task checkas av på en annan sida 
+    (typ Calender) så reflekteras det inte på Landing
+* Både Landing och Calender visa Dog_id istället för namnet på hunden i taskList
+********************
+ALLMÄNT
+********************
+* När nytt konto loggar in första gången, gå till en sida som tar in basic info, innan man skapar hund
+* Inmatning av basic info (förnamn, efternamn, något mer?)
+* Länka från basic info till skapa hund
+* ARTIKLAR - skapa en tag för refs till andra artiklar
+    t.ex <ref articleID=17> TEXT_SOM_SKA_VA_BLÅ </ref>
+********************
+API
+********************
+* Gå igenom alla modeller och se till att det finns anrop.js för alla.
+    * Gå igenom ALLA screens och ge dem en #CHECKED när dem inte längre har några custom anrop i sig.
+    * Målet är att ha mycket tunnare filer, och inte behöva hålla reda på massa custom variabler med olika namn.
+********************
+Information hundprofil
+********************
+* Vaccinationer
+* Mediciner
+* Nuvarande sjukdomar
+* Tidigare sjukdomar (flyttas automatiskt hit från nuvarande sjukdomar när djuret markeras som friskförklarad av djurägare)
+********************
+Lägg till behandling
+********************
+* Mest fritext input enl kategorier (Kategorierna finns i Figma!)
+********************
+Lägg till sjukdom
+********************
+* Fri text input enl kategorier i Figma
+
+

@@ -9,7 +9,7 @@ import Task from '../components/common/task/Task';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Button } from "react-native-paper";
 
-import getUserTasks from '../api_calls/user/getUserTasks';
+import getUserTasks from '../api_calls/task/getUserTasks';
 
 const CalendarScreen = ({ navigation }) => {
   const [currentSpanIndex, setCurrentSpanIndex] = useState(0);

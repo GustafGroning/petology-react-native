@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useFocusEffect } from '@react-navigation/native';
-import Config from 'react-native-config';
 import {
   View,
   Text,
@@ -11,23 +10,19 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PieChart from "react-native-pie-chart";
-import DogImage from "../../assets/doggo.jpg"; // TODO: fix real imports instead
+import DogImage from "../../assets/doggo.jpg";
 import offeringImage from "../../assets/offering.jpg";
 import Footer from '../components/common/Footer';
 import Header  from '../components/common/Header';
 import Task from '../components/common/task/Task';
 import SubHeader from "../components/common/SubHeader";
-import getUserTasks from "../api_calls/user/getUserTasks";
+import getUserTasks from "../api_calls/task/getUserTasks";
 import updateTaskStatus from "../api_calls/task/updateTaskStatus";
 
 const LandingPage = ({ navigation }) => {
 /**********************************************************************************/
   // PIE CHART
   const widthAndHeight = 120;
-  // const series = [123, 321, 123, 789, 537];
-  // const series = [(tasksToday.length - completedTasksToday), completedTasksToday];
-  // const series = [1, 5]
-  // const sliceColor = ["#fbd203", "#ffb300", "#ff9100", "#ff6c00", "#ff3c00"];
   const sliceColor = ["#eff8f7", "#a55671"];
 /**********************************************************************************/
 // TASK HANDLING
@@ -52,8 +47,6 @@ const filterTasksForToday = () => {
   });
 
   setTasksToday(tasksForToday);
-  // filterCompletedTasks();
-
 };
 
 const filterCompletedTasks = async () => {
@@ -124,7 +117,17 @@ useEffect(() => {
             </View>
           </>
         ) : (
-          <Text style={styles.placeholderText}>Inga uppgifter idag!</Text>
+          <View style={styles.tasksDoneGraph}>
+          <PieChart
+            widthAndHeight={widthAndHeight}
+            series={[(0), 5]}
+            sliceColor={sliceColor}
+            coverRadius={0.9}
+            coverFill={"#92cdca"}
+          />
+          <Text style={styles.noTasksLeftTextLineOne}> Inga uppgifter </Text>
+          <Text style={styles.noTasksLeftTextLineTwo}> kvar idag! </Text>
+        </View>
         )}
       </View>
 
@@ -271,6 +274,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 4,
+  },
+  noTasksLeftTextLineOne: {
+    position: 'absolute',
+    top: 50,
+  },
+  noTasksLeftTextLineTwo: {
+    position: 'absolute',
+    top: 70,
   },
 /**********************************************************************************/
   // CHECKBOX STYLES

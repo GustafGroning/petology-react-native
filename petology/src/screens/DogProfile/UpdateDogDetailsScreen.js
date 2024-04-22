@@ -26,6 +26,14 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
   const [breeds, setBreeds] = useState([]);
   const [changedFields, setChangedFields] = useState([]);
 
+
+  const sexValues = [
+    { key: "1", value: "Okastrerad hane" },
+    { key: "2", value: "Kastrerad hane" },
+    { key: "3", value: "Okastrerad tik" },
+    { key: "4", value: "Kastrerad tik" },
+  ];
+
   useEffect(() => {
     fetchSelectedDog();
     fetchBreeds();
@@ -105,7 +113,13 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
       const updatedDogInfo = Object.fromEntries(
         Object.entries(dogInfo)
           .filter(([key]) => changedFields.includes(key))
-          .map(([key, value]) => [key, value.current])
+          .map(([key, value]) => {
+            if (key === 'birthday') {
+              // Format birthday to match YYYY-MM-DD format
+              return [key, new Date(value.current).toISOString().split('T')[0]];
+            }
+            return [key, value.current];
+          })
       );
       console.log('updatedDogInfo:', updatedDogInfo);
       const success = await partialUpdateDog(dogId, updatedDogInfo);
@@ -118,25 +132,30 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
       console.error("Error updating dog information:", error);
     }
   };
+  
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>Stamtavlenamn:</Text>
+        <Text style={styles.formLabel}>Stamtavlenamn</Text>
         <TextInput
           style={styles.input}
+          autoCorrect={false}
           value={dogInfo.pedigree_name.current}
           onChangeText={(text) => handleChange("pedigree_name", text)}
         />
-        <Text style={styles.formLabel}>Breed:</Text>
+        
+        {/* Handling breed got annoying, add this back in if customers complain. */}
+        {/* <Text style={styles.formLabel}>Breed:</Text>
         <SelectList
           setSelected={(value) => handleChange("breed", value)}
           placeholder="Select Breed"
           data={breeds}
-          defaultValue={dogInfo.breed.current}
+          defaultValue={dogInfo.breed.current.id}
           style={styles.input}
-        />
-        <Text style={styles.formLabel}>Birthday:</Text>
+        /> */}
+        <View style={styles.birthdayContainer}>
+        <Text style={styles.formLabel}>Födelsedag</Text>
         <DateTimePicker
           value={dogInfo.birthday.current}
           mode="date"
@@ -148,57 +167,76 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
           }}
           style={{ marginBottom: 20 }}
         />
-        <Text style={styles.formLabel}>Sex:</Text>
+        </View>
+        <Text style={styles.formLabel}>Kön</Text>
+          <SelectList
+            setSelected={(text) => handleChange("sex", text)}
+            placeholder={dogInfo.sex.current}
+            data={sexValues}
+            save="value"
+            boxStyles={{
+              borderRadius: 90,
+              backgroundColor: "#e8f5f5",
+              marginBottom: 18,
+            }}
+          />
+
+
+
+
+        <Text style={styles.formLabel}>Färg</Text>
         <TextInput
           style={styles.input}
-          value={dogInfo.sex.current}
-          onChangeText={(text) => handleChange("sex", text)}
-        />
-        <Text style={styles.formLabel}>Color:</Text>
-        <TextInput
-          style={styles.input}
+          autoCorrect={false}
           value={dogInfo.color.current}
           onChangeText={(text) => handleChange("color", text)}
         />
-        <Text style={styles.formLabel}>ID Number:</Text>
+        <Text style={styles.formLabel}>ID-nummer</Text>
         <TextInput
           style={styles.input}
+          autoCorrect={false}
           value={dogInfo.id_number.current}
           onChangeText={(text) => handleChange("id_number", text)}
         />
-        <Text style={styles.formLabel}>Registration Number:</Text>
+        <Text style={styles.formLabel}>Registreringsnummer:</Text>
         <TextInput
           style={styles.input}
+          autoCorrect={false}
           value={dogInfo.registration_number.current}
           onChangeText={(text) => handleChange("registration_number", text)}
         />
-        <Text style={styles.formLabel}>Passport Number:</Text>
+        <Text style={styles.formLabel}>Passnummer</Text>
         <TextInput
           style={styles.input}
+          autoCorrect={false}
           value={dogInfo.passport_number.current}
           onChangeText={(text) => handleChange("passport_number", text)}
         />
-        <Text style={styles.formLabel}>Insurance Company:</Text>
+        <Text style={styles.formLabel}>Försäkringsbolag</Text>
         <TextInput
           style={styles.input}
+          autoCorrect={false}
           value={dogInfo.insurance_company.current}
           onChangeText={(text) => handleChange("insurance_company", text)}
         />
-        <Text style={styles.formLabel}>Insurance Number:</Text>
+        <Text style={styles.formLabel}>Försäkringsnummer</Text>
         <TextInput
           style={styles.input}
+          autoCorrect={false}
           value={dogInfo.insurance_number.current}
           onChangeText={(text) => handleChange("insurance_number", text)}
         />
-        <Text style={styles.formLabel}>Feed:</Text>
+        <Text style={styles.formLabel}>Foder:</Text>
         <TextInput
           style={styles.input}
+          autoCorrect={false}
           value={dogInfo.feed.current}
           onChangeText={(text) => handleChange("feed", text)}
         />
-        <Text style={styles.formLabel}>Possible Feed Intolerance:</Text>
+        <Text style={styles.formLabel}>Foderintrollerans</Text>
         <TextInput
           style={styles.input}
+          autoCorrect={false}
           value={dogInfo.possible_feed_intolerance.current}
           onChangeText={(text) => handleChange("possible_feed_intolerance", text)}
         />
@@ -220,18 +258,24 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   formContainer: {
-    marginTop: 100,
-    marginBottom: 20,
+    marginTop: 40,
+    alignItems: 'center',
+  },
+  birthdayContainer: {
+    alignItems: 'center',
   },
   formLabel: {
-    fontSize: 18,
-    marginBottom: 5,
+    fontSize: 14,
+
+    // marginBottom: 5,
   },
   input: {
     backgroundColor: "#fff",
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+    width: 340,
+    textAlign: 'center'
   },
   submitButton: {
     backgroundColor: "#007bff",

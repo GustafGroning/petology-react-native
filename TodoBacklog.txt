@@ -1,0 +1,38 @@
+********************
+Skapa hund
+********************
+* REGISTER DOG - ras-dropdown med alla SKK’s registrerade raser + 
+vanliga blandraser (typ labradoodle, cavapoo etc).
+    * Börjat göra fixtures i django för detta, men måste få tag på en
+    total lista av raser för att kunna färdigställa.
+* Nuvarande sjukdomar: kan välja mellan MMVD och HCM- Övriga sjukdomar skrivs in i 
+    fri text (gärna att dessa loggas någonstans så vi kan räkna på vilka sjukdomar som finns)
+
+
+********************
+Andetagsmonitorering
+********************
+* Välj hund bland dina hundar
+* Knapp som startar nedräkning (30 sek) samt räknar antal tryck (andetag).
+    Avslutar nedräkningen automatiskt och slutar då räkna antal tryck. Visar resultatet, som sparas.
+* Resultatsida (ska designas)
+* Varningstext kommer upp om andetag per minut överstiger 40
+
+****************************************
+BACKLOG ALLMÄNT
+****************************************
+* ALLMÄN STRUKTUR - ett sånt här projekt borde bara ha 3 typer av filer:
+    Screens, Components, api-anrop. 
+* "Glömt lösenord?" knapp, måste kunna skicka ett mail med password reset länk.
+* Deploya back-end
+* Färdigställa lista på all data som måste in i fixtures (database population vid start)
+    * hundraser måste in
+    * Vissa sjukdomar kanske borde in
+* Bygg CI/CD för back-end
+* Mer research om Postgres, förstå hur servern funkar och få tilltro till att den kommer klara sig
+
+
+
+
+
+MÅSTE GÅ IGENOM MED ANA-MARIJA ALLT SOM RÖR HEALTH INDEX INNAN JAG KAN BÖRJA BYGGA DET.

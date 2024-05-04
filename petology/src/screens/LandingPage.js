@@ -1,91 +1,104 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   Text,
   StyleSheet,
-  Button,
   ScrollView,
-  ImageBackground, TouchableOpacity,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import PieChart from "react-native-pie-chart";
-import DogImage from "../../assets/doggo.jpg";
-import offeringImage from "../../assets/offering.jpg";
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import PieChart from 'react-native-pie-chart';
+import DogImage from '../../assets/doggo.jpg';
+import offeringImage from '../../assets/offering.jpg';
 import Footer from '../components/common/Footer';
-import Header  from '../components/common/Header';
+import Header from '../components/common/Header';
 import Task from '../components/common/task/Task';
-import SubHeader from "../components/common/SubHeader";
-import getUserTasks from "../api_calls/task/getUserTasks";
-import updateTaskStatus from "../api_calls/task/updateTaskStatus";
+import SubHeader from '../components/common/SubHeader';
+import getUserTasks from '../api_calls/task/getUserTasks';
+import updateTaskStatus from '../api_calls/task/updateTaskStatus';
 
 const LandingPage = ({ navigation }) => {
-/**********************************************************************************/
-  // PIE CHART
   const widthAndHeight = 120;
-  const sliceColor = ["#eff8f7", "#a55671"];
-/**********************************************************************************/
-// TASK HANDLING
-const [allTasks, setAllTasks] = useState([]); // all tasks for the user
-const [tasksToday, setTasksToday] = useState([]); // filter out tasks for the current day
-const [completedTasksToday, setCompletedTasksToday] = useState(0); // tasks for today with completed = true
+  const sliceColor = ['#eff8f7', '#a55671'];
 
-const getAllUserTasksHandler = async () => {
-  const tasks = await getUserTasks();
-  setAllTasks(tasks);
-};
+  const [allTasks, setAllTasks] = useState([]);
+  const [tasksToday, setTasksToday] = useState([]);
+  const [completedTasksToday, setCompletedTasksToday] = useState(0);
 
-const filterTasksForToday = () => {
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-  const todayEnd = new Date();
-  todayEnd.setHours(23, 59, 59, 999);
-
-  const tasksForToday = allTasks.filter(task => {
-    const taskStartTime = new Date(task.start_time);
-    return taskStartTime >= todayStart && taskStartTime <= todayEnd;
-  });
-
-  setTasksToday(tasksForToday);
-};
-
-const filterCompletedTasks = async () => {
-  console.log('COMPLETED TASKS ', completedTasksToday);
-  setCompletedTasksToday(tasksToday.filter(task => task.completed).length);
-};
-
-  // Callback function to handle task deletion
-  const handleDeleteTask = (taskId) => {
-    // Update state to remove the deleted task
-    setTasksToday(prevTasks => prevTasks.filter(task => task.id !== taskId));
+  const getAllUserTasksHandler = async () => {
+    const tasks = await getUserTasks();
+    setAllTasks(tasks);
   };
 
-const handleUpdateTask = async (taskId, updatedTask) => {
-  try {
-    // Update the task in the allTasks state
-    setTasksToday(prevTasks => prevTasks.map(task => (task.id === taskId ? updatedTask : task)));
-  } catch (error) {
-    // Handle error if needed
-    console.error("Error updating task:", error);
-  }
-};
+  const filterTasksForToday = () => {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
 
-const updateTaskCompletion = async (taskId, completed) => {
-  // Call the new function passing the taskId, completed status, and the fetchAndUpdateTasks function
-  updateTaskStatus(taskId, completed, getAllUserTasksHandler);
-};
-/**********************************************************************************/
-useFocusEffect(
-  React.useCallback(() => {
+    const tasksForToday = allTasks.filter(task => {
+      const taskStartTime = new Date(task.start_time);
+      return taskStartTime >= todayStart && taskStartTime <= todayEnd;
+    });
+
+    setTasksToday(tasksForToday);
+  };
+
+  const filterCompletedTasks = () => {
+    const completedToday = tasksToday.filter(task => task.completed);
+    setCompletedTasksToday(completedToday.length);
+  };
+
+  const handleDeleteTask = (taskId) => {
+    setAllTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+  };
+
+  const handleUpdateTask = async (taskId, updatedTask) => {
+    try {
+      setAllTasks(prevTasks => prevTasks.map(task => (task.id === taskId ? updatedTask : task)));
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+
+  const updateTaskCompletion = async (taskId, completed) => {
+    const token = await AsyncStorage.getItem('userToken');
+    if (token) {
+        fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/patch/${taskId}/`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `JWT ${token}`,
+            },
+            body: JSON.stringify({ completed }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+          getAllUserTasksHandler();
+        })
+        .catch(error => console.error('Error updating task:', error));
+    }
+  };
+
+  useEffect(() => {
     getAllUserTasksHandler();
-  }, [])
-);
-useEffect(() => {
-  filterTasksForToday();
-}, [allTasks]);
-useEffect(() => {
-  filterCompletedTasks();
-}, [tasksToday]);
+  }, []);
+
+  useEffect(() => {
+    filterTasksForToday();
+    filterCompletedTasks();
+  }, [allTasks]);
+
+  //   useFocusEffect(() => {
+  //   getAllUserTasksHandler();
+  // });
 
   return (
     <View style={styles.container}> 
@@ -106,7 +119,7 @@ useEffect(() => {
                 series={[(tasksToday.length - completedTasksToday), completedTasksToday]}
                 sliceColor={sliceColor}
                 coverRadius={0.9}
-                coverFill={"#92cdca"}
+                coverFill={'#92cdca'}
               />
             </View>
 
@@ -123,7 +136,7 @@ useEffect(() => {
             series={[(0), 5]}
             sliceColor={sliceColor}
             coverRadius={0.9}
-            coverFill={"#92cdca"}
+            coverFill={'#92cdca'}
           />
           <Text style={styles.noTasksLeftTextLineOne}> Inga uppgifter </Text>
           <Text style={styles.noTasksLeftTextLineTwo}> kvar idag! </Text>
@@ -138,7 +151,7 @@ useEffect(() => {
       <View style={styles.activeDogPictureSection}>
         <ImageBackground
           source={ DogImage }
-          resizeMode="cover"
+          resizeMode='cover'
           style={styles.articleImageStyle}
           imageStyle={{ borderRadius: 20}}
         />
@@ -158,7 +171,7 @@ useEffect(() => {
                   startTime={task.start_time}
                   notes={task.notes}
                   location={task.location}
-                  dogName={task.dog}
+                  dogName={task.dog_name}
                   isCompleted={task.completed}
                   onCheckChange={(newCheckState) => updateTaskCompletion(task.id, newCheckState)}
                   onDeleteTask={handleDeleteTask}
@@ -170,10 +183,10 @@ useEffect(() => {
         )}
       </View>
 
-      <TouchableOpacity style={styles.offeringContainer} onPress={() => navigation.navigate("ArticleList")}>
+      <TouchableOpacity style={styles.offeringContainer} onPress={() => navigation.navigate('ArticleList')}>
       <ImageBackground
           source={ offeringImage }
-          resizeMode="cover"
+          resizeMode='cover'
           style={styles.offeringImageStyle}
           imageStyle={{ borderRadius: 20}}
         />
@@ -186,7 +199,7 @@ useEffect(() => {
       </View>
       {/* Looks in articleListScreen like entire articles are sent to render articles, which means
       the chosen article needs to be loaded here on LandingPage in order to have featured articles. */}
-      <TouchableOpacity style={styles.articlesContainer} onPress={() => navigation.navigate("ArticleList")}>
+      <TouchableOpacity style={styles.articlesContainer} onPress={() => navigation.navigate('ArticleList')}>
         <SubHeader headerText={'Artiklar'}/>
       </TouchableOpacity>
       <View style={styles.emptyContainer}></View>
@@ -202,65 +215,65 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 40,
-    backgroundColor: "#92cdca",
+    backgroundColor: '#92cdca',
   },
   scrollView: {
   },
   dayStatSection: {
     flex: 1,
     padding: 10,
-    flexDirection: "row",
+    flexDirection: 'row',
     height: 150,
-    justifyContent: "space-around",
+    justifyContent: 'space-around',
   },
   tasksDoneToday: {
-    width: "27%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '27%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   taskNumber: {
     fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: "2%",
+    fontWeight: 'bold',
+    marginBottom: '2%',
   },
   taskText: {
     fontSize: 13,
   },
   tasksDoneGraph: {
-    width: "46%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '46%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tasksLeftToday: {
-    width: "27%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '27%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   motivationTextSection: {
     flex: 1,
     height: 90,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 /**********************************************************************************/
   activeDogPictureSection: {
-    alignContent: "center",
+    alignContent: 'center',
     borderRadius: 20,
     height: '15%',
-    width: "95%",
+    width: '95%',
     marginBottom: 25,
     left: 10, // bad solution but can't figure it out dynamically right now
   },
   articleImageStyle: {
-    height: "100%",
-    width: "100%",
+    height: '100%',
+    width: '100%',
     borderRadius: 20,
   },
 /**********************************************************************************/
   tasksListSection: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingBottom: 15,
   },
   taskListBox: {
@@ -302,7 +315,7 @@ const styles = StyleSheet.create({
 /**********************************************************************************/
   dogDetailsSection: {
     flex: 1,
-    borderColor: "black",
+    borderColor: 'black',
     borderWidth: 1,
     padding: 10,
     marginBottom: 10,
@@ -310,11 +323,11 @@ const styles = StyleSheet.create({
   },
   dogText: {
     fontSize: 18,
-    color: "gray",
+    color: 'gray',
   },
   buttonSection: {
     flex: 1,
-    borderColor: "black",
+    borderColor: 'black',
     borderWidth: 1,
     padding: 10,
     marginBottom: 10,
@@ -339,8 +352,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   offeringImageStyle: {
-    height: "100%",
-    width: "100%",
+    height: '100%',
+    width: '100%',
   },
   offeringHeaderStyle: {
 

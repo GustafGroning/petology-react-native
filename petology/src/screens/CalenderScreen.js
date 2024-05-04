@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import Task from '../components/common/task/Task';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Button } from "react-native-paper";
+import { Button } from 'react-native-paper';
 
 import getUserTasks from '../api_calls/task/getUserTasks';
 
@@ -15,7 +15,7 @@ const CalendarScreen = ({ navigation }) => {
   const [currentSpanIndex, setCurrentSpanIndex] = useState(0);
   const timespans = ['dagens uppgifter', 'veckans uppgifter'];
 
-  const [taskListHeader, setTaskListHeader] = useState(['idag'])
+  const [taskListHeader, setTaskListHeader] = useState(['idag']);
   const [allTasks, setAllTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [selected, setSelected] = useState(0);
@@ -115,7 +115,7 @@ tasks for that specific date.
   } else {
     tasksForDates = allTasks;
   }
-
+  console.log(tasksForDates);
   setFilteredTasks(tasksForDates); // Update filteredTasks state
 };
 /**********************************************************************************/
@@ -131,7 +131,7 @@ const handleUpdateTask = async (taskId, updatedTask) => {
     setAllTasks(prevTasks => prevTasks.map(task => (task.id === taskId ? updatedTask : task)));
   } catch (error) {
     // Handle error if needed
-    console.error("Error updating task:", error);
+    console.error('Error updating task:', error);
   }
 };
 
@@ -150,10 +150,10 @@ const updateTaskListHeader = () => {
 };
 /**********************************************************************************/
   const updateTaskCompletion = async (taskId, completed) => {
-    const token = await AsyncStorage.getItem("userToken");
+    const token = await AsyncStorage.getItem('userToken');
     if (token) {
         fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/patch/${taskId}/`, {
-            method: "PATCH",
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `JWT ${token}`,
@@ -169,7 +169,7 @@ const updateTaskListHeader = () => {
         .then(data => {
           getAllUserTasksHandler();
         })
-        .catch(error => console.error("Error updating task:", error));
+        .catch(error => console.error('Error updating task:', error));
     }
   };
 /**********************************************************************************/
@@ -224,11 +224,11 @@ const updateTaskListHeader = () => {
 
          <View style={styles.taskHeaderSection}>
             <TouchableOpacity onPress={() => setSelected(0)}>
-                <FontAwesome name="arrow-left" size={20} color="#000" />
+                <FontAwesome name='arrow-left' size={20} color='#000' />
             </TouchableOpacity>
             <Text style={styles.taskHeaderText}> {taskListHeader} </Text>
             <TouchableOpacity onPress={() => setSelected(1)}>
-                <FontAwesome name="arrow-right" size={20} color="#000" />
+                <FontAwesome name='arrow-right' size={20} color='#000' />
             </TouchableOpacity>
           </View>
 
@@ -241,7 +241,7 @@ const updateTaskListHeader = () => {
                 startTime={task.start_time}
                 notes={task.notes}
                 location={task.location}
-                dogName={task.dog}
+                dogName={task.dog_name}
                 isCompleted={task.completed}
                 onCheckChange={(newCheckState) => updateTaskCompletion(task.id, newCheckState)}
                 onDeleteTask={handleDeleteTask}

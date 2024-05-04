@@ -1,16 +1,17 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity } from "react-native";
-import Footer from "../../components/common/Footer";
-import offeringImage from '../../../assets/offering.jpg'
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, ImageBackground, 
+  TouchableOpacity } from 'react-native';
+import Footer from '../../components/common/Footer';
+import offeringImage from '../../../assets/offering.jpg';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const LibraryScreen = ({ navigation }) => {
 /**********************************************************************************/
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
-    // console.log("Navigate to:", screenName); // Replace with actual navigation
+    // console.log('Navigate to:', screenName); // Replace with actual navigation
   };
-/**********************************************************************************/
+  /**********************************************************************************/
   return (
     
 
@@ -25,28 +26,29 @@ const LibraryScreen = ({ navigation }) => {
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Artiklar</Text>
           <View style={styles.sectionItem}>
-          <View style={styles.sectionItemImage}>
-            <ImageBackground
-              source={ offeringImage }
-              resizeMode="cover"
-              style={styles.imageStyle}
-              imageStyle={{ borderRadius: 20}}
-            />
-          </View>
+            <View style={styles.sectionItemImage}>
+              <ImageBackground
+                source={ offeringImage }
+                resizeMode='cover'
+                style={styles.imageStyle}
+                imageStyle={{ borderRadius: 20}}
+              />
+            </View>
             <View style={styles.sectionItemText}>
               <Text numberOfLines={4}>
-                Läs våra artiklar om specifika sjukdomstillstånd och hur du tar hand om din hund på bästa sätt! 
+                Läs våra artiklar om specifika sjukdomstillstånd 
+                och hur du tar hand om din hund på bästa sätt! 
               </Text>
             </View>
-              <TouchableOpacity
-               style={styles.sectionItemArrow}
-               onPress={() => navigateToScreen('ArticleList')}>
-                  <FontAwesome
-                    style={styles.navigationArrowStyle}
-                    name="arrow-right" 
-                    size={45} 
-                    color="#000" />
-              </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.sectionItemArrow}
+              onPress={() => navigateToScreen('ArticleList')}>
+              <FontAwesome
+                style={styles.navigationArrowStyle}
+                name='arrow-right' 
+                size={45} 
+                color='#000' />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.section}>
@@ -55,34 +57,36 @@ const LibraryScreen = ({ navigation }) => {
             <View style={styles.sectionItemImage}>
               <ImageBackground
                 source={ offeringImage }
-                resizeMode="cover"
+                resizeMode='cover'
                 style={styles.imageStyle}
                 imageStyle={{ borderRadius: 20}}
               />
             </View>
             <View style={styles.sectionItemText}>
               <Text numberOfLines={4}>
-                Våra kurser är perfekta för dig som vill utvecklas inom ett specifikt område.
+                Våra kurser är perfekta för dig som vill 
+                utvecklas inom ett specifikt område.
               </Text>
             </View>
             <TouchableOpacity
-               style={styles.sectionItemArrow}
-               onPress={() => navigateToScreen('ArticleList')}>
-                  <FontAwesome
-                    style={styles.navigationArrowStyle}
-                    name="arrow-right" 
-                    size={45} 
-                    color="#000" />
-              </TouchableOpacity>
+              style={styles.sectionItemArrow}
+              onPress={() => navigateToScreen('ArticleList')}>
+              <FontAwesome
+                style={styles.navigationArrowStyle}
+                name='arrow-right' 
+                size={45} 
+                color='#000' 
+              />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Instruktioner</Text>
           <View style={styles.sectionItem}>
-          <View style={styles.sectionItemImage}>
+            <View style={styles.sectionItemImage}>
               <ImageBackground
                 source={ offeringImage }
-                resizeMode="cover"
+                resizeMode='cover'
                 style={styles.imageStyle}
                 imageStyle={{ borderRadius: 20}}
               />
@@ -93,20 +97,22 @@ const LibraryScreen = ({ navigation }) => {
               </Text>
             </View>
             <TouchableOpacity
-               style={styles.sectionItemArrow}
-               onPress={() => navigateToScreen('ArticleList')}>
-                  <FontAwesome
-                    style={styles.navigationArrowStyle}
-                    name="arrow-right" 
-                    size={45} 
-                    color="#000" />
-              </TouchableOpacity>
+              style={styles.sectionItemArrow}
+              onPress={() => navigateToScreen('ArticleList')}>
+              <FontAwesome
+                style={styles.navigationArrowStyle}
+                name='arrow-right' 
+                size={45} 
+                color='#000' 
+              />
+            </TouchableOpacity>
           </View>
         </View>
         {/* Additional Links Section */}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Petology</Text>
-          <TouchableOpacity onPress={() => navigateToScreen('FrequentlyAskedQuestionsScreen')}>
+          <TouchableOpacity onPress={() => 
+            navigateToScreen('FrequentlyAskedQuestionsScreen')}>
             <Text> FaQ </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigateToScreen('ContactUsScreen')}>
@@ -130,18 +136,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 40,
-    backgroundColor: "#92cdca",
+    backgroundColor: '#92cdca',
   },
   scrollView: {},
   headerSection: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     height: 80,
     padding: 20,
   },
   headerText: {
     fontSize: 36,
-    fontFamily: "Cochin",
+    fontFamily: 'Cochin',
     opacity: 0.7,
   },
   section: {
@@ -152,7 +158,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     right: 140,
     fontSize: 22,
-    fontFamily: "Cochin",
+    fontFamily: 'Cochin',
   },
   sectionItem: {
     width: '95%',
@@ -176,8 +182,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageStyle: {
-    height: "95%",
-    width: "90%",
+    height: '95%',
+    width: '90%',
     top: 2,
     left: 1,
   },

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import getDogById from "../../api_calls/dog/getDogById";
-import Footer from "../../components/common/Footer";
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import getDogById from '../../api_calls/dog/getDogById';
+import Footer from '../../components/common/Footer';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect hook
 
@@ -24,7 +24,7 @@ const DogDetailsScreen = ({ navigation, route }) => {
       const dogDetails = await getDogById(dogId);
       setSelectedDog(dogDetails);
     } catch (error) {
-      console.error("Error fetching selected dog:", error);
+      console.error('Error fetching selected dog:', error);
     }
   };
 
@@ -34,9 +34,9 @@ const DogDetailsScreen = ({ navigation, route }) => {
 
           <TouchableOpacity
             style={styles.editInformationButton}
-            onPress={() => navigation.navigate("UpdateDogDetailsScreen", { dogId: dogId })}
+            onPress={() => navigation.navigate('UpdateDogDetailsScreen', { dogId: dogId })}
           >
-            <FontAwesome name="edit" size={35} color="#000" />
+            <FontAwesome name='edit' size={35} color='#000' />
           </TouchableOpacity>
 
       {selectedDog && (
@@ -76,7 +76,7 @@ const DogDetailsScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#92cdca",
+    backgroundColor: '#92cdca',
     padding: 5,
   },
   headerContainer: {
@@ -84,12 +84,12 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 36,
-    fontFamily: "Cochin",
+    fontFamily: 'Cochin',
     opacity: 0.7,
   },
   dogInfoContainer: {
     marginTop: 100,
-    // backgroundColor: "red",
+    // backgroundColor: 'red',
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
-import { ImageBackground } from "react-native";
-import ArticleItem from "../../components/ArticleComponents/ArticleItem";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput } from 'react-native';
+import { ImageBackground } from 'react-native';
+import ArticleItem from '../../components/ArticleComponents/ArticleItem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from '../../components/common/Footer';
 
 const ArticleListScreen = ({ navigation }) => {
@@ -13,16 +13,16 @@ const ArticleListScreen = ({ navigation }) => {
 
   const fetchArticles = async () => {
     try {
-      const token = await AsyncStorage.getItem("userToken");
+      const token = await AsyncStorage.getItem('userToken');
       if (token) {
         const response = await fetch(
           `${process.env.EXPO_PUBLIC_DEV_URL}/api/articles/`,
           {
-            method: "GET",
+            method: 'GET',
             headers: {
               Authorization: `JWT ${token}`,
             },
-          }
+          },
         );
 
         if (response.ok) {
@@ -36,7 +36,7 @@ const ArticleListScreen = ({ navigation }) => {
         }
       }
     } catch (error) {
-      console.error("Error fetching articles:", error);
+      console.error('Error fetching articles:', error);
     }
   };
 
@@ -50,7 +50,7 @@ const ArticleListScreen = ({ navigation }) => {
       setFilteredArticles(articles); // Reset to the original list of articles
     } else {
       const filtered = articles.filter(article => 
-        article.title.toLowerCase().includes(query.toLowerCase())
+        article.title.toLowerCase().includes(query.toLowerCase()),
       );
       setFilteredArticles(filtered);
     }
@@ -60,7 +60,7 @@ const ArticleListScreen = ({ navigation }) => {
     <View style={styles.container}>
       <TextInput
         style={styles.searchInput}
-        placeholder="Search articles..."
+        placeholder='Search articles...'
         value={searchQuery}
         onChangeText={handleSearch}
       />
@@ -86,7 +86,8 @@ const ArticleListScreen = ({ navigation }) => {
         <View style={styles.articleContainer}>
           {filteredArticles.length > 0 ? (
             filteredArticles
-              .filter(article => !article.featured_article) // Exclude featured articles
+              // Exclude featured articles
+              .filter(article => !article.featured_article)
               .map((article, index) => (
                 <ArticleItem key={index} article={article} navigation={navigation}/>
               ))
@@ -104,27 +105,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 40,
-    backgroundColor: "#92cdca",
+    backgroundColor: '#92cdca',
   },
   scrollView: {},
   headerSection: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     height: 80,
     padding: 20,
   },
   headerText: {
     fontSize: 36,
-    fontFamily: "Cochin",
+    fontFamily: 'Cochin',
     opacity: 0.7,
   },
   subHeaderSection: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 10,
   },
   subHeaderText: {
     fontSize: 22,
-    fontFamily: "Cochin",
+    fontFamily: 'Cochin',
     marginBottom: 5,
   },
   articleContainer: {

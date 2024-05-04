@@ -1,8 +1,8 @@
 import { Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "react-native-paper";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from 'react-native-paper';
 import DatePicker from '../components/CreateTaskScreenComponents/DatePicker';
 
 import { SelectList } from 'react-native-dropdown-select-list';
@@ -47,14 +47,14 @@ useEffect(() => {
 /**********************************************************************************/
 const fetchDogs = async () => {
     try {
-        const token = await AsyncStorage.getItem("userToken");
+        const token = await AsyncStorage.getItem('userToken');
         const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/all/`, {
             headers: {
                 Authorization: `JWT ${token}`,
             },
         });
         const data = await response.json();
-        console.log("Response data:", data);
+        console.log('Response data:', data);
 
         if (response.ok && Array.isArray(data.dogs)) {
             const formattedDogs = data.dogs.map(dog => ({
@@ -63,17 +63,16 @@ const fetchDogs = async () => {
             }));
             setItems(formattedDogs);
 
-            // NEW CODE 
             setDogList(
                 data.dogs.map((dogs) => ({key: dogs.id, value: dogs.name}))
             );
-            console.log('dogList ', dogList)
+            console.log('dogList ', dogList);
 
         } else {
-            console.error("Failed to fetch dogs or 'dogs' is not an array");
+            console.error('Failed to fetch dogs or 'dogs' is not an array');
         }
     } catch (error) {
-        console.error("Error fetching dogs:", error);
+        console.error('Error fetching dogs:', error);
     }
 };
 /**********************************************************************************/
@@ -81,14 +80,14 @@ const fetchDogs = async () => {
 const handleCreateTask = async () => {
     console.log('value (should be dog_id) ', value);
     try {
-        const token = await AsyncStorage.getItem("userToken");
+        const token = await AsyncStorage.getItem('userToken');
         // Format the startDate to exclude the time component
         const startDateWithoutTime = startDate.toISOString().split('T')[0];
-
+        console.log(value, taskName, location, startDateWithoutTime, notes);
         const response = await fetch(`http://localhost:8000/api/tasks/add/`, {
-            method: "POST",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: `JWT ${token}`,
             },
             body: JSON.stringify({
@@ -103,23 +102,21 @@ const handleCreateTask = async () => {
         if (response.ok) {
             const data = await response.json();
 
-            setTaskName("");
-            setLocation("");
-            setNotes("");
+            setTaskName('');
+            setLocation('');
+            setNotes('');
             setStartDate(new Date());
 
-            Alert.alert("Success", "Task created successfully");
+            Alert.alert('Success', 'Task created successfully');
         } else {
-            console.error("Failed to create task");
-            Alert.alert("Error", "Failed to create task");
+            console.error('Failed to create task');
+            Alert.alert('Error', 'Failed to create task');
         }
     } catch (error) {
-        console.error("Error:", error);
-        Alert.alert("Error", "An error occurred while creating the task");
+        console.error('Error:', error);
+        Alert.alert('Error', 'An error occurred while creating the task');
     }
 };
-
-
 
 
 
@@ -144,9 +141,9 @@ return (
                 // Other SelectList props as needed
                 boxStyles={{
                     borderRadius: 90,
-                    backgroundColor: "#e8f5f5",
+                    backgroundColor: '#e8f5f5',
                     marginBottom: 18,
-                    width: "100%", // Adjust if necessary to match your design
+                    width: '100%', // Adjust if necessary to match your design
                 }}
             />
             </View>
@@ -154,7 +151,7 @@ return (
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Titel"
+                    placeholder='Titel'
                     value={taskName}
                     onChangeText={setTaskName}
                 />
@@ -162,19 +159,19 @@ return (
             <View style={styles.inputContainer}>
                 <TextInput
                         style={styles.input}
-                        placeholder="Plats"
+                        placeholder='Plats'
                         value={location}
                         onChangeText={setLocation}
                     />
                 </View>
             <View style={styles.datePickerContainer}>
                 <DatePicker
-                    title={"Startar"}
+                    title={'Startar'}
                     date={startDate}
                     onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStartDate)}
                 />
                 {/* <DatePicker
-                    title={"end"}
+                    title={'end'}
                     date={stopDate}
                     onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStopDate, setStopTime)}
                 /> */}
@@ -184,7 +181,7 @@ return (
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
-                    placeholder="Anteckningar"
+                    placeholder='Anteckningar'
                     value={notes}
                     onChangeText={setNotes}
                 />
@@ -192,7 +189,7 @@ return (
         </View>
 
         <View style={styles.submitButtonSection}>
-            <Button mode="contained" onPress={handleCreateTask} style={styles.addButtonStyle}>
+            <Button mode='contained' onPress={handleCreateTask} style={styles.addButtonStyle}>
                 Lägg till
             </Button>
         </View>
@@ -208,7 +205,7 @@ const styles = StyleSheet.create({
 container: {
     flex: 1,
     paddingTop: 40,
-    // backgroundColor: "#92cdca",
+    // backgroundColor: '#92cdca',
   },
 scrollView: {},
 /**********************************************************************************/
@@ -225,7 +222,7 @@ headerSection: {
   },
 headerText: {
     fontSize: 28,
-    fontFamily: "Cochin",
+    fontFamily: 'Cochin',
     paddingLeft: 70,
 },
 inputSection: {

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // API's
-import getDogById from "../../api_calls/dog/getDogById";
-import getTasksForDog from "../../api_calls/task/getTaskForDog";
+import getDogById from '../../api_calls/dog/getDogById';
+import getTasksForDog from '../../api_calls/task/getTaskForDog';
 // STYLING
-import Footer from "../../components/common/Footer";
-import Task from "../../components/common/task/Task";
+import Footer from '../../components/common/Footer';
+import Task from '../../components/common/task/Task';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const DogMainScreen = ({ navigation, route }) => {
@@ -33,7 +33,7 @@ const DogMainScreen = ({ navigation, route }) => {
       const dogDetails = await getDogById(dogId);
       setSelectedDog(dogDetails);
     } catch (error) {
-      console.error("Error fetching selected dog:", error);
+      console.error('Error fetching selected dog:', error);
     }
   };
 
@@ -42,7 +42,7 @@ const DogMainScreen = ({ navigation, route }) => {
       const tasks = await getTasksForDog(dogId); // Call getTasksForDog with dogId
       setDogTasks(tasks);
     } catch (error) {
-      console.error("Error fetching dog tasks:", error);
+      console.error('Error fetching dog tasks:', error);
     }
   };
 
@@ -72,9 +72,9 @@ const DogMainScreen = ({ navigation, route }) => {
           </View>
           <TouchableOpacity
             style={styles.editInformationButton}
-            onPress={() => navigation.navigate("DogDetailsScreen", { dogId: dogId })}
+            onPress={() => navigation.navigate('DogDetailsScreen', { dogId: dogId })}
           >
-            <FontAwesome name="arrow-right" size={20} color="#000" />
+            <FontAwesome name='arrow-right' size={20} color='#000' />
           </TouchableOpacity>
           
           <Text style={styles.dogInfoText}>Stamtavlenamn: {selectedDog?.pedigree_name}</Text>
@@ -127,7 +127,7 @@ const DogMainScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#92cdca",
+    backgroundColor: '#92cdca',
   },
   scrollContent: {
     flexGrow: 1,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dogInfoContainer: {
-    backgroundColor: "red",
+    backgroundColor: 'red',
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,
@@ -158,12 +158,12 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 36,
-    fontFamily: "Cochin",
+    fontFamily: 'Cochin',
     opacity: 0.7,
   },
   taskListContainer: {
     // padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 10,
 
     // marginTop: 20,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
   taskListHeader: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 
   editInformationButton: {

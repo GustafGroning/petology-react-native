@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Footer from "../../components/common/Footer";
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Footer from '../../components/common/Footer';
 
 const PolicyScreen = ({ navigation }) => {
   const navigateToScreen = (screenName) => {
@@ -21,8 +21,8 @@ const PolicyScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

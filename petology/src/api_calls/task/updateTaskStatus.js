@@ -1,34 +1,33 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const updateTaskStatus = async (taskId, completed, fetchAndUpdateTasks) => {
   try {
-    const token = await AsyncStorage.getItem("userToken");
+    const token = await AsyncStorage.getItem('userToken');
     if (token) {
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/patch/${taskId}/`,
         {
-          method: "PATCH",
+          method: 'PATCH',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `JWT ${token}`,
           },
           body: JSON.stringify({ completed }),
-        }
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
 
-      // If the update is successful, trigger the provided function to fetch and update tasks
       if (fetchAndUpdateTasks) {
         fetchAndUpdateTasks();
       }
     } else {
-      throw new Error("User token not found.");
+      throw new Error('User token not found.');
     }
   } catch (error) {
-    console.error("Error updating task:", error);
+    console.error('Error updating task:', error);
   }
 };
 

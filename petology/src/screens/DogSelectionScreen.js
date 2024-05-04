@@ -1,16 +1,16 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity, ScrollView,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DogListItem from '../components/DogSelectionScreenComponents/DogListItem';
-import Header from "../components/common/Header";
+import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
-import getDogsForUser from "../api_calls/dog/getDogsForUser";
+import getDogsForUser from '../api_calls/dog/getDogsForUser';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect hook
 
 const DogSelectionScreen = ({ navigation }) => {
@@ -32,10 +32,10 @@ const DogSelectionScreen = ({ navigation }) => {
       if (data) {
         setDogs(data);
       } else {
-        console.error("Failed to fetch dogs");
+        console.error('Failed to fetch dogs');
       }
     } catch (error) {
-      console.error("Error fetching dogs", error);
+      console.error('Error fetching dogs', error);
     }
   };
 
@@ -46,10 +46,10 @@ const DogSelectionScreen = ({ navigation }) => {
   /**********************************************************************************/
   const handleSelectDog = async (dogId) => {
     try {
-      await AsyncStorage.setItem("selectedDogId", dogId.toString());
-      navigation.navigate("DogMainScreen", { dogId: dogId });
+      await AsyncStorage.setItem('selectedDogId', dogId.toString());
+      navigation.navigate('DogMainScreen', { dogId: dogId });
     } catch (error) {
-      console.error("Error setting selected dog ID:", error);
+      console.error('Error setting selected dog ID:', error);
     }
   };
   
@@ -88,40 +88,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 60,
-    backgroundColor: "#92cdca",
-    justifyContent: "center",
+    backgroundColor: '#92cdca',
+    justifyContent: 'center',
   },
   headerSection: {
     paddingTop: 5,
     height: 75,
     width: '100%',
-    alignItems: "center",
+    alignItems: 'center',
     marginBottom: 15,
   },
   headerText: {
     fontSize: 36,
-    fontFamily: "Cochin",
+    fontFamily: 'Cochin',
     opacity: 0.6,
   },
   subHeaderSection: {
     flexDirection: 'row',
     height: 40,
     width: '80%',
-    // borderColor: "black",
+    // borderColor: 'black',
     // borderWidth: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 40,
   },
   subHeaderText: {
     fontSize: 26,
-    fontFamily: "Cochin",
+    fontFamily: 'Cochin',
     marginLeft: 30,
   },
   dogListSection: {
     height: 500,
     width: '100%',
-    // borderColor: "black",
+    // borderColor: 'black',
     // borderWidth: 1, // REMOVE
   },
   dogListScrollView: {
@@ -129,9 +129,9 @@ const styles = StyleSheet.create({
   },
   listItem: {
     padding: 15,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: '#f8f8f8',
     borderBottomWidth: 1,
-    borderColor: "#eee",
+    borderColor: '#eee',
   },
   itemText: {
     fontSize: 18,

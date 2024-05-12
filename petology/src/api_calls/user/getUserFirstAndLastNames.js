@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const getUserFirstAndLastNames = async () => {
   try {
@@ -12,19 +12,13 @@ const getUserFirstAndLastNames = async () => {
       },
     });
 
-    console.log('response ', response);
-
     if (response.ok) {
-      console.log('response okay!');
-
       // Check if response status is 204 (No Content)
       if (response.status === 204) {
-        console.log('No content in response');
         return null; // or return any default value you want
       }
 
       const data = await response.json();
-      console.log('data ', data);
       return data;
     } else {
       throw new Error('Failed to get first and last names');

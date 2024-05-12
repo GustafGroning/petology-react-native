@@ -1,42 +1,55 @@
-// Components
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Button, TextInput } from 'react-native';
-import { CheckBox, Icon } from '@rneui/themed';
-import DatePicker from '../../CreateTaskScreenComponents/DatePicker';
-// APIs
-import { deleteTask } from '../../../api_calls/task/deleteTask';
-import { updateTask } from '../../../api_calls/task/updateTask';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Button,
+  TextInput,
+} from "react-native";
+import { CheckBox, Icon } from "@rneui/themed";
+import DatePicker from "../../CreateTaskScreenComponents/DatePicker";
+import { deleteTask } from "../../../api_calls/task/deleteTask";
+import { updateTask } from "../../../api_calls/task/updateTask";
 
-
-
-const Task = ({ taskId, taskName, location, notes, dogName, isCompleted, onCheckChange, onDeleteTask, onUpdateTask }) => {
+const Task = ({
+  taskId,
+  taskName,
+  location,
+  notes,
+  dogName,
+  isCompleted,
+  onCheckChange,
+  onDeleteTask,
+  onUpdateTask,
+}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [check, setCheck] = useState(isCompleted);
+  const [check, setCheck] = useState(isCompleted); // Ensure check state reflects completion status
   const [editedTaskName, setEditedTaskName] = useState(taskName);
   const [editedLocation, setEditedLocation] = useState(location);
   const [editedNotes, setEditedNotes] = useState(notes);
 
+  // Ensure that the local state reflects the props when they change
+  useEffect(() => {
+    setCheck(isCompleted);
+  }, [isCompleted]);
+
   const saveChanges = async () => {
-    // Construct the updated task object with the edited fields
     const updatedTask = {
       id: taskId,
       name: editedTaskName,
       location: editedLocation,
       notes: editedNotes,
       dog: dogName,
-      // Add other fields here if needed
     };
-    console.log('updatedTask ', updatedTask);
-    // Call the updateTask API with the updated task object
     const response = await updateTask(taskId, updatedTask);
     if (response && response.id) {
       onUpdateTask(taskId, response);
     } else {
-      // Handle error if needed
-      console.error('Error updating task:', response);
+      console.error("Error updating task:", response);
     }
-  
-    // Close the modal
+
     setIsModalVisible(false);
   };
 
@@ -45,16 +58,14 @@ const Task = ({ taskId, taskName, location, notes, dogName, isCompleted, onCheck
   };
 
   const handleCheckboxPress = () => {
-    console.log('Checkbox pressed');
     const newCheckState = !check;
-    setCheck(newCheckState);
-    onCheckChange(newCheckState); // Call the function passed from parent component
+    setCheck(newCheckState); // Update local state
+    onCheckChange(newCheckState); // Update parent component's state
   };
 
   const deleteTaskHandler = async () => {
     const success = await deleteTask(taskId);
     if (success) {
-      // Call the onDeleteTask callback function passed from the parent component
       onDeleteTask(taskId);
     } else {
       // Handle deletion failure
@@ -62,91 +73,119 @@ const Task = ({ taskId, taskName, location, notes, dogName, isCompleted, onCheck
     setIsModalVisible(false);
   };
 
-  useEffect(() => {
-    console.log('isCompleted:', isCompleted);
-    console.log('check:', check);
-  }, [isCompleted, check]);
-
   return (
     <View style={styles.container}>
       <TouchableOpacity>
-        <View style={styles.checkBoxContainer}> 
+        <View style={styles.checkBoxContainer}>
           <CheckBox
             center
-            checkedIcon={<Icon name="radio-button-checked" type="material" color="black" size={30} />}
-            uncheckedIcon={<Icon name="radio-button-unchecked" type="material" color="black" size={30} />}
+            checkedIcon={
+              <Icon
+                name="radio-button-checked"
+                type="material"
+                color="black"
+                size={30}
+              />
+            }
+            uncheckedIcon={
+              <Icon
+                name="radio-button-unchecked"
+                type="material"
+                color="black"
+                size={30}
+              />
+            }
             checked={check}
             onPress={handleCheckboxPress}
-            containerStyle={{ backgroundColor: '#92cdca', justifyContent: 'center' }}
+            containerStyle={{
+              backgroundColor: "#92cdca",
+              justifyContent: "center",
+            }}
           />
         </View>
       </TouchableOpacity>
       <TouchableOpacity onPress={toggleModal}>
-        <View style={styles.textContainer}> 
+        <View style={styles.textContainer}>
           <Text style={styles.taskName}>{taskName}</Text>
-          <Text style={styles.taskNotes} numberOfLines={1} ellipsizeMode='tail'>
-            {dogName} - {notes}
-          </Text>
+          {notes ? (
+            <Text
+              style={styles.taskNotes}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {dogName} - {notes}
+            </Text>
+          ) : (
+            <Text
+              style={styles.taskNotes}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {dogName}
+            </Text>
+          )}
         </View>
       </TouchableOpacity>
       <Modal visible={isModalVisible} animationType="slide">
-  <View style={styles.modalContainer}>
-    <Text style={styles.dogName}>{dogName}</Text>
-    <TextInput
-      style={styles.input}
-      placeholder="Task Name"
-      value={editedTaskName}
-      onChangeText={setEditedTaskName}
-    />
-    <TextInput
-      style={styles.input}
-      placeholder="Location"
-      value={editedLocation}
-      onChangeText={setEditedLocation}
-    />
-    <TextInput
-      style={[styles.input, styles.notesInput]} // Apply styles for multiline input
-      placeholder="Notes"
-      value={editedNotes}
-      onChangeText={setEditedNotes}
-      multiline={true} // Enable multiline
-      numberOfLines={4} // Set the maximum number of lines
-    />
-    <Button title="Save" onPress={saveChanges} />
-    <TouchableOpacity style={styles.deleteButton} onPress={deleteTaskHandler}>
-      <Text style={styles.deleteButtonText}>Delete</Text>
-    </TouchableOpacity>
-    <Button title="Cancel" onPress={toggleModal} />
-  </View>
-</Modal>
+        <View style={styles.modalContainer}>
+          <Text style={styles.dogName}>{dogName}</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Task Name"
+            value={editedTaskName}
+            onChangeText={setEditedTaskName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Location"
+            value={editedLocation}
+            onChangeText={setEditedLocation}
+          />
+          <TextInput
+            style={[styles.input, styles.notesInput]}
+            placeholder="Notes"
+            value={editedNotes}
+            onChangeText={setEditedNotes}
+            multiline={true}
+            numberOfLines={4}
+          />
+          <Button title="Save" onPress={saveChanges} />
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={deleteTaskHandler}
+          >
+            <Text style={styles.deleteButtonText}>Delete</Text>
+          </TouchableOpacity>
+          <Button title="Cancel" onPress={toggleModal} />
+        </View>
+      </Modal>
     </View>
   );
 };
 
-
-
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 10,
-    backgroundColor: '#92cdca',
-    alignItems: 'center',
-    marginBottom: 8,
+    flexDirection: "row",
+    // padding: 2,
+    // borderWidth: 1,
+    // borderRadius: 10,
+    backgroundColor: "#92cdca",
+    alignItems: "center",
   },
   taskName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 15,
+    // fontWeight: 'bold',
     marginBottom: 5,
+    top: 12,
   },
   taskNotes: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
+    top: 6,
   },
   checkBoxContainer: {
     marginRight: 10,
-    backgroundColor: '#92cdca',
+    backgroundColor: "#92cdca",
   },
   textContainer: {
     flex: 1,
@@ -154,19 +193,19 @@ const styles = StyleSheet.create({
   expandedContainer: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 10,
     marginTop: 5,
   },
   modalContainer: {
     paddingTop: 100,
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   modalText: {
@@ -175,37 +214,36 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
   },
   notesInput: {
     height: 100,
-    textAlignVertical: 'top', // Allows multiline text alignment
+    textAlignVertical: "top", // Allows multiline text alignment
   },
   modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   dogName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   deleteButton: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginTop: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   deleteButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
 });
-
 
 export default Task;

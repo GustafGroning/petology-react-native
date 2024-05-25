@@ -3,11 +3,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const getDogsForUser = async () => {
   try {
     const token = await AsyncStorage.getItem("userToken");
-    const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/all/`, {
-      headers: {
-        Authorization: `JWT ${token}`,
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/all/`,
+      {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
       },
-    });
+    );
     const data = await response.json();
 
     if (response.ok && Array.isArray(data.dogs)) {
@@ -25,7 +28,7 @@ const getDogsForUser = async () => {
         possible_feed_intolerance: dog.possible_feed_intolerance,
         id_number: dog.id_number,
         registration_number: dog.registration_number,
-        passport_number: dog.passport_number
+        passport_number: dog.passport_number,
       }));
       return formattedDogs;
     } else {

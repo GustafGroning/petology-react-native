@@ -164,7 +164,7 @@ const LandingPage = ({ navigation }) => {
                 {" "}
                 Inga uppgifter{" "}
               </Text>
-              <Text style={styles.noTasksLeftTextLineTwo}> kvar idag! </Text>
+              <Text style={styles.noTasksLeftTextLineTwo}> idag! </Text>
             </View>
           )}
         </View>

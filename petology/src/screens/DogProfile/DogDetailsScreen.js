@@ -31,7 +31,6 @@ const DogDetailsScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       
-
           <TouchableOpacity
             style={styles.editInformationButton}
             onPress={() => navigation.navigate('UpdateDogDetailsScreen', { dogId: dogId })}

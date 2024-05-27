@@ -4,6 +4,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // API's
 import getDogById from '../../api_calls/dog/getDogById';
 import getTasksForDog from '../../api_calls/task/getTaskForDog';
+import getLatestHealthIndexRowForDog from '../../api_calls/healthIndex/getLatestHealthIndexRowForDog';
+
+// COMPONENTS
+import HealthIndexBanner from '../../components/DogProfileComponents/HealthIndexBanner';
+
 // STYLING
 import Footer from '../../components/common/Footer';
 import Task from '../../components/common/task/Task';
@@ -12,21 +17,22 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const DogMainScreen = ({ navigation, route }) => {
   const [selectedDog, setSelectedDog] = useState(null);
   const [dogTasks, setDogTasks] = useState([]);
+  const [healthIndexLatestRow, setHealthIndexLatestRow] = useState(null);
 
   const { dogId } = route.params;
 
   useEffect(() => {
     fetchSelectedDog();
-    fetchDogTasks(); // Call fetchDogTasks when the component mounts
-  }, []);
-  
+    fetchDogTasks();
+    fetchLatestHealthIndexRowForDog();
+  }, [dogId]);
+
   useEffect(() => {
     if (selectedDog?.birthday) {
       const age = calculateAge(selectedDog.birthday);
       console.log('Age:', age);
     }
   }, [selectedDog]);
-  
 
   const fetchSelectedDog = async () => {
     try {
@@ -39,20 +45,32 @@ const DogMainScreen = ({ navigation, route }) => {
 
   const fetchDogTasks = async () => {
     try {
-      const tasks = await getTasksForDog(dogId); // Call getTasksForDog with dogId
+      const tasks = await getTasksForDog(dogId);
       setDogTasks(tasks);
     } catch (error) {
       console.error('Error fetching dog tasks:', error);
     }
   };
 
+  const fetchLatestHealthIndexRowForDog = async () => {
+    try {
+      const row = await getLatestHealthIndexRowForDog(dogId);
+      setHealthIndexLatestRow(row);
+      console.log(row);
+    } catch (error) {
+      console.error('Error fetching latest health index row:', error);
+    }
+  };
+
   const calculateAge = (birthday) => {
-    const monthsDiff = (new Date().getFullYear() - new Date(birthday).getFullYear()) * 12 + new Date().getMonth() - new Date(birthday).getMonth();
-    console.log(monthsDiff);
+    const birthDate = new Date(birthday);
+    const ageDifMs = Date.now() - birthDate.getTime();
+    const ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
   return (
-    <View style={styles.container}> 
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.dogHeaderContainer}>
           <View style={styles.headerContainer}>
@@ -62,13 +80,13 @@ const DogMainScreen = ({ navigation, route }) => {
 
         <View style={styles.diagramContainer}>
           <View style={styles.headerContainer}>
-            <Text style={styles.headerText}> Status </Text>
+            <Text style={styles.headerText}>Status</Text>
           </View>
         </View>
 
         <View style={styles.dogInfoContainer}>
           <View style={styles.headerContainer}>
-            <Text style={styles.headerText}> Information </Text>
+            <Text style={styles.headerText}>Information</Text>
           </View>
           <TouchableOpacity
             style={styles.editInformationButton}
@@ -76,7 +94,7 @@ const DogMainScreen = ({ navigation, route }) => {
           >
             <FontAwesome name='arrow-right' size={20} color='#000' />
           </TouchableOpacity>
-          
+
           <Text style={styles.dogInfoText}>Stamtavlenamn: {selectedDog?.pedigree_name}</Text>
           <Text style={styles.dogInfoText}>Ras: {selectedDog?.breed}</Text>
           <Text style={styles.dogInfoText}>Födelsedag: {selectedDog?.birthday}</Text>
@@ -98,10 +116,24 @@ const DogMainScreen = ({ navigation, route }) => {
 
           <Text style={styles.dogInfoText}>Foder: {selectedDog?.feed}</Text>
           <Text style={styles.dogInfoText}>Eventuella foderintoleranser: {selectedDog?.possible_feed_intolerance}</Text>
-
         </View>
+
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Pågående vårdplaner</Text>
+        </View>
+        <View style={styles.carePlanListContainer}>
+          {healthIndexLatestRow && (
+            <>
+              {/* <Text>batches_in_row: {healthIndexLatestRow.batches_in_row}</Text> */}
+              <HealthIndexBanner batches_in_row={healthIndexLatestRow.batches_in_row} last_performed_date={healthIndexLatestRow.date_performed}/>
+            </>
+          )}
+        </View>
+
         <View style={styles.taskListContainer}>
-          <Text style={styles.taskListHeader}>Dog's Tasks:</Text>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>Dog's Tasks:</Text>
+          </View>
           {dogTasks.map(task => (
             <Task
               key={task.id}
@@ -192,6 +224,9 @@ const styles = StyleSheet.create({
 
   spaceBetweenFields: {
     marginBottom: 20,
+  },
+  carePlanListContainer: {
+    height: 180,
   }
 });
 

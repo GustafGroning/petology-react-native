@@ -16,6 +16,7 @@ import DogMainScreen from './src/screens/DogProfile/DogMainScreen';
 import DogDetailsScreen from './src/screens/DogProfile/DogDetailsScreen';
 import UpdateDogDetailsScreen from './src/screens/DogProfile/UpdateDogDetailsScreen';
 import InputUserBasicInfoScreen from './src/screens/InputUserBasicInfoScreen';
+import HealthIndexSurveyScreen from './src/screens/DogProfile/HealthIndexSurveyScreen';
 
 // LIBRARY SCREENS
 import ArticleListScreen from './src/screens/Library/ArticleListScreen';
@@ -48,6 +49,8 @@ const App = () => {
           <Stack.Screen name='DogDetailsScreen' component={DogDetailsScreen} />
           <Stack.Screen name='UpdateDogDetailsScreen' component={UpdateDogDetailsScreen} />
           <Stack.Screen name='InputUserBasicInfoScreen' component={InputUserBasicInfoScreen} />
+          <Stack.Screen name='HealthIndexSurveyScreen' component={HealthIndexSurveyScreen} />
+          
           
           <Stack.Screen name='ArticleList' component={ArticleListScreen} />
           <Stack.Screen name='ArticleScreen' component={ArticleScreen} />

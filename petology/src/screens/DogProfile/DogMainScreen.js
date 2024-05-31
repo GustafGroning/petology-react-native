@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // API's
 import getDogById from '../../api_calls/dog/getDogById';
@@ -20,12 +21,15 @@ const DogMainScreen = ({ navigation, route }) => {
   const [healthIndexLatestRow, setHealthIndexLatestRow] = useState(null);
 
   const { dogId } = route.params;
+  console.log('dogId in Main ', dogId);
 
-  useEffect(() => {
-    fetchSelectedDog();
-    fetchDogTasks();
-    fetchLatestHealthIndexRowForDog();
-  }, [dogId]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchSelectedDog();
+      fetchDogTasks();
+      fetchLatestHealthIndexRowForDog();
+    }, [dogId])
+  );
 
   useEffect(() => {
     if (selectedDog?.birthday) {
@@ -124,8 +128,13 @@ const DogMainScreen = ({ navigation, route }) => {
         <View style={styles.carePlanListContainer}>
           {healthIndexLatestRow && (
             <>
-              {/* <Text>batches_in_row: {healthIndexLatestRow.batches_in_row}</Text> */}
-              <HealthIndexBanner batches_in_row={healthIndexLatestRow.batches_in_row} last_performed_date={healthIndexLatestRow.date_performed}/>
+              <HealthIndexBanner 
+                batches_in_row={healthIndexLatestRow.batches_in_row}          // Only for displaying streak.
+                last_performed_date={healthIndexLatestRow.date_performed}     // Disables button if survey has been performed within 24h.
+                latest_batch = {healthIndexLatestRow.latest_run_batch_id}
+                navigation={navigation}
+                dog_id={dogId}
+              />
             </>
           )}
         </View>
@@ -194,23 +203,19 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   taskListContainer: {
-    // padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
-
-    // marginTop: 20,
     height: 200,
   },
   taskListHeader: {
     fontSize: 24,
     fontWeight: 'bold',
   },
-
   editInformationButton: {
-    zIndex: 1, // Set a higher zIndex for the button
-    position: 'absolute', // Position the button absolutely
-    top: 28, // Adjust the top position as needed
-    right: 30, // Adjust the right position as needed
+    zIndex: 1,
+    position: 'absolute',
+    top: 28,
+    right: 30,
     alignItems: 'center',
     justifyContent: 'center',
     width: 28,
@@ -221,7 +226,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
   },
-
   spaceBetweenFields: {
     marginBottom: 20,
   },

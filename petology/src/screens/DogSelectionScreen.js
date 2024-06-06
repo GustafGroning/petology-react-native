@@ -12,6 +12,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import getDogsForUser from '../api_calls/dog/getDogsForUser';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect hook
+import { LinearGradient } from 'expo-linear-gradient';
 
 const DogSelectionScreen = ({ navigation }) => {
   const [dogs, setDogs] = useState([]);
@@ -55,7 +56,10 @@ const DogSelectionScreen = ({ navigation }) => {
   
   /**********************************************************************************/
   return (
-    <View style={styles.container}>
+    <LinearGradient
+    colors={['#86c8c5', '#e4f4f2']}
+    style={styles.container}
+    >
       <View style={{ flex: 1, }}>
         <Header/>
         <View style={styles.subHeaderSection}>
@@ -80,7 +84,7 @@ const DogSelectionScreen = ({ navigation }) => {
         </ScrollView>
       </View>
       <Footer navigation={navigation}/>
-    </View>
+    </LinearGradient>
   );  
 };
   /**********************************************************************************/

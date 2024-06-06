@@ -2,22 +2,21 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, Text } from "react-native-paper";
+import { LinearGradient } from 'expo-linear-gradient';
 import getUserFirstAndLastNames from "../api_calls/user/getUserFirstAndLastNames";
 
 const LoginScreen = ({ navigation }) => {
-  /**********************************************************************************/
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  /**********************************************************************************/
   const navigateToSignUp = () => {
     setEmail("");
     setPassword("");
     navigation.navigate("SignUp");
   };
+
   const handleLogin = async () => {
     try {
-      // Authenticate the user
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_DEV_URL}/api-token-auth/`,
         {
@@ -38,16 +37,13 @@ const LoginScreen = ({ navigation }) => {
         const { token } = data;
         await AsyncStorage.setItem("userToken", token); // Store the token
 
-        // Fetch user's basic info
         const basicInfo = await getUserFirstAndLastNames();
 
-        // If the user has no full name, navigate to basic info signup
         if (!basicInfo || !basicInfo.full_name) {
           navigation.navigate("InputUserBasicInfoScreen");
           return;
         }
 
-        // Fetch user's dogs
         const dogsResponse = await fetch("http://localhost:8000/api/dog/all/", {
           method: "GET",
           headers: {
@@ -63,18 +59,18 @@ const LoginScreen = ({ navigation }) => {
           navigation.navigate("DogIntroduction");
         }
       } else {
-        // Handle login failure (e.g., show an error message)
         console.log("Login failed");
       }
     } catch (error) {
       console.error(error);
-      // Handle network or other errors
     }
   };
 
-  /**********************************************************************************/
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#86c8c5', '#e4f4f2']}
+      style={styles.container}
+    >
       <View style={styles.headerBox}>
         <View style={styles.headerContainer}>
           <Text variant="headlineMedium">Petology</Text>
@@ -91,7 +87,7 @@ const LoginScreen = ({ navigation }) => {
         />
         <TextInput
           style={styles.input}
-          placeholder="password"
+          placeholder="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -110,22 +106,19 @@ const LoginScreen = ({ navigation }) => {
           <Button onPress={navigateToSignUp}>Sign up</Button>
         </View>
       </View>
-      {/* <View style={styles.loginButtonBox}></View> */}
       <View style={styles.boxFour}></View>
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#92cdca",
     flex: 1,
     justifyContent: "space-around",
     paddingTop: 40,
   },
   headerBox: {
     flex: 1,
-    backgroundColor: "#92cdca",
     alignItems: "center",
     padding: 10,
   },
@@ -150,7 +143,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
-    // backgroundColor: 'gold',
   },
   boxFour: {
     flex: 3,
@@ -159,5 +151,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
-
-// alpha-p-circle

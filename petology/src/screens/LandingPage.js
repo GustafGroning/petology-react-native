@@ -18,6 +18,8 @@ import Task from "../components/common/task/Task";
 import SubHeader from "../components/common/SubHeader";
 import getUserTasks from "../api_calls/task/getUserTasks";
 
+import { LinearGradient } from 'expo-linear-gradient';
+
 const LandingPage = ({ navigation }) => {
   const widthAndHeight = 120;
   const sliceColor = ["#eff8f7", "#a55671"];
@@ -118,7 +120,10 @@ const LandingPage = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+    colors={['#86c8c5', '#e4f4f2']}
+    style={styles.container}
+    >
       <ScrollView style={styles.scrollView}>
         <Header />
         <View style={styles.dayStatSection}>
@@ -244,7 +249,7 @@ const LandingPage = ({ navigation }) => {
         <View style={styles.emptyContainer}></View>
       </ScrollView>
       <Footer navigation={navigation} />
-    </View>
+    </LinearGradient>
   );
 };
 

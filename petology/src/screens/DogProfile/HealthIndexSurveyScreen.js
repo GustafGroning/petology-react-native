@@ -12,6 +12,7 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState({});
     const [showModal, setShowModal] = useState(false);
+    const [showExitConfirmationModal, setShowExitConfirmationModal] = useState(false);
 
     const { latest_question_batch, dogId } = route.params;
     console.log('dogId:', dogId);
@@ -119,6 +120,13 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
         navigation.navigate('DogMainScreen', { dogId: dogId });
     };
 
+    const handleExitConfirmation = (confirm) => {
+        if (confirm) {
+            navigation.navigate('DogMainScreen', { dogId: dogId });
+        }
+        setShowExitConfirmationModal(false);
+    };
+
     return (
         <View style={styles.container}>
             <ScrollView style={styles.scrollView}>
@@ -127,7 +135,7 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                     <View style={styles.closeButtonContainer}>
                         <TouchableOpacity
                             style={styles.closeButton}
-                            onPress={() => navigation.navigate('DogMainScreen', { dogId: dogId })}
+                            onPress={() => setShowExitConfirmationModal(true)}
                         >
                             <Text style={styles.closeButtonText}>X</Text>
                         </TouchableOpacity>
@@ -166,6 +174,26 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                             <Button mode='contained' onPress={handleCloseModal} buttonColor='#4a8483'>
                                 OK
                             </Button>
+                        </View>
+                    </View>
+                </Modal>
+                <Modal
+                    visible={showExitConfirmationModal}
+                    transparent={true}
+                    animationType="slide"
+                    onRequestClose={() => setShowExitConfirmationModal(false)}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalText}>Vill du verkligen avsluta undersökningen?</Text>
+                            <View style={styles.modalButtonContainer}>
+                                <Button mode='contained' onPress={() => handleExitConfirmation(true)} buttonColor='#4a8483'>
+                                    Ja
+                                </Button>
+                                <Button mode='contained' onPress={() => handleExitConfirmation(false)} buttonColor='#4a8483' style={{ marginLeft: 10 }}>
+                                    Nej
+                                </Button>
+                            </View>
                         </View>
                     </View>
                 </Modal>
@@ -253,6 +281,10 @@ const styles = StyleSheet.create({
     skipButton: {
         fontSize: 16,
         textDecorationLine: 'underline',
+    },
+    modalButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
 });
 

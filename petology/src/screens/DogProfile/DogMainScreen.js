@@ -89,15 +89,15 @@ const DogMainScreen = ({ navigation, route }) => {
         </View>
 
         <View style={styles.dogInfoContainer}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Information</Text>
+          <View style={styles.infoHeaderContainer}>
+            <Text style={styles.infoHeaderText}>Information</Text>
+            <TouchableOpacity
+              style={styles.editInformationButton}
+              onPress={() => navigation.navigate('DogDetailsScreen', { dogId: dogId })}
+            >
+              <FontAwesome name='arrow-right' size={20} color='#000' />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.editInformationButton}
-            onPress={() => navigation.navigate('DogDetailsScreen', { dogId: dogId })}
-          >
-            <FontAwesome name='arrow-right' size={20} color='#000' />
-          </TouchableOpacity>
 
           <Text style={styles.dogInfoText}>Stamtavlenamn: {selectedDog?.pedigree_name}</Text>
           <Text style={styles.dogInfoText}>Ras: {selectedDog?.breed}</Text>
@@ -109,7 +109,7 @@ const DogMainScreen = ({ navigation, route }) => {
 
           <Text style={styles.dogInfoText}>ID-nummer: {selectedDog?.id_number}</Text>
           <Text style={styles.dogInfoText}>Registreringsnummer: {selectedDog?.registration_number}</Text>
-          <Text style={styles.dogInfoText}>Passnummber: {selectedDog?.passport_number}</Text>
+          <Text style={styles.dogInfoText}>Passnummer: {selectedDog?.passport_number}</Text>
 
           <View style={styles.spaceBetweenFields}></View>
 
@@ -160,7 +160,7 @@ const DogMainScreen = ({ navigation, route }) => {
           ))}
         </View>
       </ScrollView>
-      <Footer navigation={navigation} />
+      <Footer style={styles.footer} navigation={navigation} />
     </View>
   );
 };
@@ -172,66 +172,82 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 80, // Adjust this value as needed to ensure the Footer is visible
   },
   dogHeaderContainer: {
-    marginTop: 150,
+    marginTop: 40,
     height: 100,
     alignItems: 'center',
   },
   headerContainer: {
     alignItems: 'center',
+    marginVertical: 10,
   },
   diagramContainer: {
     height: 350,
-    backgroundColor: 'gold',
+    backgroundColor: '#F3EAC2',
     alignItems: 'center',
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginBottom: 20,
+    padding: 10,
   },
   dogInfoContainer: {
-    backgroundColor: 'red',
+    backgroundColor: '#CDECE8',
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,
+    marginHorizontal: 20,
+  },
+  infoHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  infoHeaderText: {
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   dogInfoText: {
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 10,
   },
   headerText: {
-    fontSize: 36,
-    fontFamily: 'Cochin',
+    fontSize: 24,
+    fontWeight: 'bold',
     opacity: 0.7,
   },
   taskListContainer: {
-    backgroundColor: '#fff',
     borderRadius: 10,
-    height: 200,
+    marginHorizontal: 20,
+    padding: 10,
+    marginBottom: 20,
   },
   taskListHeader: {
     fontSize: 24,
     fontWeight: 'bold',
   },
   editInformationButton: {
-    zIndex: 1,
-    position: 'absolute',
-    top: 28,
-    right: 30,
     alignItems: 'center',
     justifyContent: 'center',
     width: 28,
     height: 28,
-  },
-  editInformationButtonText: {
-    color: 'black',
-    fontSize: 15,
-    fontWeight: 'bold',
   },
   spaceBetweenFields: {
     marginBottom: 20,
   },
   carePlanListContainer: {
     height: 180,
-  }
+    marginBottom: 25,
+    alignItems: 'center',
+  },
+  footer: {
+    position: 'absolute',
+    top: 15,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
 });
 
 export default DogMainScreen;

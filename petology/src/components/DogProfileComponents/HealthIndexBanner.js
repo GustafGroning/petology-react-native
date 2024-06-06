@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
-import doggo from '../../../assets/doggo.jpg';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, navigation, dog_id }) => {
   const [isToday, setIsToday] = useState(false);
@@ -35,20 +35,19 @@ const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, 
       onPress={!isToday ? navigateToHealthIndexSurvey : null}
       disabled={isToday}
     >
-      <View style={styles.imageContainer}>
-        <ImageBackground   
-          style={styles.dogImage}
-          imageStyle={{ borderRadius: 30 }}
-          source={doggo}
-        />
-        <Text style={styles.batchAmountTextStyling}>{batches_in_row} dagar</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>Undersökning</Text>
+        <FontAwesome name="heart" size={20} color="#000" style={styles.icon} />
+        <Text style={styles.dogName}>Ellie</Text>
       </View>
-      <View style={styles.textContainer}> 
-        <Text>Undersökning</Text>
-        <Text>
-          {isToday ? 'klar med dagens undersökning' : 'Dagens undersökning redo'}
+      <View style={styles.daysContainer}>
+        <FontAwesome name="fire" size={20} color="#E94F37" />
+        <Text style={styles.daysText}>{batches_in_row} dagar</Text>
+      </View>
+      <View style={styles.messageContainer}>
+        <Text style={styles.messageText}>
+          {isToday ? 'genomförd idag!' : 'starta undersökningen'}
         </Text>
-        <Text>{last_performed_date.split('T')[0]}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -56,42 +55,52 @@ const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, 
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'row',
-    height: 90,
-    top: 10,
+    width: '90%',
+    height: 95,
+    borderWidth: 1,
+    borderRadius: 15,
+    backgroundColor: '#9ecccb',
+    padding: 10,
+    marginVertical: 10,
   },
-  imageContainer: {
-    flex: 1,
-    height: 90,
-    justifyContent: 'center',
+  headerContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  dogImage: {
-    height: 90,
-    width: 90,
-    borderRadius: 30,
-    left: 0,
-    zIndex: 1,
-  },
-  batchAmountTextStyling: {
-    position: 'absolute',
-    fontSize: 22,
-    zIndex: 1000,
-    bottom: 10,
-  },
-  textContainer: {
-    flex: 2,
-    height: 90,
-    width: '100%',
-    backgroundColor: '#ebf9f8',
-    zIndex: 0,
-    justifyContent: 'center',
-  },
-  textStyle: {
-    marginLeft: 70,
-    marginBottom: 6,
+  headerText: {
     fontSize: 15,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  icon: {
+    marginRight: 10,
+  },
+  dogName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  daysContainer: {
+    position: 'absolute',
+    right: 10,
+    top: 30,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  daysText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginRight: 5,
+    color: '#E94F37',
+  },
+  messageContainer: {
+    marginTop: 10,
+    right: 95,
+    alignItems: 'center',
+  },
+  messageText: {
+    color: 'blue',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

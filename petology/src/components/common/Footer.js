@@ -19,7 +19,7 @@ const Footer = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigateToScreen('DogSelection')}>
       <FontAwesome name="paw" size={20} color="#000" />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigateToScreen('Screen4')}>
+      <TouchableOpacity onPress={() => navigateToScreen('PulseMonitorScreen')}>
       <FontAwesome name="heart" size={20} color="#000" />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigateToScreen('LibraryScreen')}>

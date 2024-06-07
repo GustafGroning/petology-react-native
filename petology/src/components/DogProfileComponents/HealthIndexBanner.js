@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import getDogById from '../../api_calls/dog/getDogById';
 
 const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, navigation, dog_id }) => {
   const [isToday, setIsToday] = useState(false);
+  const [dogName, setDogName] = useState('');
 
   const navigateToHealthIndexSurvey = () =>  {
     console.log('test');
@@ -16,6 +18,15 @@ const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, 
   };
 
   useEffect(() => {
+    const fetchDogData = async () => {
+      const dogData = await getDogById(dog_id);
+      if (dogData) {
+        setDogName(dogData.name);
+      }
+    };
+
+    fetchDogData();
+
     const today = new Date();
     const lastPerformed = new Date(last_performed_date);
 
@@ -26,7 +37,7 @@ const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, 
     );
 
     setIsToday(isSameDay);
-  }, [last_performed_date]);
+  }, [last_performed_date, dog_id]);
 
   console.log('isToday ', isToday);
   return (
@@ -38,7 +49,7 @@ const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, 
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Undersökning</Text>
         <FontAwesome name="heart" size={20} color="#000" style={styles.icon} />
-        <Text style={styles.dogName}>Ellie</Text>
+        <Text style={styles.dogName}>{dogName}</Text>
       </View>
       <View style={styles.daysContainer}>
         <FontAwesome name="fire" size={20} color="#E94F37" />
@@ -57,7 +68,6 @@ const styles = StyleSheet.create({
   container: {
     width: '90%',
     height: 95,
-    borderWidth: 1,
     borderRadius: 15,
     backgroundColor: '#9ecccb',
     padding: 10,
@@ -93,8 +103,8 @@ const styles = StyleSheet.create({
     color: '#E94F37',
   },
   messageContainer: {
-    marginTop: 10,
-    right: 95,
+    top: 15,
+    right: 85,
     alignItems: 'center',
   },
   messageText: {

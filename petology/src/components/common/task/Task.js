@@ -98,7 +98,7 @@ const Task = ({
             checked={check}
             onPress={handleCheckboxPress}
             containerStyle={{
-              backgroundColor: "#92cdca",
+              backgroundColor: "transparent",
               justifyContent: "center",
             }}
           />
@@ -166,15 +166,10 @@ const Task = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    // padding: 2,
-    // borderWidth: 1,
-    // borderRadius: 10,
-    backgroundColor: "#92cdca",
     alignItems: "center",
   },
   taskName: {
     fontSize: 15,
-    // fontWeight: 'bold',
     marginBottom: 5,
     top: 12,
   },
@@ -185,7 +180,6 @@ const styles = StyleSheet.create({
   },
   checkBoxContainer: {
     marginRight: 10,
-    backgroundColor: "#92cdca",
   },
   textContainer: {
     flex: 1,
@@ -193,7 +187,6 @@ const styles = StyleSheet.create({
   expandedContainer: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#f0f0f0",
     borderRadius: 10,
     marginTop: 5,
   },

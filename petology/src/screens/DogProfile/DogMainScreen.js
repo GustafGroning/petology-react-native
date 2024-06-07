@@ -14,11 +14,13 @@ import HealthIndexBanner from '../../components/DogProfileComponents/HealthIndex
 import Footer from '../../components/common/Footer';
 import Task from '../../components/common/task/Task';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const DogMainScreen = ({ navigation, route }) => {
   const [selectedDog, setSelectedDog] = useState(null);
   const [dogTasks, setDogTasks] = useState([]);
   const [healthIndexLatestRow, setHealthIndexLatestRow] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { dogId } = route.params;
   console.log('dogId in Main ', dogId);
@@ -50,7 +52,8 @@ const DogMainScreen = ({ navigation, route }) => {
   const fetchDogTasks = async () => {
     try {
       const tasks = await getTasksForDog(dogId);
-      setDogTasks(tasks);
+      const incompleteTasks = tasks.filter(task => !task.completed);
+      setDogTasks(incompleteTasks);
     } catch (error) {
       console.error('Error fetching dog tasks:', error);
     }
@@ -73,8 +76,52 @@ const DogMainScreen = ({ navigation, route }) => {
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
+  const handleTaskCompletion = async (taskId, completed) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (token) {
+        await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/patch/${taskId}/`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `JWT ${token}`,
+          },
+          body: JSON.stringify({ completed }),
+        });
+        fetchDogTasks();
+      }
+    } catch (error) {
+      console.error('Error updating task completion:', error);
+    }
+  };
+
+  const handleTaskDeletion = async (taskId) => {
+    if (isDeleting) return;
+    setIsDeleting(true);
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (token) {
+        await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/delete/${taskId}/`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `JWT ${token}`,
+          },
+        });
+        fetchDogTasks();
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <LinearGradient 
+      colors={['#86c8c5', '#e4f4f2']}
+      style={styles.container}
+    >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.dogHeaderContainer}>
           <View style={styles.headerContainer}>
@@ -89,38 +136,38 @@ const DogMainScreen = ({ navigation, route }) => {
         </View>
 
         <View style={styles.dogInfoContainer}>
-          <View style={styles.infoHeaderContainer}>
-            <Text style={styles.infoHeaderText}>Information</Text>
-            <TouchableOpacity
-              style={styles.editInformationButton}
-              onPress={() => navigation.navigate('DogDetailsScreen', { dogId: dogId })}
-            >
-              <FontAwesome name='arrow-right' size={20} color='#000' />
-            </TouchableOpacity>
-          </View>
+  <View style={styles.infoHeaderContainer}>
+    <Text style={styles.infoHeaderText}>Information</Text>
+    <TouchableOpacity
+      style={styles.editInformationButton}
+      onPress={() => navigation.navigate('DogDetailsScreen', { dogId: dogId })}
+    >
+      <FontAwesome name='arrow-right' size={20} color='#000' />
+    </TouchableOpacity>
+  </View>
 
-          <Text style={styles.dogInfoText}>Stamtavlenamn: {selectedDog?.pedigree_name}</Text>
-          <Text style={styles.dogInfoText}>Ras: {selectedDog?.breed}</Text>
-          <Text style={styles.dogInfoText}>Födelsedag: {selectedDog?.birthday}</Text>
-          <Text style={styles.dogInfoText}>Kön: {selectedDog?.sex}</Text>
-          <Text style={styles.dogInfoText}>Färg: {selectedDog?.color}</Text>
+  <Text style={styles.dogInfoLabel}>Stamtavlenamn: <Text style={styles.dogInfoText}>{selectedDog?.pedigree_name}</Text></Text>
+  <Text style={styles.dogInfoLabel}>Ras: <Text style={styles.dogInfoText}>{selectedDog?.breed}</Text></Text>
+  <Text style={styles.dogInfoLabel}>Födelsedag: <Text style={styles.dogInfoText}>{selectedDog?.birthday}</Text></Text>
+  <Text style={styles.dogInfoLabel}>Kön: <Text style={styles.dogInfoText}>{selectedDog?.sex}</Text></Text>
+  <Text style={styles.dogInfoLabel}>Färg: <Text style={styles.dogInfoText}>{selectedDog?.color}</Text></Text>
 
-          <View style={styles.spaceBetweenFields}></View>
+  <View style={styles.spaceBetweenFields}></View>
 
-          <Text style={styles.dogInfoText}>ID-nummer: {selectedDog?.id_number}</Text>
-          <Text style={styles.dogInfoText}>Registreringsnummer: {selectedDog?.registration_number}</Text>
-          <Text style={styles.dogInfoText}>Passnummer: {selectedDog?.passport_number}</Text>
+  <Text style={styles.dogInfoLabel}>ID-nummer: <Text style={styles.dogInfoText}>{selectedDog?.id_number}</Text></Text>
+  <Text style={styles.dogInfoLabel}>Registreringsnummer: <Text style={styles.dogInfoText}>{selectedDog?.registration_number}</Text></Text>
+  <Text style={styles.dogInfoLabel}>Passnummer: <Text style={styles.dogInfoText}>{selectedDog?.passport_number}</Text></Text>
 
-          <View style={styles.spaceBetweenFields}></View>
+  <View style={styles.spaceBetweenFields}></View>
 
-          <Text style={styles.dogInfoText}>Försäkringsbolag: {selectedDog?.insurance_company}</Text>
-          <Text style={styles.dogInfoText}>Försäkringsnummer: {selectedDog?.insurance_number}</Text>
+  <Text style={styles.dogInfoLabel}>Försäkringsbolag: <Text style={styles.dogInfoText}>{selectedDog?.insurance_company}</Text></Text>
+  <Text style={styles.dogInfoLabel}>Försäkringsnummer: <Text style={styles.dogInfoText}>{selectedDog?.insurance_number}</Text></Text>
 
-          <View style={styles.spaceBetweenFields}></View>
+  <View style={styles.spaceBetweenFields}></View>
 
-          <Text style={styles.dogInfoText}>Foder: {selectedDog?.feed}</Text>
-          <Text style={styles.dogInfoText}>Eventuella foderintoleranser: {selectedDog?.possible_feed_intolerance}</Text>
-        </View>
+  <Text style={styles.dogInfoLabel}>Foder: <Text style={styles.dogInfoText}>{selectedDog?.feed}</Text></Text>
+  <Text style={styles.dogInfoLabel}>Eventuella foderintoleranser: <Text style={styles.dogInfoText}>{selectedDog?.possible_feed_intolerance}</Text></Text>
+</View>
 
         <View style={styles.headerContainer}>
           <Text style={styles.headerText}>Pågående vårdplaner</Text>
@@ -153,15 +200,17 @@ const DogMainScreen = ({ navigation, route }) => {
               location={task.location}
               dogName={task.dog}
               isCompleted={task.completed}
-              onCheckChange={(newCheckState) => {/* Handle task completion */}}
-              onDeleteTask={(taskId) => {/* Handle task deletion */}}
-              onUpdateTask={(taskId, updatedTask) => {/* Handle task update */}}
+              onCheckChange={(newCheckState) => handleTaskCompletion(task.id, newCheckState)}
+              onDeleteTask={handleTaskDeletion}
+              onUpdateTask={(taskId, updatedTask) => {
+                setDogTasks(prevTasks => prevTasks.map(task => task.id === taskId ? updatedTask : task));
+              }}
             />
           ))}
         </View>
       </ScrollView>
       <Footer style={styles.footer} navigation={navigation} />
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -174,7 +223,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   dogHeaderContainer: {
-    marginTop: 40,
+    marginTop: 55,
     height: 100,
     alignItems: 'center',
   },
@@ -192,7 +241,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   dogInfoContainer: {
-    backgroundColor: '#CDECE8',
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,
@@ -208,9 +256,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  dogInfoLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
   dogInfoText: {
     fontSize: 16,
-    marginBottom: 10,
+    fontWeight: 'normal',
   },
   headerText: {
     fontSize: 24,
@@ -218,7 +271,8 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   taskListContainer: {
-    borderRadius: 10,
+    borderRadius: 20,
+    backgroundColor: '#e4f4f2',
     marginHorizontal: 20,
     padding: 10,
     marginBottom: 20,

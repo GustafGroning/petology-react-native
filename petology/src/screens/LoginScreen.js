@@ -54,6 +54,7 @@ const LoginScreen = ({ navigation }) => {
         const dogsData = await dogsResponse.json();
 
         if (dogsResponse.ok && dogsData.dogs && dogsData.dogs.length > 0) {
+          // DEMO PURPOSE HUR DUR
           navigation.navigate("Landing");
         } else {
           navigation.navigate("DogIntroduction");

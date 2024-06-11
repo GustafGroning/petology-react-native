@@ -1,15 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 
-const PetologyTextInput = ({ placeholder, value, onUpdateText }) => {
-
-  const onHandleChangeText = () => {
-    console.log(value);
-    onUpdateText(value);
-  };
-  
+const PetologyTextInput = ({ placeholder, value, onUpdateText, style }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <TextInput
         style={styles.textInputStyling}
         placeholder={placeholder}
@@ -21,17 +15,18 @@ const PetologyTextInput = ({ placeholder, value, onUpdateText }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    marginBottom: 10,
+    width: '100%',
+  },
   textInputStyling: {
     textAlign: 'center',
-    height: 42,
+    height: 40,
     borderColor: 'black',
     borderWidth: 0.5,
-    borderRadius: 15,
+    borderRadius: 22,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
-    marginBottom: 15,
-    fontSize: 16,
   },
 });
 

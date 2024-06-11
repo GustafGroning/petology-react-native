@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
+import PetologyTextInput from '../../components/common/input/PetologyTextInput'; // Adjust the path as needed
+import PetologyDropdown from '../../components/common/input/PetologyDropdown'; // Adjust the path as needed
+import PetologyNumericInput from '../../components/common/input/PetologyNumericInput'; // Adjust the path as needed
+import PetologyDatePicker from '../../components/common/input/PetologyDatePicker';
 import getDogById from '../../api_calls/dog/getDogById';
 import { partialUpdateDog } from '../../api_calls/dog/updateDogDetails';
-import { SelectList } from 'react-native-dropdown-select-list';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 const UpdateDogDetailsScreen = ({ route, navigation }) => {
   const { dogId } = route.params;
@@ -12,7 +15,7 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
   const [dogInfo, setDogInfo] = useState({
     pedigree_name: { current: '', original: '' },
     breed: { current: '', original: '' },
-    birthday: { current: new Date(), original: '' }, // Initialize with a Date object
+    birthday: { current: new Date(), original: '' },
     sex: { current: '', original: '' },
     color: { current: '', original: '' },
     id_number: { current: '', original: '' },
@@ -25,7 +28,6 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
   });
   const [breeds, setBreeds] = useState([]);
   const [changedFields, setChangedFields] = useState([]);
-
 
   const sexValues = [
     { key: '1', value: 'Okastrerad hane' },
@@ -43,13 +45,12 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
     try {
       const dogDetails = await getDogById(dogId);
       setSelectedDog(dogDetails);
-      // Set initial values and original values for dogInfo
       setDogInfo(prevState => {
         return {
           ...prevState,
           pedigree_name: { current: dogDetails.pedigree_name, original: dogDetails.pedigree_name },
           breed: { current: dogDetails.breed, original: dogDetails.breed },
-          birthday: { current: new Date(dogDetails.birthday), original: dogDetails.birthday }, // Convert to Date object
+          birthday: { current: new Date(dogDetails.birthday), original: dogDetails.birthday },
           sex: { current: dogDetails.sex, original: dogDetails.sex },
           color: { current: dogDetails.color, original: dogDetails.color },
           id_number: { current: dogDetails.id_number, original: dogDetails.id_number },
@@ -89,7 +90,6 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
   };
 
   const handleChange = (name, value) => {
-    // If the name is 'breed', find the corresponding breed name
     const newValue = name === 'breed' ? breeds.find(breed => breed.key === value).value : value;
     
     setDogInfo(prevState => {
@@ -99,29 +99,23 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
       };
     });
   
-    // Add the field to changedFields array if it's not already there
     if (!changedFields.includes(name)) {
       setChangedFields(prevState => [...prevState, name]);
     }
   };
-  
 
   const handleSubmit = async () => {
-    console.log('inside handleSubmit: ', dogInfo);
     try {
-      // Filter out unchanged fields from dogInfo
       const updatedDogInfo = Object.fromEntries(
         Object.entries(dogInfo)
           .filter(([key]) => changedFields.includes(key))
           .map(([key, value]) => {
             if (key === 'birthday') {
-              // Format birthday to match YYYY-MM-DD format
               return [key, new Date(value.current).toISOString().split('T')[0]];
             }
             return [key, value.current];
           })
       );
-      console.log('updatedDogInfo:', updatedDogInfo);
       const success = await partialUpdateDog(dogId, updatedDogInfo);
       if (success) {
         navigation.goBack();
@@ -132,156 +126,123 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
       console.error('Error updating dog information:', error);
     }
   };
-  
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>Stamtavlenamn</Text>
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          value={dogInfo.pedigree_name.current}
-          onChangeText={(text) => handleChange('pedigree_name', text)}
-        />
-        
-        {/* Handling breed got annoying, add this back in if customers complain. */}
-        {/* <Text style={styles.formLabel}>Breed:</Text>
-        <SelectList
-          setSelected={(value) => handleChange('breed', value)}
-          placeholder='Select Breed'
-          data={breeds}
-          defaultValue={dogInfo.breed.current.id}
-          style={styles.input}
-        /> */}
-        <View style={styles.birthdayContainer}>
-        <Text style={styles.formLabel}>Födelsedag</Text>
-        <DateTimePicker
-          value={dogInfo.birthday.current}
-          mode='date'
-          locale='sv-SE'
-          onChange={(event, selectedDateTime) => {
-            if (selectedDateTime) {
-              handleChange('birthday', selectedDateTime);
-            }
-          }}
-          style={{ marginBottom: 20 }}
-        />
-        </View>
-        <Text style={styles.formLabel}>Kön</Text>
-          <SelectList
+    <LinearGradient
+      colors={['#86c8c5', '#e4f4f2']}
+      style={styles.container}
+    >
+      <ScrollView style={styles.scrollContent}>
+        <View style={styles.formContainer}>
+          <Text style={styles.formLabel}>Stamtavlenamn</Text>
+          <PetologyTextInput
+            placeholder="Stamtavlenamn"
+            value={dogInfo.pedigree_name.current}
+            onUpdateText={(text) => handleChange('pedigree_name', text)}
+          />
+
+          <Text style={styles.formLabel}>Födelsedag</Text>
+          <View style={styles.birthdayContainer}>
+            <PetologyDatePicker
+              date={dogInfo.birthday.current}
+              onDateTimeChange={(selectedDateTime) => handleChange('birthday', selectedDateTime)}
+            />
+          </View>
+
+          <Text style={styles.formLabel}>Kön</Text>
+          <PetologyDropdown
             setSelected={(text) => handleChange('sex', text)}
             placeholder={dogInfo.sex.current}
             data={sexValues}
             save='value'
-            boxStyles={{
-              borderRadius: 90,
-              backgroundColor: '#e8f5f5',
-              marginBottom: 18,
-            }}
           />
 
-
-
-
-        <Text style={styles.formLabel}>Färg</Text>
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          value={dogInfo.color.current}
-          onChangeText={(text) => handleChange('color', text)}
-        />
-        <Text style={styles.formLabel}>ID-nummer</Text>
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          value={dogInfo.id_number.current}
-          onChangeText={(text) => handleChange('id_number', text)}
-        />
-        <Text style={styles.formLabel}>Registreringsnummer:</Text>
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          value={dogInfo.registration_number.current}
-          onChangeText={(text) => handleChange('registration_number', text)}
-        />
-        <Text style={styles.formLabel}>Passnummer</Text>
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          value={dogInfo.passport_number.current}
-          onChangeText={(text) => handleChange('passport_number', text)}
-        />
-        <Text style={styles.formLabel}>Försäkringsbolag</Text>
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          value={dogInfo.insurance_company.current}
-          onChangeText={(text) => handleChange('insurance_company', text)}
-        />
-        <Text style={styles.formLabel}>Försäkringsnummer</Text>
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          value={dogInfo.insurance_number.current}
-          onChangeText={(text) => handleChange('insurance_number', text)}
-        />
-        <Text style={styles.formLabel}>Foder:</Text>
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          value={dogInfo.feed.current}
-          onChangeText={(text) => handleChange('feed', text)}
-        />
-        <Text style={styles.formLabel}>Foderintrollerans</Text>
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          value={dogInfo.possible_feed_intolerance.current}
-          onChangeText={(text) => handleChange('possible_feed_intolerance', text)}
-        />
-      </View>
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={handleSubmit}
-      >
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
-    </ScrollView>
+          <Text style={styles.formLabel}>Färg</Text>
+          <PetologyTextInput
+            placeholder="Färg"
+            value={dogInfo.color.current}
+            onUpdateText={(text) => handleChange('color', text)}
+          />
+          <Text style={styles.formLabel}>ID-nummer</Text>
+          <PetologyNumericInput
+            placeholder="ID-nummer"
+            value={dogInfo.id_number.current}
+            onUpdateText={(text) => handleChange('id_number', text)}
+          />
+          <Text style={styles.formLabel}>Registreringsnummer</Text>
+          <PetologyNumericInput
+            placeholder="Registreringsnummer"
+            value={dogInfo.registration_number.current}
+            onUpdateText={(text) => handleChange('registration_number', text)}
+          />
+          <Text style={styles.formLabel}>Passnummer</Text>
+          <PetologyNumericInput
+            placeholder="Passnummer"
+            value={dogInfo.passport_number.current}
+            onUpdateText={(text) => handleChange('passport_number', text)}
+          />
+          <Text style={styles.formLabel}>Försäkringsbolag</Text>
+          <PetologyTextInput
+            placeholder="Försäkringsbolag"
+            value={dogInfo.insurance_company.current}
+            onUpdateText={(text) => handleChange('insurance_company', text)}
+          />
+          <Text style={styles.formLabel}>Försäkringsnummer</Text>
+          <PetologyNumericInput
+            placeholder="Försäkringsnummer"
+            value={dogInfo.insurance_number.current}
+            onUpdateText={(text) => handleChange('insurance_number', text)}
+          />
+          <Text style={styles.formLabel}>Foder</Text>
+          <PetologyTextInput
+            placeholder="Foder"
+            value={dogInfo.feed.current}
+            onUpdateText={(text) => handleChange('feed', text)}
+          />
+          <Text style={styles.formLabel}>Foderintolerans</Text>
+          <PetologyTextInput
+            placeholder="Foderintolerans"
+            value={dogInfo.possible_feed_intolerance.current}
+            onUpdateText={(text) => handleChange('possible_feed_intolerance', text)}
+          />
+        </View>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={handleSubmit}
+        >
+          <Text style={styles.submitButtonText}>Submit</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#92cdca',
-    padding: 20,
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
   },
   formContainer: {
-    marginTop: 40,
+    marginTop: 80,
     alignItems: 'center',
   },
   birthdayContainer: {
     alignItems: 'center',
+    width: '35%',
   },
   formLabel: {
     fontSize: 14,
-
-    // marginBottom: 5,
-  },
-  input: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-    width: 340,
-    textAlign: 'center'
+    marginBottom: 5,
   },
   submitButton: {
     backgroundColor: '#007bff',
     padding: 15,
     alignItems: 'center',
     borderRadius: 5,
+    marginHorizontal: 20,
+    marginTop: 20,
   },
   submitButtonText: {
     color: '#fff',

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-paper";
-import DatePicker from "../components/CreateTaskScreenComponents/DatePicker";
+import PetologyDatePicker from "../components/common/input/PetologyDatePicker";
 
 import { SelectList } from "react-native-dropdown-select-list";
 
@@ -173,7 +173,7 @@ const CreateTaskScreen = ({ navigation }) => {
             />
           </View>
           <View style={styles.datePickerContainer}>
-            <DatePicker
+            <PetologyDatePicker
               title={"Startar"}
               date={startDate}
               onDateTimeChange={(newDateTime) =>

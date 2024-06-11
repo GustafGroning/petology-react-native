@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { ImageBackground, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from '../../components/common/Footer';
-
+import { LinearGradient } from 'expo-linear-gradient';
 const ArticleScreen = ({ route, navigation }) => {
   const { article } = route.params;
   // const [article, setArticle] = useState(null);
@@ -45,8 +45,6 @@ const ArticleScreen = ({ route, navigation }) => {
   //   fetchArticle();
   // }, [articleId]);
 
-  console.log('inside ArticleScreen, article is = ', article);
-
   const renderArticleBody = (body) => {
     const sections = body.split(/<header>|<section>|<bullet>/).filter(text => text);
     return sections.map((section, index) => {
@@ -67,7 +65,10 @@ const ArticleScreen = ({ route, navigation }) => {
   };  
   
   return (
-    <View style={styles.container}>
+    <LinearGradient 
+    colors={['#86c8c5', '#e4f4f2']}
+    style={styles.container}
+    >
       <ScrollView style={styles.scrollView}>
         <View style={styles.headerSection}>
           <Text style={styles.headerText}>Petology</Text>
@@ -93,7 +94,7 @@ const ArticleScreen = ({ route, navigation }) => {
         </View>
       </ScrollView>
       <Footer navigation={navigation} />
-    </View>
+    </LinearGradient>
   );  
 };
 

@@ -9,7 +9,7 @@ import {
   TextInput,
 } from "react-native";
 import { CheckBox, Icon } from "@rneui/themed";
-import DatePicker from "../../CreateTaskScreenComponents/DatePicker";
+import DatePicker from "../input/PetologyDatePicker";
 import { deleteTask } from "../../../api_calls/task/deleteTask";
 import { updateTask } from "../../../api_calls/task/updateTask";
 

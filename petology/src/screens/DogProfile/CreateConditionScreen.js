@@ -30,11 +30,10 @@ const CreateConditionScreen = ({ route, navigation }) => {
         dogId,
         conditionName,
         onsetDate,
+        followUp ? new Date(followUp) : null,
         clinicName,
-        followUp,
-        medication,
         notes,
-        journalFile
+        medication
       );
       if (success) {
         navigation.goBack();
@@ -55,9 +54,8 @@ const CreateConditionScreen = ({ route, navigation }) => {
         <View style={styles.content}>
           <Text style={styles.header}>Lägg till sjukdom</Text>
 
-          <PetologyDropdown
-            title="Skada/sjukdom"
-            placeholder="Välj den diagnos som din hund fått"
+          <PetologyTextInput
+            placeholder="Skada/sjukdom"
             value={conditionName}
             onUpdateText={(text) => setConditionName(text)}
           />
@@ -81,7 +79,7 @@ const CreateConditionScreen = ({ route, navigation }) => {
                 styles.optionButton,
                 followUp === true && styles.selectedOptionButton,
               ]}
-              onPress={() => setFollowUp(true)}
+              onPress={() => setFollowUp(new Date())}
             >
               <Text style={styles.optionButtonText}>Ja</Text>
             </TouchableOpacity>
@@ -90,11 +88,19 @@ const CreateConditionScreen = ({ route, navigation }) => {
                 styles.optionButton,
                 followUp === false && styles.selectedOptionButton,
               ]}
-              onPress={() => setFollowUp(false)}
+              onPress={() => setFollowUp(null)}
             >
               <Text style={styles.optionButtonText}>Nej</Text>
             </TouchableOpacity>
           </View>
+
+          {followUp && (
+            <PetologyDatePicker
+              title="Återbesök"
+              date={followUp}
+              onDateTimeChange={(date) => setFollowUp(date)}
+            />
+          )}
 
           <Text style={styles.subHeader}>Ska några mediciner ges?</Text>
           <View style={styles.buttonGroup}>
@@ -112,7 +118,7 @@ const CreateConditionScreen = ({ route, navigation }) => {
                 styles.optionButton,
                 medication === false && styles.selectedOptionButton,
               ]}
-              onPress={() => setMedication(false)}
+              onPress={() => setMedication(null)}
             >
               <Text style={styles.optionButtonText}>Nej</Text>
             </TouchableOpacity>

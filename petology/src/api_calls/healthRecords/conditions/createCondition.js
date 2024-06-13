@@ -1,37 +1,52 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const createCondition = async (dogId, name, onsetDate, followUpDate, vetClinic, notes, medicationId = null) => {
+const createCondition = async (dogId, name, onsetDate, followUpDate, vetClinic, notes, medicationId) => {
   try {
     const token = await AsyncStorage.getItem("userToken");
-    const formattedOnsetDate = `${onsetDate.getFullYear()}-${onsetDate.getMonth() + 1}-${onsetDate.getDate()}`;
-    const formattedFollowUpDate = followUpDate ? `${followUpDate.getFullYear()}-${followUpDate.getMonth() + 1}-${followUpDate.getDate()}` : null;
+    const formatDate = (date) => {
+      if (!date) return null;
+      const d = new Date(date);
+      const month = `${d.getMonth() + 1}`.padStart(2, '0');
+      const day = `${d.getDate()}`.padStart(2, '0');
+      return `${d.getFullYear()}-${month}-${day}`;
+    };
 
-    const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/conditions/create/`, {
+    const formattedOnsetDate = formatDate(onsetDate);
+    const formattedFollowUpDate = followUpDate ? formatDate(followUpDate) : null;
+
+    const payload = {
+      dog: dogId,
+      name: name,
+      onset_date: formattedOnsetDate,
+      follow_up_date: formattedFollowUpDate,
+      vet_clinic: vetClinic || '',
+      notes: notes || '',
+      medication: medicationId || null,
+    };
+
+    console.log('Payload:', payload);  // Log the payload being sent
+
+    const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/conditions/create/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `JWT ${token}`,
       },
-      body: JSON.stringify({
-        dog: dogId,
-        name: name,
-        onset_date: formattedOnsetDate,
-        follow_up_date: formattedFollowUpDate,
-        vet_clinic: vetClinic,
-        notes: notes,
-        medication: medicationId,
-      }),
+      body: JSON.stringify(payload),
     });
 
-    if (response.ok) {
-      return { success: true };
-    } else {
-      const errorData = await response.json();
-      return { success: false, message: errorData.message || "Failed to create condition" };
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error response from server:", errorText);
+      throw new Error(`Server responded with status ${response.status}`);
     }
+
+    const responseData = await response.json();
+    return { success: true, data: responseData };
+
   } catch (error) {
     console.error("Error creating condition:", error);
-    return { success: false, message: "An error occurred while creating the condition" };
+    return { success: false, message: error.message || "An error occurred while creating the condition" };
   }
 };
 

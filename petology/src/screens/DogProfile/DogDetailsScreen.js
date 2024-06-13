@@ -7,6 +7,7 @@ import getDogById from '../../api_calls/dog/getDogById';
 import getVaccinationsForDog from '../../api_calls/healthRecords/vaccinations/getVaccinationsForDog';
 import Footer from '../../components/common/Footer';
 import { LinearGradient } from 'expo-linear-gradient';
+import InfoCard from '../../components/dogDetails/InfoCard';
 
 const DogDetailsScreen = ({ navigation, route }) => {
   const { dogId } = route.params;
@@ -91,16 +92,31 @@ const DogDetailsScreen = ({ navigation, route }) => {
             </View>
           )}
 
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionHeader}>Vaccinationer</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('CreateVaccinationScreen', { dogId: dogId })}>
-              <FontAwesome name='plus' size={24} color='#000' />
-            </TouchableOpacity>
-          </View>
-          {vaccinations.map((vaccination) => (
-            <Text key={vaccination.id} style={styles.dogInfoText}>{vaccination.name} - {vaccination.vaccination_date}</Text>
-          ))}
+            <View style={styles.sectionIconContainer}>
+              <FontAwesome name='heart-o' size={58} color='#000' />
+            </View>
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionHeader}>Vaccinationer</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('CreateVaccinationScreen', { dogId: dogId })}>
+                <FontAwesome name='plus' size={24} color='#000' />
+              </TouchableOpacity>
+            </View>
+            {vaccinations.map((vaccination) => (
+              <InfoCard 
+                key={vaccination.id} 
+                type="vaccination" 
+                data={{
+                  name: vaccination.name,
+                  vaccineName: vaccination.vaccineName,
+                  date: vaccination.vaccination_date,
+                  nextDate: vaccination.next_vaccination_date
+                }} 
+              />
+            ))}
 
+          <View style={styles.sectionIconContainer}>
+            <FontAwesome name='heart-o' size={58} color='#000' />
+          </View>
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionHeader}>Mediciner</Text>
             <TouchableOpacity onPress={() => navigation.navigate('MedicationsScreen', { dogId: dogId })}>
@@ -108,7 +124,10 @@ const DogDetailsScreen = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
           {/* Add medications data here */}
-
+          
+          <View style={styles.sectionIconContainer}>
+              <FontAwesome name='heart-o' size={58} color='#000' />
+          </View>
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionHeader}>Nuvarande sjukdomar</Text>
             <TouchableOpacity onPress={() => navigation.navigate('CreateConditionScreen', { dogId: dogId })}>
@@ -117,6 +136,9 @@ const DogDetailsScreen = ({ navigation, route }) => {
           </View>
           {/* Add current conditions data here */}
 
+          <View style={styles.sectionIconContainer}>
+              <FontAwesome name='heart-o' size={58} color='#000' />
+          </View>
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionHeader}>Tidigare sjukdomar</Text>
             <TouchableOpacity onPress={() => navigation.navigate('PastConditionsScreen', { dogId: dogId })}>
@@ -185,6 +207,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 28,
     height: 28,
+  },
+  sectionIconContainer: {
+    alignItems: 'center',
   },
   sectionContainer: {
     flexDirection: 'row',

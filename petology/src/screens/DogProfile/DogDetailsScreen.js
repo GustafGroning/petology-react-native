@@ -4,16 +4,19 @@ import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import getDogById from '../../api_calls/dog/getDogById';
+import getVaccinationsForDog from '../../api_calls/healthRecords/vaccinations/getVaccinationsForDog';
 import Footer from '../../components/common/Footer';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const DogDetailsScreen = ({ navigation, route }) => {
   const { dogId } = route.params;
   const [selectedDog, setSelectedDog] = useState(null);
+  const [vaccinations, setVaccinations] = useState([]);
 
   useFocusEffect(
     useCallback(() => {
       fetchSelectedDog();
+      fetchDogVaccinations();
     }, [dogId])
   );
 
@@ -21,9 +24,17 @@ const DogDetailsScreen = ({ navigation, route }) => {
     try {
       const dogDetails = await getDogById(dogId);
       setSelectedDog(dogDetails);
-      console.log('dog ', selectedDog);
     } catch (error) {
       console.error('Error fetching selected dog:', error);
+    }
+  };
+
+  const fetchDogVaccinations = async () => {
+    try {
+      const vaccinations = await getVaccinationsForDog(dogId);
+      setVaccinations(vaccinations);
+    } catch (error) {
+      console.error('Error fetching vaccinations:', error);
     }
   };
 
@@ -82,11 +93,13 @@ const DogDetailsScreen = ({ navigation, route }) => {
 
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionHeader}>Vaccinationer</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('VaccinationsScreen', { dogId: dogId })}>
+            <TouchableOpacity onPress={() => navigation.navigate('CreateVaccinationScreen', { dogId: dogId })}>
               <FontAwesome name='plus' size={24} color='#000' />
             </TouchableOpacity>
           </View>
-          {/* Add vaccinations data here */}
+          {vaccinations.map((vaccination) => (
+            <Text key={vaccination.id} style={styles.dogInfoText}>{vaccination.name} - {vaccination.vaccination_date}</Text>
+          ))}
 
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionHeader}>Mediciner</Text>
@@ -98,7 +111,7 @@ const DogDetailsScreen = ({ navigation, route }) => {
 
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionHeader}>Nuvarande sjukdomar</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('CurrentConditionsScreen', { dogId: dogId })}>
+            <TouchableOpacity onPress={() => navigation.navigate('CreateConditionScreen', { dogId: dogId })}>
               <FontAwesome name='plus' size={24} color='#000' />
             </TouchableOpacity>
           </View>

@@ -19,6 +19,8 @@ import InputUserBasicInfoScreen from './src/screens/InputUserBasicInfoScreen';
 import HealthIndexSurveyScreen from './src/screens/DogProfile/HealthIndexSurveyScreen';
 import PulseMonitorScreen from './src/screens/PulseMonitorScreen';
 import AddTreatmentScreen from './src/screens/AddTreatmentScreen';
+import CreateVaccinationScreen from './src/screens/DogProfile/CreateVaccinationScreen';
+import CreateConditionScreen from './src/screens/DogProfile/CreateConditionScreen';
 
 // LIBRARY SCREENS
 import ArticleListScreen from './src/screens/Library/ArticleListScreen';
@@ -54,6 +56,8 @@ const App = () => {
           <Stack.Screen name='HealthIndexSurveyScreen' component={HealthIndexSurveyScreen} />
           <Stack.Screen name='PulseMonitorScreen' component={PulseMonitorScreen} />
           <Stack.Screen name='AddTreatmentScreen' component={AddTreatmentScreen} />
+          <Stack.Screen name='CreateVaccinationScreen' component={CreateVaccinationScreen} />
+          <Stack.Screen name='CreateConditionScreen' component={CreateConditionScreen} />
           
           <Stack.Screen name='ArticleList' component={ArticleListScreen} />
           <Stack.Screen name='ArticleScreen' component={ArticleScreen} />

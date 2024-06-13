@@ -1,0 +1,450 @@
+    function saveAlarmData(type, subtype, value,
+        description, alarmLevel) {
+        console.log('ALL VALUES:');
+        console.log(type, subtype, value, description,
+            alarmLevel);
+        // type = chX, communication_status, power_supply
+        //subtype = aboveThreshold, belowThreshold, N/A
+        // to turn off alarms, send value = 0, still needs correct type and subtype
+        // value = INT
+
+        if (type === 'ch1') {
+            if (subtype === '1 to 0') {
+                channel1Data[2]['active'] = true;
+                channel1Data[2]['oneToZero'] = true;
+            } 
+            if (subtype === '0 to 1') {
+                channel1Data[2]['active'] = true;
+                channel1Data[2]['zeroToOne'] = true;
+            }
+            for (var index in channel1Data) {
+                if (channel1Data[index]['type'] ===
+                    subtype) {
+                    // if value = 0, the alarm should be turned off.
+                    if (value == 0) {
+                        channel1Data[index]['active'] =
+                            false;
+                        channel1Data[index]['value'] =
+                            0;
+                        channel1Data[index][
+                            'description'
+                        ] = "";
+                        channel1Data[index][
+                                'alarmLevel'
+                            ] =
+                            "";
+                    } else {
+                        channel1Data[index]['active'] =
+                            true;
+                        channel1Data[index]['value'] =
+                            value;
+                        channel1Data[index][
+                                'description'
+                            ] =
+                            description;
+                        channel1Data[index][
+                                'alarmLevel'
+                            ] =
+                            alarmLevel;
+                    }
+                }
+
+            }
+        }
+        if (type === 'ch2') {
+            if (subtype === '1 to 0') {
+                channel2Data[2]['active'] = true;
+                channel2Data[2]['oneToZero'] = true;
+            } 
+            if (subtype === '0 to 1') {
+                channel2Data[2]['active'] = true;
+                channel2Data[2]['zeroToOne'] = true;
+            }
+            console.log('channel is ch2');
+            for (var index in channel2Data) {
+                if (channel2Data[index]['type'] ===
+                    subtype) {
+                    // if value = 0, the alarm should be turned off.
+                    if (value == 0) {
+                        channel2Data[index]['active'] =
+                            false;
+                        channel2Data[index]['value'] =
+                            0;
+                        channel2Data[index][
+                                'description'
+                            ] =
+                            "";
+                        channel2Data[index][
+                                'alarmLevel'
+                            ] =
+                            "";
+                    } else {
+                        channel2Data[index]['active'] =
+                            true;
+                        channel2Data[index]['value'] =
+                            value;
+                        channel2Data[index][
+                                'description'
+                            ] =
+                            description;
+                        channel2Data[index][
+                                'alarmLevel'
+                            ] =
+                            alarmLevel;
+                    }
+                }
+
+            }
+        }
+        if (type === 'ch3') {
+            if (subtype === '1 to 0') {
+                channel3Data[2]['active'] = true;
+                channel3Data[2]['oneToZero'] = true;
+            } 
+            if (subtype === '0 to 1') {
+                channel3Data[2]['active'] = true;
+                channel3Data[2]['zeroToOne'] = true;
+            }
+            console.log('channel is ch3');
+            for (var index in channel3Data) {
+                if (channel3Data[index]['type'] ===
+                    subtype) {
+                    // if value = 0, the alarm should be turned off.
+                    if (value == 0) {
+                        channel3Data[index]['active'] =
+                            false;
+                        channel3Data[index]['value'] =
+                            0;
+                        channel3Data[index][
+                                'description'
+                            ] =
+                            "";
+                        channel3Data[index][
+                                'alarmLevel'
+                            ] =
+                            "";
+                    } else {
+                        channel3Data[index]['active'] =
+                            true;
+                        channel3Data[index]['value'] =
+                            value;
+                        channel3Data[index][
+                                'description'
+                            ] =
+                            description;
+                        channel3Data[index][
+                                'alarmLevel'
+                            ] =
+                            alarmLevel;
+                    }
+                }
+
+            }
+        }
+        if (type === 'ch4') {
+            if (subtype === '1 to 0') {
+                channel4Data[2]['active'] = true;
+                channel4Data[2]['oneToZero'] = true;
+            } 
+            if (subtype === '0 to 1') {
+                channel4Data[2]['active'] = true;
+                channel4Data[2]['zeroToOne'] = true;
+            }
+            console.log('channel is ch4');
+            for (var index in channel4Data) {
+                if (channel4Data[index]['type'] ===
+                    subtype) {
+                    // if value = 0, the alarm should be turned off.
+                    if (value == 0) {
+                        channel4Data[index]['active'] =
+                            false;
+                        channel4Data[index]['value'] =
+                            0;
+                        channel4Data[index][
+                                'description'
+                            ] =
+                            "";
+                        channel4Data[index][
+                                'alarmLevel'
+                            ] =
+                            "";
+                    } else {
+                        channel4Data[index]['active'] =
+                            true;
+                        channel4Data[index]['value'] =
+                            value;
+                        channel4Data[index][
+                                'description'
+                            ] =
+                            description;
+                        channel4Data[index][
+                                'alarmLevel'
+                            ] =
+                            alarmLevel;
+                    }
+                }
+
+            }
+        }
+        if (type === 'ch5') {
+            if (subtype === '1 to 0') {
+                channel5Data[2]['active'] = true;
+                channel5Data[2]['oneToZero'] = true;
+            } 
+            if (subtype === '0 to 1') {
+                channel5Data[2]['active'] = true;
+                channel5Data[2]['zeroToOne'] = true;
+            }
+            for (var index in channel5Data) {
+                console.log('index is ', index);
+                console.log(
+                    'channel5Data[index][type] is',
+                    channel5Data[index]['type']);
+
+                if (channel5Data[index]['type'] ===
+                    subtype) {
+                    // if value = 0, the alarm should be turned off.
+                    if (value == 0) {
+                        channel5Data[index]['active'] =
+                            false;
+                        channel5Data[index]['value'] =
+                            0;
+                        channel5Data[index][
+                                'description'
+                            ] =
+                            "";
+                        channel5Data[index][
+                                'alarmLevel'
+                            ] =
+                            "";
+                    } else {
+                        channel5Data[index]['active'] =
+                            true;
+                        channel5Data[index]['value'] =
+                            value;
+                        channel5Data[index][
+                                'description'
+                            ] =
+                            description;
+                        channel5Data[index][
+                                'alarmLevel'
+                            ] =
+                            alarmLevel;
+                    }
+                }
+
+            }
+        }
+        if (type === 'ch6') {
+            if (subtype === '1 to 0') {
+                channel6Data[2]['active'] = true;
+                channel6Data[2]['oneToZero'] = true;
+            } 
+            if (subtype === '0 to 1') {
+                channel6Data[2]['active'] = true;
+                channel6Data[2]['zeroToOne'] = true;
+            }
+            console.log('channel is ch6');
+            for (var index in channel6Data) {
+                if (channel6Data[index]['type'] ===
+                    subtype) {
+                    // if value = 0, the alarm should be turned off.
+                    if (value == 0) {
+                        channel6Data[index]['active'] =
+                            false;
+                        channel6Data[index]['value'] =
+                            0;
+                        channel6Data[index][
+                                'description'
+                            ] =
+                            "";
+                        channel6Data[index][
+                                'alarmLevel'
+                            ] =
+                            "";
+                    } else {
+                        console.log('value wasnt zero ',
+                            value);
+                        channel6Data[index]['active'] =
+                            true;
+                        channel6Data[index]['value'] =
+                            value;
+                        channel6Data[index][
+                                'description'
+                            ] =
+                            description;
+                        channel6Data[index][
+                                'alarmLevel'
+                            ] =
+                            alarmLevel;
+                    }
+                }
+
+            }
+        }
+        if (type === 'ch7') {
+            if (subtype === '1 to 0') {
+                channel7Data[2]['active'] = true;
+                channel7Data[2]['oneToZero'] = true;
+            } 
+            if (subtype === '0 to 1') {
+                channel7Data[2]['active'] = true;
+                channel7Data[2]['zeroToOne'] = true;
+            }
+            console.log('channel is ch7');
+            for (var index in channel7Data) {
+                if (channel7Data[index]['type'] ===
+                    subtype) {
+                    // if value = 0, the alarm should be turned off.
+                    if (value == 0) {
+                        channel7Data[index]['active'] =
+                            false;
+                        channel7Data[index]['value'] =
+                            0;
+                        channel7Data[index][
+                                'description'
+                            ] =
+                            "";
+                        channel7Data[index][
+                                'alarmLevel'
+                            ] =
+                            "";
+                    } else {
+                        channel7Data[index]['active'] =
+                            true;
+                        channel7Data[index]['value'] =
+                            value;
+                        channel7Data[index][
+                                'description'
+                            ] =
+                            description;
+                        channel7Data[index][
+                                'alarmLevel'
+                            ] =
+                            alarmLevel;
+                    }
+                }
+
+            }
+        }
+        if (type === 'ch30') {
+            if (subtype === '1 to 0') {
+                channel30Data[2]['active'] = true;
+                channel30Data[2]['oneToZero'] = true;
+            } 
+            if (subtype === '0 to 1') {
+                channel30Data[2]['active'] = true;
+                channel30Data[2]['zeroToOne'] = true;
+            }
+            console.log('channel is ch30');
+            for (var index in channel30Data) {
+                if (channel30Data[index]['type'] ===
+                    subtype) {
+                    // if value = 0, the alarm should be turned off.
+                    if (value == 0) {
+                        channel30Data[index]['active'] =
+                            false;
+                        channel30Data[index]['value'] =
+                            0;
+                        channel30Data[index][
+                                'description'
+                            ] =
+                            "";
+                        channel30Data[index][
+                                'alarmLevel'
+                            ] =
+                            "";
+                    } else {
+                        console.log('value wasnt zero ',
+                            value);
+                        channel30Data[index]['active'] =
+                            true;
+                        channel30Data[index]['value'] =
+                            value;
+                        channel30Data[index][
+                                'description'
+                            ] =
+                            description;
+                        channel30Data[index][
+                                'alarmLevel'
+                            ] =
+                            alarmLevel;
+                    }
+                }
+
+            }
+        }
+        if (type === 'ch31') {
+            if (subtype === '1 to 0') {
+                channel31Data[2]['active'] = true;
+                channel31Data[2]['oneToZero'] = true;
+            } 
+            if (subtype === '0 to 1') {
+                channel31Data[2]['active'] = true;
+                channel31Data[2]['zeroToOne'] = true;
+            }
+            console.log('channel is ch31');
+            for (var index in channel31Data) {
+                if (channel31Data[index]['type'] ===
+                    subtype) {
+                    // if value = 0, the alarm should be turned off.
+                    if (value == 0) {
+                        channel31Data[index]['active'] =
+                            false;
+                        channel31Data[index]['value'] =
+                            0;
+                        channel31Data[index][
+                                'description'
+                            ] =
+                            "";
+                        channel31Data[index][
+                                'alarmLevel'
+                            ] =
+                            "";
+                    } else {
+                        channel31Data[index]['active'] =
+                            true;
+                        channel31Data[index]['value'] =
+                            value;
+                        channel31Data[index][
+                                'description'
+                            ] =
+                            description;
+                        channel31Data[index][
+                                'alarmLevel'
+                            ] =
+                            alarmLevel;
+                    }
+                }
+
+            }
+        }
+        if (type === 'communication_status') {
+            console.log('build this!');
+        };
+        if (type === 'power_supply') {
+            console.log('build this!');
+        };
+
+        // Recreate the JSON structure
+        var recreatedData = {
+            "channels": {
+                "ch1": channel1Data,
+                "ch2": channel2Data,
+                "ch3": channel3Data,
+                "ch4": channel4Data,
+                "ch5": channel5Data,
+                "ch6": channel6Data,
+                "ch7": channel7Data,
+                "ch30": channel30Data,
+                "ch31": channel31Data
+            },
+            "global_rules": {
+                "communication_status": communicationStatusData,
+                "power_supply": powerSupplyData
+            }
+        };
+        console.log(recreatedData);
+        updateAttributeShared(entityId,
+            "devAlarmRulesSh", recreatedData);
+    }

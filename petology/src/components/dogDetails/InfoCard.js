@@ -17,21 +17,21 @@ const InfoCard = ({ type, data }) => {
         return (
           <>
             <Text style={styles.cardTitle}>{data.name}</Text>
-            <Text style={styles.cardText}>{data.strength}</Text>
-            <Text style={styles.cardText}>{data.administration_method}</Text>
-            <Text style={styles.cardText}>{data.amount}</Text>
-            <Text style={styles.cardText}>{data.frequency}</Text>
-            <Text style={styles.cardText}>Startdatum: {data.administration_start_date}</Text>
-            <Text style={styles.cardText}>Slutdatum: {data.administration_length}</Text>
+            <Text style={styles.cardText}>Styrka: {data.strength}</Text>
+            <Text style={styles.cardText}>Administrationsmetod: {data.administrationMethod}</Text>
+            <Text style={styles.cardText}>Mängd: {data.amount}</Text>
+            <Text style={styles.cardText}>Frekvens: {data.frequency}</Text>
+            <Text style={styles.cardText}>Startdatum: {data.administrationStartDate}</Text>
+            <Text style={styles.cardText}>Längd: {data.administrationLength}</Text>
           </>
         );
       case 'condition':
         return (
           <>
             <Text style={styles.cardTitle}>{data.name}</Text>
-            <Text style={styles.cardText}>Debut: {data.onset_date}</Text>
-            <Text style={styles.cardText}>Uppföljning: {data.follow_up_date}</Text>
-            <Text style={styles.cardText}>Veterinärklinik: {data.vet_clinic}</Text>
+            <Text style={styles.cardText}>Debut: {data.onsetDate}</Text>
+            <Text style={styles.cardText}>Uppföljning: {data.followUpDate}</Text>
+            <Text style={styles.cardText}>Veterinärklinik: {data.vetClinic}</Text>
             <Text style={styles.cardText}>Anteckningar: {data.notes}</Text>
           </>
         );

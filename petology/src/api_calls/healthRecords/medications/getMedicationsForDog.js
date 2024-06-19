@@ -1,25 +1,24 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const getConditionsForDog = async (dogId) => {
+const getMedicationsForDog = async (dogId) => {
   try {
     const token = await AsyncStorage.getItem("userToken");
-    const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/conditions/dog/${dogId}/`, {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/medications/dog/${dogId}/`, {
       headers: {
         Authorization: `JWT ${token}`,
       },
     });
     const data = await response.json();
     if (response.ok) {
-      console.log('data from conditions ', data);
       return data;
     } else {
-      console.error("Failed to fetch conditions");
+      console.error("Failed to fetch medications");
       return [];
     }
   } catch (error) {
-    console.error("Error fetching conditions:", error);
+    console.error("Error fetching medications:", error);
     return [];
   }
 };
 
-export default getConditionsForDog;
+export default getMedicationsForDog;

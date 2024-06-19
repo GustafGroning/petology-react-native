@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
-  ScrollView,
   TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Button,
+  TextInput,
+  ScrollView,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
-import PetologyTextInput from '../../components/common/input/PetologyTextInput';
 import PetologyDatePicker from '../../components/common/input/PetologyDatePicker';
-import PetologyDropdown from '../../components/common/input/PetologyDropdown';
+import createMedication from '../../api_calls/healthRecords/medications/createMedication';
 import createCondition from '../../api_calls/healthRecords/conditions/createCondition';
 
 const CreateConditionScreen = ({ route, navigation }) => {
@@ -23,9 +24,29 @@ const CreateConditionScreen = ({ route, navigation }) => {
   const [medication, setMedication] = useState(null);
   const [notes, setNotes] = useState('');
   const [journalFile, setJournalFile] = useState(null); // Placeholder for file upload
+  const [isMedicationModalVisible, setIsMedicationModalVisible] = useState(false);
+  const [medicationData, setMedicationData] = useState({
+    name: '',
+    strength: '',
+    administration_method: '',
+    amount: '',
+    frequency: '',
+    administration_start_date: new Date(),
+    administration_length: new Date(),
+  });
 
   const handleCreateCondition = async () => {
     try {
+      let medicationId = null;
+      if (medication) {
+        const savedMedication = await createMedication(medicationData);
+        if (savedMedication && savedMedication.id) {
+          medicationId = savedMedication.id;
+        } else {
+          console.error('Failed to create medication');
+          return;
+        }
+      }
       const success = await createCondition(
         dogId,
         conditionName,
@@ -33,7 +54,7 @@ const CreateConditionScreen = ({ route, navigation }) => {
         followUp ? new Date(followUp) : null,
         clinicName,
         notes,
-        medication
+        medicationId
       );
       if (success) {
         navigation.goBack();
@@ -45,19 +66,31 @@ const CreateConditionScreen = ({ route, navigation }) => {
     }
   };
 
+  const handleCreateMedication = async () => {
+    try {
+      const savedMedication = await createMedication(medicationData);
+      if (savedMedication && savedMedication.id) {
+        setMedication(savedMedication.id);
+        setIsMedicationModalVisible(false);
+      } else {
+        console.error('Failed to create medication');
+      }
+    } catch (error) {
+      console.error('Error creating medication:', error);
+    }
+  };
+
   return (
-    <LinearGradient
-      colors={['#86c8c5', '#e4f4f2']}
-      style={styles.container}
-    >
+    <LinearGradient colors={['#86c8c5', '#e4f4f2']} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
           <Text style={styles.header}>Lägg till sjukdom</Text>
 
-          <PetologyTextInput
+          <TextInput
             placeholder="Skada/sjukdom"
             value={conditionName}
-            onUpdateText={(text) => setConditionName(text)}
+            onChangeText={(text) => setConditionName(text)}
+            style={styles.input}
           />
 
           <PetologyDatePicker
@@ -66,10 +99,11 @@ const CreateConditionScreen = ({ route, navigation }) => {
             onDateTimeChange={(date) => setOnsetDate(date)}
           />
 
-          <PetologyTextInput
+          <TextInput
             placeholder="Fyll i veterinärklinikens namn"
             value={clinicName}
-            onUpdateText={(text) => setClinicName(text)}
+            onChangeText={(text) => setClinicName(text)}
+            style={styles.input}
           />
 
           <Text style={styles.subHeader}>Är ett återbesök inbokat?</Text>
@@ -77,7 +111,7 @@ const CreateConditionScreen = ({ route, navigation }) => {
             <TouchableOpacity
               style={[
                 styles.optionButton,
-                followUp === true && styles.selectedOptionButton,
+                followUp !== null && styles.selectedOptionButton,
               ]}
               onPress={() => setFollowUp(new Date())}
             >
@@ -86,7 +120,7 @@ const CreateConditionScreen = ({ route, navigation }) => {
             <TouchableOpacity
               style={[
                 styles.optionButton,
-                followUp === false && styles.selectedOptionButton,
+                followUp === null && styles.selectedOptionButton,
               ]}
               onPress={() => setFollowUp(null)}
             >
@@ -107,16 +141,16 @@ const CreateConditionScreen = ({ route, navigation }) => {
             <TouchableOpacity
               style={[
                 styles.optionButton,
-                medication === true && styles.selectedOptionButton,
+                medication !== null && styles.selectedOptionButton,
               ]}
-              onPress={() => setMedication(true)}
+              onPress={() => setIsMedicationModalVisible(true)}
             >
               <Text style={styles.optionButtonText}>Ja</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.optionButton,
-                medication === false && styles.selectedOptionButton,
+                medication === null && styles.selectedOptionButton,
               ]}
               onPress={() => setMedication(null)}
             >
@@ -124,15 +158,90 @@ const CreateConditionScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
 
+          <Modal visible={isMedicationModalVisible} animationType="slide">
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Lägg till medicin</Text>
+              <TextInput
+                placeholder="Namn"
+                value={medicationData.name}
+                onChangeText={(text) =>
+                  setMedicationData({ ...medicationData, name: text })
+                }
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Styrka"
+                value={medicationData.strength}
+                onChangeText={(text) =>
+                  setMedicationData({ ...medicationData, strength: text })
+                }
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Administrationsmetod"
+                value={medicationData.administration_method}
+                onChangeText={(text) =>
+                  setMedicationData({
+                    ...medicationData,
+                    administration_method: text,
+                  })
+                }
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Mängd"
+                value={medicationData.amount}
+                onChangeText={(text) =>
+                  setMedicationData({ ...medicationData, amount: text })
+                }
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Frekvens"
+                value={medicationData.frequency}
+                onChangeText={(text) =>
+                  setMedicationData({ ...medicationData, frequency: text })
+                }
+                style={styles.input}
+              />
+              <PetologyDatePicker
+                title="Startdatum"
+                date={medicationData.administration_start_date}
+                onDateTimeChange={(date) =>
+                  setMedicationData({
+                    ...medicationData,
+                    administration_start_date: date,
+                  })
+                }
+              />
+              <PetologyDatePicker
+                title="Längd"
+                date={medicationData.administration_length}
+                onDateTimeChange={(date) =>
+                  setMedicationData({
+                    ...medicationData,
+                    administration_length: date,
+                  })
+                }
+              />
+              <Button title="Spara" onPress={handleCreateMedication} />
+              <Button
+                title="Avbryt"
+                onPress={() => setIsMedicationModalVisible(false)}
+              />
+            </View>
+          </Modal>
+
           <Text style={styles.subHeader}>Lägg in journalkopia</Text>
           <TouchableOpacity style={styles.fileUploadButton}>
             <Text style={styles.fileUploadButtonText}>Välj fil</Text>
           </TouchableOpacity>
 
-          <PetologyTextInput
+          <TextInput
             placeholder="Fyll i egna anteckningar (valfritt)"
             value={notes}
-            onUpdateText={(text) => setNotes(text)}
+            onChangeText={(text) => setNotes(text)}
+            style={styles.input}
             multiline={true}
           />
 
@@ -227,6 +336,19 @@ const styles = StyleSheet.create({
   actionButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
 });
 

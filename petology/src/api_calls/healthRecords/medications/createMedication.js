@@ -30,6 +30,7 @@ const createMedication = async (medicationData) => {
     });
 
     const data = await response.json();
+    console.log('inside createMedication, seeing data ', data);
     if (response.ok) {
       return data;
     } else {

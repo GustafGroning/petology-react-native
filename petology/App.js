@@ -21,6 +21,7 @@ import PulseMonitorScreen from './src/screens/PulseMonitorScreen';
 import AddTreatmentScreen from './src/screens/AddTreatmentScreen';
 import CreateVaccinationScreen from './src/screens/DogProfile/CreateVaccinationScreen';
 import CreateConditionScreen from './src/screens/DogProfile/CreateConditionScreen';
+import CreateMedicationScreen from './src/screens/DogProfile/CreateMedicationScreen';
 
 // LIBRARY SCREENS
 import ArticleListScreen from './src/screens/Library/ArticleListScreen';
@@ -58,6 +59,8 @@ const App = () => {
           <Stack.Screen name='AddTreatmentScreen' component={AddTreatmentScreen} />
           <Stack.Screen name='CreateVaccinationScreen' component={CreateVaccinationScreen} />
           <Stack.Screen name='CreateConditionScreen' component={CreateConditionScreen} />
+          <Stack.Screen name='CreateMedicationScreen' component={CreateMedicationScreen} />
+          
           
           <Stack.Screen name='ArticleList' component={ArticleListScreen} />
           <Stack.Screen name='ArticleScreen' component={ArticleScreen} />

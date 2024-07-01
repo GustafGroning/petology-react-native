@@ -9,15 +9,16 @@ const deleteMedication = async (medicationId) => {
         Authorization: `JWT ${token}`,
       },
     });
+
     if (response.ok) {
-      return true;
+      return { success: true };
     } else {
-      console.error("Failed to delete medication");
-      return false;
+      const errorData = await response.json();
+      return { success: false, message: errorData.message || "Failed to delete medication" };
     }
   } catch (error) {
     console.error("Error deleting medication:", error);
-    return false;
+    return { success: false, message: "An error occurred while deleting the medication" };
   }
 };
 

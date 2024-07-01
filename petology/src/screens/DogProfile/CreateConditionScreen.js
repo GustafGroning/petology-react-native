@@ -233,8 +233,10 @@ const CreateConditionScreen = ({ route, navigation }) => {
           </Modal>
 
           <Text style={styles.subHeader}>Lägg in journalkopia</Text>
-          <TouchableOpacity style={styles.fileUploadButton}>
-            <Text style={styles.fileUploadButtonText}>Välj fil</Text>
+          <TouchableOpacity 
+            style={styles.fileUploadButton} 
+            disabled={true}>
+            <Text style={styles.fileUploadButtonText}>Kommer snart!</Text>
           </TouchableOpacity>
 
           <TextInput
@@ -286,6 +288,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 20,
+    
   },
   buttonGroup: {
     flexDirection: 'row',

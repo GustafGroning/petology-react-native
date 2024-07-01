@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const deleteVaccinationById = async (vaccinationId) => {
   try {
     const token = await AsyncStorage.getItem("userToken");
-    const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/vaccination/delete/${vaccinationId}/`, {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/vaccinations/${vaccinationId}/delete/`, {
       method: "DELETE",
       headers: {
         Authorization: `JWT ${token}`,

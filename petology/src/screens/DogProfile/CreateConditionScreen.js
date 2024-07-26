@@ -39,7 +39,10 @@ const CreateConditionScreen = ({ route, navigation }) => {
     try {
       let medicationId = null;
       if (medication) {
-        const savedMedication = await createMedication(medicationData);
+        const savedMedication = await createMedication({
+          ...medicationData,
+          dog: dogId,
+        });
         if (savedMedication && savedMedication.id) {
           medicationId = savedMedication.id;
         } else {
@@ -47,14 +50,27 @@ const CreateConditionScreen = ({ route, navigation }) => {
           return;
         }
       }
+      console.log('name within CreateConditionScreen ', conditionName);
+      const conditionData = {
+        dog: dogId,
+        name: conditionName,
+        onset_date: onsetDate.toISOString().split('T')[0],
+        follow_up_date: followUp ? followUp.toISOString().split('T')[0] : null,
+        vet_clinic: clinicName,
+        notes: notes,
+        medication: medicationId,
+      };
+      console.log('dogId ', dogId);
+      console.log('Payload inside CreateConditionsScreen:', conditionData); // Log to check structure
+
       const success = await createCondition(
         dogId,
-        conditionName,
-        onsetDate,
-        followUp ? new Date(followUp) : null,
-        clinicName,
-        notes,
-        medicationId
+        conditionData.name,
+        conditionData.onset_date,
+        conditionData.follow_up_date,
+        conditionData.vet_clinic,
+        conditionData.notes,
+        conditionData.medication
       );
       if (success) {
         navigation.goBack();
@@ -68,7 +84,10 @@ const CreateConditionScreen = ({ route, navigation }) => {
 
   const handleCreateMedication = async () => {
     try {
-      const savedMedication = await createMedication(medicationData);
+      const savedMedication = await createMedication({
+        ...medicationData,
+        dog: dogId,
+      });
       if (savedMedication && savedMedication.id) {
         setMedication(savedMedication.id);
         setIsMedicationModalVisible(false);

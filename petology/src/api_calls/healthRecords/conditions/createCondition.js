@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const createCondition = async (dogId, name, onsetDate, followUpDate, vetClinic, notes, medicationId) => {
+  console.log('inside API ', dogId, name, onsetDate, followUpDate, vetClinic, notes, medicationId);
   try {
     const token = await AsyncStorage.getItem("userToken");
     const formatDate = (date) => {
@@ -14,6 +15,8 @@ const createCondition = async (dogId, name, onsetDate, followUpDate, vetClinic, 
     const formattedOnsetDate = formatDate(onsetDate);
     const formattedFollowUpDate = followUpDate ? formatDate(followUpDate) : null;
 
+    console.log('dogId within API ', dogId.dog);
+    console.log('Name within API ', name);
     const payload = {
       dog: dogId,
       name: name,
@@ -24,7 +27,7 @@ const createCondition = async (dogId, name, onsetDate, followUpDate, vetClinic, 
       medication: medicationId || null,
     };
 
-    console.log('Payload:', payload);  // Log the payload being sent
+    console.log('Payload: INSIDE CREATE CONDITION API CALL', payload);  // Log the payload being sent
 
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/conditions/create/`, {
       method: "POST",

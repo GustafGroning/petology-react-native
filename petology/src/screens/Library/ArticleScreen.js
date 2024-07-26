@@ -1,49 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { ImageBackground, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from '../../components/common/Footer';
 import { LinearGradient } from 'expo-linear-gradient';
+
 const ArticleScreen = ({ route, navigation }) => {
   const { article } = route.params;
-  // const [article, setArticle] = useState(null);
+  const [articleData, setArticleData] = useState(null);
 
+  const fetchArticle = async (id) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (token) {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/articles/get/${id}/`, {
+          method: 'GET',
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        });
 
-  // useEffect(() => {
-  //   const fetchArticle = async () => {
-  //     const token = await AsyncStorage.getItem('userToken');
-      
-  //     if (token) {
-  //       try {
-  //         const response = await fetch(
-  //           `${process.env.EXPO_PUBLIC_DEV_URL}/api/articles/get/${articleId}/`,
-  //           {
-  //             method: 'GET',
-  //             headers: {
-  //               'Content-Type': 'application/json',
-  //               Authorization: `JWT ${token}`,
-  //             },
-  //           }
-  //         );
-    
-  //         if (response.ok) {
-  //           const data = await response.json();
-  //           console.log('data in articleScreen ', data);
-  //           setArticle(data);
-  //         } else {
-  //           throw new Error('Network response was not ok');
-  //         }
-  //       } catch (error) {
-  //         console.error('Error fetching article:', error);
-  //       }
-  //     } else {
-  //       console.error('User token not found');
-  //     }
-  //   };
-    
+        if (response.ok) {
+          const data = await response.json();
+          setArticleData(data);
+        } else {
+          console.error("Failed to fetch article");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching article:", error);
+    }
+  };
 
-  //   fetchArticle();
-  // }, [articleId]);
+  useEffect(() => {
+    if (article && article.id) {
+      fetchArticle(article.id);
+    }
+  }, [article]);
 
   const renderArticleBody = (body) => {
     const sections = body.split(/<header>|<section>|<bullet>/).filter(text => text);
@@ -62,51 +54,44 @@ const ArticleScreen = ({ route, navigation }) => {
         );
       }
     });
-  };  
-  
+  };
+
   return (
-    <LinearGradient 
-    colors={['#86c8c5', '#e4f4f2']}
-    style={styles.container}
-    >
+    <LinearGradient colors={['#86c8c5', '#e4f4f2']} style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.headerSection}>
           <Text style={styles.headerText}>Petology</Text>
         </View>
         <View style={styles.articleContainer}>
-          {article && (
+          {articleData && (
             <View style={styles.articleSection}>
-              <View style={styles.articleHeaderContainer}> 
-                <Text style={styles.articleTitle}>{article.title}</Text>
+              <View style={styles.articleHeaderContainer}>
+                <Text style={styles.articleTitle}>{articleData.title}</Text>
               </View>
-              <View style={styles.imageContainer}> 
+              <View style={styles.imageContainer}>
                 <Image
-                  source={{ uri: article.image }}
+                  source={{ uri: articleData.image }}
                   resizeMode='cover'
                   style={styles.articleImage}
-                />              
+                />
               </View>
-
-              {/* <Text style={styles.articleSummary}>{article.summary}</Text> */}
-              {renderArticleBody(article.body)}
+              {renderArticleBody(articleData.body)}
             </View>
           )}
         </View>
       </ScrollView>
       <Footer navigation={navigation} />
     </LinearGradient>
-  );  
+  );
 };
 
 const styles = StyleSheet.create({
-/**********************************************************************************/
   container: {
     flex: 1,
     paddingTop: 40,
     backgroundColor: '#92cdca',
   },
   scrollView: {},
-  /**********************************************************************************/
   headerSection: {
     flex: 1,
     alignItems: 'center',
@@ -118,15 +103,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Cochin',
     opacity: 0.7,
   },
-  /**********************************************************************************/
   articleContainer: {
     alignItems: 'center',
-    // borderWidth: 2,
   },
-  /**********************************************************************************/
-  articleSection: {
-  // alignItems: 'center',
-  },
+  articleSection: {},
   articleHeaderContainer: {
     alignItems: 'center',
   },
@@ -134,7 +114,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     paddingTop: 80,
     paddingBottom: 20,
-    // fontWeight: 'bold',
   },
   header: {
     fontSize: 20,
@@ -143,13 +122,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#333',
     paddingLeft: 10,
-    // textAlign: 'center', // Center align text
   },
-  
   section: {
     fontSize: 15,
     marginBottom: 10,
-    // textAlign: 'center', // Center align text
     paddingLeft: 10,
   },
   bulletItem: {
@@ -161,15 +137,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingLeft: 10,
   },
-  /**********************************************************************************/
   imageContainer: {
     alignItems: 'center',
   },
   articleImage: {
     height: 130,
-    width:  380,
+    width: 380,
     borderRadius: 10,
   },
 });
-/**********************************************************************************/
+
 export default ArticleScreen;

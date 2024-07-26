@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput } from 'react-native';
-import { ImageBackground } from 'react-native';
 import ArticleItem from '../../components/ArticleComponents/ArticleItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from '../../components/common/Footer';
@@ -29,9 +28,9 @@ const ArticleListScreen = ({ navigation }) => {
           const data = await response.json();
           console.log(data);
           setArticles(data);
-          setFilteredArticles(data);
+          setFilteredArticles(data.map(article => article.id));
           // Filter featured articles
-          const featured = data.filter(article => article.featured_article);
+          const featured = data.filter(article => article.featured_article).map(article => article.id);
           setFeaturedArticles(featured);
         }
       }
@@ -47,11 +46,11 @@ const ArticleListScreen = ({ navigation }) => {
   const handleSearch = (query) => {
     setSearchQuery(query);
     if (query === '') {
-      setFilteredArticles(articles); // Reset to the original list of articles
+      setFilteredArticles(articles.map(article => article.id)); // Reset to the original list of articles
     } else {
       const filtered = articles.filter(article => 
         article.title.toLowerCase().includes(query.toLowerCase()),
-      );
+      ).map(article => article.id);
       setFilteredArticles(filtered);
     }
   };
@@ -73,8 +72,8 @@ const ArticleListScreen = ({ navigation }) => {
         </View>
         <View style={styles.articleContainer}>
           {featuredArticles.length > 0 ? (
-            featuredArticles.map((article, index) => (
-              <ArticleItem key={index} article={article} navigation={navigation}/>
+            featuredArticles.map((articleId, index) => (
+              <ArticleItem key={index} articleId={articleId} navigation={navigation}/>
             ))
           ) : (
             <Text>No articles found</Text>
@@ -87,9 +86,9 @@ const ArticleListScreen = ({ navigation }) => {
           {filteredArticles.length > 0 ? (
             filteredArticles
               // Exclude featured articles
-              .filter(article => !article.featured_article)
-              .map((article, index) => (
-                <ArticleItem key={index} article={article} navigation={navigation}/>
+              .filter(articleId => !featuredArticles.includes(articleId))
+              .map((articleId, index) => (
+                <ArticleItem key={index} articleId={articleId} navigation={navigation}/>
               ))
           ) : (
             <Text>No articles found</Text>

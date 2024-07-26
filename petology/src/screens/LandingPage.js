@@ -17,6 +17,7 @@ import Header from "../components/common/Header";
 import Task from "../components/common/task/Task";
 import SubHeader from "../components/common/SubHeader";
 import getUserTasks from "../api_calls/task/getUserTasks";
+import ArticleItem from "../components/ArticleComponents/ArticleItem";
 
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -29,25 +30,23 @@ const LandingPage = ({ navigation }) => {
   /**********************************************************************************/
   const getAllUserTasksHandler = async () => {
     const tasks = await getUserTasks();
-    console.log("tasks ", tasks);
     setAllTasks(tasks);
   };
   /**********************************************************************************/
-  const filterTasksForToday = () => {
-    console.log("********** started filtering tasks for TODAY **********");
+  const filterTasksForTodayAndOverdue = () => {
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
     const todayEnd = new Date();
     todayEnd.setHours(23, 59, 59, 999);
-
-    const tasksForToday = allTasks.filter((task) => {
+  
+    const tasksForTodayAndOverdue = allTasks.filter((task) => {
       const taskStartTime = new Date(task.start_time);
-      return taskStartTime >= todayStart && taskStartTime <= todayEnd;
+      return (taskStartTime >= todayStart && taskStartTime <= todayEnd) ||
+             (taskStartTime < todayStart && !task.completed);
     });
-    console.log("********** found tasks for today **********");
-    console.log(tasksForToday);
-    setTasksToday(tasksForToday);
+    setTasksToday(tasksForTodayAndOverdue);
   };
+  
   /**********************************************************************************/
   const filterCompletedTasks = () => {
     console.log("********** inside filterCompletedTasks **********");
@@ -104,8 +103,7 @@ const LandingPage = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    // Call filterTasksForToday whenever allTasks changes
-    filterTasksForToday();
+    filterTasksForTodayAndOverdue();
   }, [allTasks]);
 
   useEffect(() => {
@@ -234,18 +232,14 @@ const LandingPage = ({ navigation }) => {
         <View style={styles.newsContainer}>
           <SubHeader headerText={"Nyheter"} />
           <Text style={styles.motivationTextSection}>
-            {" "}
             Petology 1.0 har precis släppts!{" "}
           </Text>
         </View>
-        {/* Looks in articleListScreen like entire articles are sent to render articles, which means
-      the chosen article needs to be loaded here on LandingPage in order to have featured articles. */}
-        <TouchableOpacity
-          style={styles.articlesContainer}
-          onPress={() => navigation.navigate("ArticleList")}
-        >
-          <SubHeader headerText={"Artiklar"} />
-        </TouchableOpacity>
+        <View style={styles.featuredArticlesContainer}>
+          <SubHeader headerText={"Utvalda Artiklar"} />
+          <ArticleItem articleId={1} navigation={navigation}/>
+          <ArticleItem articleId={2} navigation={navigation}/>
+        </View>
         <View style={styles.emptyContainer}></View>
       </ScrollView>
       <Footer navigation={navigation} />
@@ -384,6 +378,10 @@ const styles = StyleSheet.create({
     left: 20,
     borderRadius: 20,
     backgroundColor: "lightgreen",
+  },
+  featuredArticlesContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   offeringContainer: {
     height: 200,

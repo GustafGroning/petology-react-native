@@ -1,26 +1,62 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ArticleItem = ({ navigation, article, id}) => {
-  
-  const navigateToScreen = () => {
-    console.log('ARTICLE FOR NAV ', article);
-    navigation.navigate('ArticleScreen', { article: article });
+const ArticleItem = ({ navigation, articleId }) => {
+  const [article, setArticle] = useState(null);
+
+  const fetchArticle = async (id) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (token) {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/articles/get/${id}/`, {
+          method: 'GET',
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setArticle(data);
+        } else {
+          console.error("Failed to fetch article");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching article:", error);
+    }
   };
+
+  useEffect(() => {
+    fetchArticle(articleId);
+  }, [articleId]);
+
+  const navigateToScreen = () => {
+    if (article) {
+      navigation.navigate('ArticleScreen', { article });
+    }
+  };
+
+  if (!article) {
+    return null; // Or render a loading spinner
+  }
+
+  // Ensure the image URL is correctly formatted
+  const imageUrl = article.image.startsWith("http") ? article.image : `${process.env.EXPO_PUBLIC_DEV_URL}${article.image}`;
+  console.log('Formatted Article Image URL:', imageUrl);
+
   return (
-    <TouchableOpacity style={styles.articleItem} 
-    
-      onPress={() => navigateToScreen('ArticleScreen')}>
+    <TouchableOpacity style={styles.articleItem} onPress={navigateToScreen}>
       <ImageBackground
-        source={{ uri: article.image }}
+        source={{ uri: imageUrl }}
         resizeMode="cover"
         style={styles.articleImageStyle}
-        imageStyle={{ borderRadius: 20}}
-
+        imageStyle={{ borderRadius: 20 }}
       >
         <View style={styles.articleItemFooter}>
-            <Text style={styles.articleTitle}>{article.title}</Text>
-            <Text numberOfLines={2} style={styles.articleSummary}>{article.summary}</Text> 
+          <Text style={styles.articleTitle}>{article.title}</Text>
+          <Text numberOfLines={2} style={styles.articleSummary}>{article.summary}</Text>
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -36,39 +72,36 @@ const styles = StyleSheet.create({
     height: 165,
     width: "85%",
     marginBottom: 25,
-    // position: "relative",
   },
   articleTitle: {
-    // Your styles for article title here
-    color: "#fff", // Text color for article title
-    fontSize: 16, // Adjust the font size as needed
-    fontWeight: "bold", // Adjust the font weight as needed
-    position: "absolute", // Position title absolutely
-    top: 10, // Adjust the top position as needed
-    left: 10, // Adjust the left position as needed
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    position: "absolute",
+    top: 10,
+    left: 10,
   },
   articleSummary: {
-        // Your styles for article title here
-        color: "#fff", // Text color for article title
-        fontSize: 12, // Adjust the font size as needed
-        fontWeight: "bold", // Adjust the font weight as needed
-        position: "absolute", // Position title absolutely
-        top: 30, // Adjust the top position as needed
-        left: 10, // Adjust the left position as needed
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
+    position: "absolute",
+    top: 30,
+    left: 10,
   },
   articleItemFooter: {
     backgroundColor: "#4e7c77",
     opacity: 0.8,
     height: "40%",
     justifyContent: "center",
-    alignItems: "center", // Center the text vertically
+    alignItems: "center",
     borderBottomStartRadius: 20,
     borderBottomEndRadius: 20,
   },
   articleImageStyle: {
     height: "100%",
     width: "100%",
-    justifyContent: "flex-end", // Align content at the bottom
+    justifyContent: "flex-end",
     borderRadius: 20,
   },
 });

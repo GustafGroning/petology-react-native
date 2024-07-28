@@ -3,6 +3,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const saveNewHealthIndexRow = async (dogId, newRow) => {
   try {
     const token = await AsyncStorage.getItem("userToken");
+    console.log('new row: ', newRow);
+
+    // Ensure the date_performed is in the correct format
+    newRow.date_performed = new Date().toISOString().split('T')[0]; // Converts to YYYY-MM-DD
 
     const response = await fetch(`http://localhost:8000/api/health-index/dog/${dogId}/add/`, {
       method: "POST",

@@ -6,11 +6,9 @@ import getDogById from '../../api_calls/dog/getDogById';
 const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, navigation, dog_id }) => {
   const [isToday, setIsToday] = useState(false);
   const [dogName, setDogName] = useState('');
+  const [displayBatchesInRow, setDisplayBatchesInRow] = useState(0);
 
-  const navigateToHealthIndexSurvey = () =>  {
-    console.log('test');
-    console.log('latest batch ID ', latest_batch);
-    console.log('dog_id to be sent ', dog_id);
+  const navigateToHealthIndexSurvey = () => {
     navigation.navigate('HealthIndexSurveyScreen', {
       latest_question_batch: latest_batch,
       dogId: dog_id
@@ -29,6 +27,8 @@ const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, 
 
     const today = new Date();
     const lastPerformed = new Date(last_performed_date);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
 
     const isSameDay = (
       today.getFullYear() === lastPerformed.getFullYear() &&
@@ -36,10 +36,16 @@ const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, 
       today.getDate() === lastPerformed.getDate()
     );
 
+    const isYesterday = (
+      yesterday.getFullYear() === lastPerformed.getFullYear() &&
+      yesterday.getMonth() === lastPerformed.getMonth() &&
+      yesterday.getDate() === lastPerformed.getDate()
+    );
+
     setIsToday(isSameDay);
+    setDisplayBatchesInRow(isYesterday ? batches_in_row : 0);
   }, [last_performed_date, dog_id]);
 
-  console.log('isToday ', isToday);
   return (
     <TouchableOpacity
       style={styles.container}
@@ -53,7 +59,7 @@ const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, 
       </View>
       <View style={styles.daysContainer}>
         <FontAwesome name="fire" size={20} color="#E94F37" />
-        <Text style={styles.daysText}>{batches_in_row} dagar</Text>
+        <Text style={styles.daysText}>{displayBatchesInRow} dagar</Text>
       </View>
       <View style={styles.messageContainer}>
         <Text style={styles.messageText}>

@@ -1,11 +1,26 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RadarChart from '../../components/common/RadarChart';
+
+const screenWidth = Dimensions.get('window').width;
+const labels = [
+  'Munhälsa',
+  'Ögon',
+  'Allmäntillstånd',
+  'Övrigt',
+  'Hud och päls',
+  'Rörelseapparat'
+];
+const chartSize = Dimensions.get('window').width - 150; // 20px padding on each side
+
+
 // API's
 import getDogById from '../../api_calls/dog/getDogById';
 import getTasksForDog from '../../api_calls/task/getTaskForDog';
 import getLatestHealthIndexRowForDog from '../../api_calls/healthIndex/getLatestHealthIndexRowForDog';
+
 
 // COMPONENTS
 import HealthIndexBanner from '../../components/DogProfileComponents/HealthIndexBanner';
@@ -23,7 +38,7 @@ const DogMainScreen = ({ navigation, route }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const { dogId } = route.params;
-  console.log('dogId in Main ', dogId);
+  const screenWidth = Dimensions.get('window').width;
 
   useFocusEffect(
     useCallback(() => {
@@ -62,8 +77,10 @@ const DogMainScreen = ({ navigation, route }) => {
   const fetchLatestHealthIndexRowForDog = async () => {
     try {
       const row = await getLatestHealthIndexRowForDog(dogId);
+      console.log('is this where we print row?');
       setHealthIndexLatestRow(row);
       console.log(row);
+      console.log('healthIndexLatestRow.date_performed: ', healthIndexLatestRow);
     } catch (error) {
       console.error('Error fetching latest health index row:', error);
     }
@@ -130,10 +147,35 @@ const DogMainScreen = ({ navigation, route }) => {
         </View>
 
         <View style={styles.diagramContainer}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Status</Text>
-          </View>
-        </View>
+  <View style={styles.headerContainer}>
+    <Text style={styles.headerText}>Status</Text>
+  </View>
+  {healthIndexLatestRow && (
+    <>
+      <RadarChart
+        data={[
+          { label: 'Munhälsa', value: healthIndexLatestRow.dental_health },
+          { label: 'Ögon', value: healthIndexLatestRow.eyes },
+          { label: 'Allmäntillstånd', value: healthIndexLatestRow.general_condition },
+          { label: 'Övrigt', value: healthIndexLatestRow.other },
+          { label: 'Hud och päls', value: healthIndexLatestRow.skin_and_coat },
+          { label: 'Rörelseapparat', value: healthIndexLatestRow.locomotor_system }
+        ]}
+        size={chartSize}
+      />
+      {labels.map((label, i) => {
+        const angle = (i * (2 * Math.PI)) / labels.length;
+        const x = (chartSize / 2) + (chartSize / 2.5 * 1.35) * Math.cos(angle);
+        const y = (chartSize / 2) + (chartSize / 2.5 * 1.2) * Math.sin(angle);
+        return (
+          <Text key={i} style={[styles.label, { top: y + 50, left: x + 30 }]}>
+            {label}
+          </Text>
+        );
+      })}
+    </>
+  )}
+</View>
 
         <View style={styles.dogInfoContainer}>
   <View style={styles.infoHeaderContainer}>
@@ -223,8 +265,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   dogHeaderContainer: {
-    marginTop: 55,
-    height: 100,
+    marginTop: 120,
+    height: 60,
     alignItems: 'center',
   },
   headerContainer: {
@@ -233,7 +275,7 @@ const styles = StyleSheet.create({
   },
   diagramContainer: {
     height: 350,
-    backgroundColor: '#F3EAC2',
+    // backgroundColor: '#F3EAC2',
     alignItems: 'center',
     borderRadius: 10,
     marginHorizontal: 20,
@@ -294,6 +336,10 @@ const styles = StyleSheet.create({
     height: 180,
     marginBottom: 25,
     alignItems: 'center',
+  },
+  label: {
+    position: 'absolute',
+    fontSize: 14,
   },
   footer: {
     position: 'absolute',

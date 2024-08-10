@@ -9,7 +9,7 @@ const getDogsForUser = async () => {
         headers: {
           Authorization: `JWT ${token}`,
         },
-      },
+      }
     );
     const data = await response.json();
 
@@ -29,7 +29,9 @@ const getDogsForUser = async () => {
         id_number: dog.id_number,
         registration_number: dog.registration_number,
         passport_number: dog.passport_number,
+        image_uri: dog.image_url,  // Add image_uri
       }));
+      console.log('found doggos! ', formattedDogs);
       return formattedDogs;
     } else {
       console.error("Failed to fetch dogs or 'dogs' is not an array");

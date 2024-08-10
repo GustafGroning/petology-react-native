@@ -46,29 +46,30 @@ const LibraryScreen = ({ navigation }) => {
               <FontAwesome
                 style={styles.navigationArrowStyle}
                 name='arrow-right' 
-                size={45} 
+                size={30} 
                 color='#000' />
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Kurser</Text>
+          <Text style={styles.disabledSectionHeader}>Kurser</Text>
           <View style={styles.sectionItem}>
             <View style={styles.sectionItemImage}>
               <ImageBackground
                 source={ offeringImage }
                 resizeMode='cover'
-                style={styles.imageStyle}
+                style={styles.disabledImageStyle}
                 imageStyle={{ borderRadius: 20}}
               />
             </View>
             <View style={styles.sectionItemText}>
               <Text numberOfLines={4}>
-                Våra kurser är perfekta för dig som vill 
-                utvecklas inom ett specifikt område.
+                {/* Våra kurser är perfekta för dig som vill 
+                utvecklas inom ett specifikt område. */}
+                Kommer snart!
               </Text>
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.sectionItemArrow}
               onPress={() => navigateToScreen('ArticleList')}>
               <FontAwesome
@@ -77,26 +78,27 @@ const LibraryScreen = ({ navigation }) => {
                 size={45} 
                 color='#000' 
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Instruktioner</Text>
+          <Text style={styles.disabledSectionHeader}>Instruktioner</Text>
           <View style={styles.sectionItem}>
             <View style={styles.sectionItemImage}>
               <ImageBackground
                 source={ offeringImage }
                 resizeMode='cover'
-                style={styles.imageStyle}
+                style={styles.disabledImageStyle}
                 imageStyle={{ borderRadius: 20}}
               />
             </View>
             <View style={styles.sectionItemText}>
               <Text numberOfLines={4}>
-                Se instruktionsfilmer om olika undersökningar och behandlingar.
+                {/* Se instruktionsfilmer om olika undersökningar och behandlingar. */}
+                Kommer snart!
               </Text>
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.sectionItemArrow}
               onPress={() => navigateToScreen('ArticleList')}>
               <FontAwesome
@@ -105,12 +107,12 @@ const LibraryScreen = ({ navigation }) => {
                 size={45} 
                 color='#000' 
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
         {/* Additional Links Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Petology</Text>
+        <View style={styles.miscSection}>
+          <Text style={styles.miscSectionHeader}>Petology</Text>
           <TouchableOpacity onPress={() => 
             navigateToScreen('FrequentlyAskedQuestionsScreen')}>
             <Text> FaQ </Text>
@@ -155,10 +157,26 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     paddingHorizontal: 20,
   },
+  miscSection: {
+    alignItems: 'left',
+    marginVertical: 20,
+    paddingHorizontal: 20,
+  },
   sectionHeader: {
     right: 140,
     fontSize: 22,
     fontFamily: 'Cochin',
+  },
+  miscSectionHeader: {
+    // right: 140,
+    fontSize: 26,
+    fontFamily: 'Cochin',
+  },
+  disabledSectionHeader: {
+    right: 140,
+    fontSize: 22,
+    fontFamily: 'Cochin',
+    opacity: 0.4,
   },
   sectionItem: {
     width: '95%',
@@ -186,6 +204,13 @@ const styles = StyleSheet.create({
     width: '90%',
     top: 2,
     left: 1,
+  },
+  disabledImageStyle: {
+    height: '95%',
+    width: '90%',
+    top: 2,
+    left: 1,
+    opacity: 0.4,
   },
   navigationArrowStyle: {
   },

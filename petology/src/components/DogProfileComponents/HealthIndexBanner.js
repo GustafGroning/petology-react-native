@@ -1,50 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useFocusEffect } from '@react-navigation/native';
 import getDogById from '../../api_calls/dog/getDogById';
+import getLatestHealthIndexRowForDog from '../../api_calls/healthIndex/getLatestHealthIndexRowForDog';
 
-const HealthIndexBanner = ({ batches_in_row, last_performed_date, latest_batch, navigation, dog_id }) => {
+const HealthIndexBanner = ({ navigation, dog_id, batches_in_row }) => {
   const [isToday, setIsToday] = useState(false);
   const [dogName, setDogName] = useState('');
   const [displayBatchesInRow, setDisplayBatchesInRow] = useState(0);
+  const [latestBatchId, setLatestBatchId] = useState(0);
+
+  const fetchDogData = async () => {
+    const dogData = await getDogById(dog_id);
+    if (dogData) {
+      setDogName(dogData.name);
+    }
+  };
+
+  const fetchHealthIndexData = async () => {
+    const data = await getLatestHealthIndexRowForDog(dog_id);
+    if (data) {
+      const today = new Date();
+      const lastPerformedDate = new Date(data.date_performed);
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+
+      const isSameDay = (
+        today.getFullYear() === lastPerformedDate.getFullYear() &&
+        today.getMonth() === lastPerformedDate.getMonth() &&
+        today.getDate() === lastPerformedDate.getDate()
+      );
+
+      const isYesterday = (
+        yesterday.getFullYear() === lastPerformedDate.getFullYear() &&
+        yesterday.getMonth() === lastPerformedDate.getMonth() &&
+        yesterday.getDate() === lastPerformedDate.getDate()
+      );
+
+      setIsToday(isSameDay);
+      setDisplayBatchesInRow(isYesterday || isSameDay ? data.batches_in_row : 0);
+      setLatestBatchId(data.latest_run_batch_id);
+    } else {
+      setDisplayBatchesInRow(1);
+      setLatestBatchId(1);
+    }
+  };
+
+  // Re-fetch data whenever the screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      fetchDogData();
+      fetchHealthIndexData();
+    }, [dog_id])
+  );
 
   const navigateToHealthIndexSurvey = () => {
     navigation.navigate('HealthIndexSurveyScreen', {
-      latest_question_batch: latest_batch,
-      dogId: dog_id
+      latest_question_batch: latestBatchId,
+      dogId: dog_id,
     });
   };
-
-  useEffect(() => {
-    const fetchDogData = async () => {
-      const dogData = await getDogById(dog_id);
-      if (dogData) {
-        setDogName(dogData.name);
-      }
-    };
-
-    fetchDogData();
-
-    const today = new Date();
-    const lastPerformed = new Date(last_performed_date);
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-
-    const isSameDay = (
-      today.getFullYear() === lastPerformed.getFullYear() &&
-      today.getMonth() === lastPerformed.getMonth() &&
-      today.getDate() === lastPerformed.getDate()
-    );
-
-    const isYesterday = (
-      yesterday.getFullYear() === lastPerformed.getFullYear() &&
-      yesterday.getMonth() === lastPerformed.getMonth() &&
-      yesterday.getDate() === lastPerformed.getDate()
-    );
-
-    setIsToday(isSameDay);
-    setDisplayBatchesInRow(isYesterday ? batches_in_row : 0);
-  }, [last_performed_date, dog_id]);
 
   return (
     <TouchableOpacity
@@ -84,6 +100,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
+    width: "75%",
     fontSize: 15,
     fontWeight: 'bold',
     marginRight: 10,

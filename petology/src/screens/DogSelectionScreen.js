@@ -103,6 +103,7 @@ const DogSelectionScreen = ({ navigation }) => {
               name={dog.name}
               breed={dog.breed}
               birthday={dog.birthday}
+              imageUri={dog.image_uri}
               onPress={() => handleSelectDog(dog.id)}
             />
           ))}

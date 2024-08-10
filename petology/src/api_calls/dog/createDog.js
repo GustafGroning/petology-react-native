@@ -1,24 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const createDog = async (name, selectedBreed, birthday, selectedSex) => {
+const createDog = async (formData) => {
   try {
     const token = await AsyncStorage.getItem("userToken");
-    const formattedDate = `${birthday.getFullYear()}-${
-      birthday.getMonth() + 1
-    }-${birthday.getDate()}`;
 
     const response = await fetch("http://localhost:8000/api/dog/add/", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `JWT ${token}`,
       },
-      body: JSON.stringify({
-        name: name,
-        breed: selectedBreed, // Use the selected breed's ID
-        birthday: formattedDate, // Format date to YYYY-MM-DD
-        sex: selectedSex,
-      }),
+      body: formData,
     });
 
     if (response.ok) {

@@ -1,8 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Footer from '../../components/common/Footer';
-
-
 
 const ContactUsScreen = ({ navigation }) => {
   const navigateToScreen = (screenName) => {
@@ -11,10 +9,12 @@ const ContactUsScreen = ({ navigation }) => {
   
   return (
     <View style={styles.container}>
-      <Text>Here you can find information about contacting us.</Text>
-      <TouchableOpacity onPress={() => navigateToScreen('ContactUsScreen')}>
-        <Text>Contact Us</Text>
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text>Here you can find information about contacting us.</Text>
+        <TouchableOpacity onPress={() => navigateToScreen('ContactUsScreen')}>
+          <Text>Contact Us</Text>
+        </TouchableOpacity>
+      </ScrollView>
       <Footer navigation={navigation} />
     </View>
   );
@@ -23,6 +23,9 @@ const ContactUsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

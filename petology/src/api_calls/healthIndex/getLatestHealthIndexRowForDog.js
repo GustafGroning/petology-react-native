@@ -28,11 +28,11 @@ const getLatestHealthIndexRowForDog = async (dogId) => {
       };
       return dogLatestHealthRow;
     } else {
-      console.error("Failed to fetch dog health rows");
+      console.log("Failed to fetch dog health rows");
       return null;
     }
   } catch (error) {
-    console.error("Error fetching dog:", error);
+    console.log("Error fetching dog health row:", error);
     return null;
   }
 };

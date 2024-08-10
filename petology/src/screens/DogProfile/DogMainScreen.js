@@ -1,8 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RadarChart from '../../components/common/RadarChart';
+import getDogById from '../../api_calls/dog/getDogById';
+import getTasksForDog from '../../api_calls/task/getTaskForDog';
+import getLatestHealthIndexRowForDog from '../../api_calls/healthIndex/getLatestHealthIndexRowForDog';
+import getLatestToothbrushingForDog from '../../api_calls/healthIndex/getLatestToothbrushingForDog';
+import HealthIndexBanner from '../../components/DogProfileComponents/HealthIndexBanner';
+import ToothbrushingBanner from '../../components/DogProfileComponents/ToothbrushingBanner';
+import Footer from '../../components/common/Footer';
+import Task from '../../components/common/task/Task';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const screenWidth = Dimensions.get('window').width;
 const labels = [
@@ -13,40 +23,45 @@ const labels = [
   'Hud och päls',
   'Rörelseapparat'
 ];
-const chartSize = Dimensions.get('window').width - 150; // 20px padding on each side
-
-
-// API's
-import getDogById from '../../api_calls/dog/getDogById';
-import getTasksForDog from '../../api_calls/task/getTaskForDog';
-import getLatestHealthIndexRowForDog from '../../api_calls/healthIndex/getLatestHealthIndexRowForDog';
-
-
-// COMPONENTS
-import HealthIndexBanner from '../../components/DogProfileComponents/HealthIndexBanner';
-
-// STYLING
-import Footer from '../../components/common/Footer';
-import Task from '../../components/common/task/Task';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { LinearGradient } from 'expo-linear-gradient';
+const chartSize = Dimensions.get('window').width - 150;
 
 const DogMainScreen = ({ navigation, route }) => {
   const [selectedDog, setSelectedDog] = useState(null);
   const [dogTasks, setDogTasks] = useState([]);
   const [healthIndexLatestRow, setHealthIndexLatestRow] = useState(null);
+  const [toothbrushingLatestRow, setToothbrushingLatestRow] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [loading, setLoading] = useState(true);  // Add loading state
 
   const { dogId } = route.params;
-  const screenWidth = Dimensions.get('window').width;
 
   useFocusEffect(
     useCallback(() => {
-      fetchSelectedDog();
-      fetchDogTasks();
-      fetchLatestHealthIndexRowForDog();
-    }, [dogId])
+      const fetchData = async () => {
+        await fetchSelectedDog();
+        await fetchDogTasks();
+        await fetchLatestToothbrushingForDog();
+        setLoading(false);  // Set loading to false after data is fetched
+      };
+      fetchData();
+    }, [navigation])
   );
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      console.log('currently at DogMainScreen');
+      fetchLatestHealthIndexRowForDog();
+    }
+  }, [isFocused]
+);
+    
+
+  // useEffect(
+  //   useCallback(() => {
+  //     fetchLatestHealthIndexRowForDog();
+  //   }, [dogId])
+  // );
 
   useEffect(() => {
     if (selectedDog?.birthday) {
@@ -77,12 +92,20 @@ const DogMainScreen = ({ navigation, route }) => {
   const fetchLatestHealthIndexRowForDog = async () => {
     try {
       const row = await getLatestHealthIndexRowForDog(dogId);
-      console.log('is this where we print row?');
-      setHealthIndexLatestRow(row);
-      console.log(row);
-      console.log('healthIndexLatestRow.date_performed: ', healthIndexLatestRow);
+      setHealthIndexLatestRow(row || null);
     } catch (error) {
       console.error('Error fetching latest health index row:', error);
+      setHealthIndexLatestRow(null);
+    }
+  };
+
+  const fetchLatestToothbrushingForDog = async () => {
+    try {
+      const row = await getLatestToothbrushingForDog(dogId);
+      setToothbrushingLatestRow(row || null);
+    } catch (error) {
+      console.error('Error fetching latest toothbrushing row:', error);
+      setToothbrushingLatestRow(null);
     }
   };
 
@@ -134,6 +157,14 @@ const DogMainScreen = ({ navigation, route }) => {
     }
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <LinearGradient 
       colors={['#86c8c5', '#e4f4f2']}
@@ -145,89 +176,89 @@ const DogMainScreen = ({ navigation, route }) => {
             <Text style={styles.headerText}>{selectedDog?.name}</Text>
           </View>
         </View>
-
+  
         <View style={styles.diagramContainer}>
-  <View style={styles.headerContainer}>
-    <Text style={styles.headerText}>Status</Text>
-  </View>
-  {healthIndexLatestRow && (
-    <>
-      <RadarChart
-        data={[
-          { label: 'Munhälsa', value: healthIndexLatestRow.dental_health },
-          { label: 'Ögon', value: healthIndexLatestRow.eyes },
-          { label: 'Allmäntillstånd', value: healthIndexLatestRow.general_condition },
-          { label: 'Övrigt', value: healthIndexLatestRow.other },
-          { label: 'Hud och päls', value: healthIndexLatestRow.skin_and_coat },
-          { label: 'Rörelseapparat', value: healthIndexLatestRow.locomotor_system }
-        ]}
-        size={chartSize}
-      />
-      {labels.map((label, i) => {
-        const angle = (i * (2 * Math.PI)) / labels.length;
-        const x = (chartSize / 2) + (chartSize / 2.5 * 1.35) * Math.cos(angle);
-        const y = (chartSize / 2) + (chartSize / 2.5 * 1.2) * Math.sin(angle);
-        return (
-          <Text key={i} style={[styles.label, { top: y + 50, left: x + 30 }]}>
-            {label}
-          </Text>
-        );
-      })}
-    </>
-  )}
-</View>
-
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>Status</Text>
+          </View>
+          {healthIndexLatestRow ? (
+            <>
+              <RadarChart
+                data={[
+                  { label: 'Munhälsa', value: healthIndexLatestRow.dental_health },
+                  { label: 'Ögon', value: healthIndexLatestRow.eyes },
+                  { label: 'Allmäntillstånd', value: healthIndexLatestRow.general_condition },
+                  { label: 'Övrigt', value: healthIndexLatestRow.other },
+                  { label: 'Hud och päls', value: healthIndexLatestRow.skin_and_coat },
+                  { label: 'Rörelseapparat', value: healthIndexLatestRow.locomotor_system }
+                ]}
+                size={chartSize}
+              />
+              {labels.map((label, i) => {
+                const angle = (i * (2 * Math.PI)) / labels.length;
+                const x = (chartSize / 2) + (chartSize / 2.5 * 1.35) * Math.cos(angle);
+                const y = (chartSize / 2) + (chartSize / 2.5 * 1.2) * Math.sin(angle);
+                return (
+                  <Text key={i} style={[styles.label, { top: y + 50, left: x + 30 }]}>
+                    {label}
+                  </Text>
+                );
+              })}
+            </>
+          ) : (
+            <Text style={styles.noDataText}>No health data available</Text>
+          )}
+        </View>
+  
         <View style={styles.dogInfoContainer}>
-  <View style={styles.infoHeaderContainer}>
-    <Text style={styles.infoHeaderText}>Information</Text>
-    <TouchableOpacity
-      style={styles.editInformationButton}
-      onPress={() => navigation.navigate('DogDetailsScreen', { dogId: dogId })}
-    >
-      <FontAwesome name='arrow-right' size={20} color='#000' />
-    </TouchableOpacity>
-  </View>
-
-  <Text style={styles.dogInfoLabel}>Stamtavlenamn: <Text style={styles.dogInfoText}>{selectedDog?.pedigree_name}</Text></Text>
-  <Text style={styles.dogInfoLabel}>Ras: <Text style={styles.dogInfoText}>{selectedDog?.breed}</Text></Text>
-  <Text style={styles.dogInfoLabel}>Födelsedag: <Text style={styles.dogInfoText}>{selectedDog?.birthday}</Text></Text>
-  <Text style={styles.dogInfoLabel}>Kön: <Text style={styles.dogInfoText}>{selectedDog?.sex}</Text></Text>
-  <Text style={styles.dogInfoLabel}>Färg: <Text style={styles.dogInfoText}>{selectedDog?.color}</Text></Text>
-
-  <View style={styles.spaceBetweenFields}></View>
-
-  <Text style={styles.dogInfoLabel}>ID-nummer: <Text style={styles.dogInfoText}>{selectedDog?.id_number}</Text></Text>
-  <Text style={styles.dogInfoLabel}>Registreringsnummer: <Text style={styles.dogInfoText}>{selectedDog?.registration_number}</Text></Text>
-  <Text style={styles.dogInfoLabel}>Passnummer: <Text style={styles.dogInfoText}>{selectedDog?.passport_number}</Text></Text>
-
-  <View style={styles.spaceBetweenFields}></View>
-
-  <Text style={styles.dogInfoLabel}>Försäkringsbolag: <Text style={styles.dogInfoText}>{selectedDog?.insurance_company}</Text></Text>
-  <Text style={styles.dogInfoLabel}>Försäkringsnummer: <Text style={styles.dogInfoText}>{selectedDog?.insurance_number}</Text></Text>
-
-  <View style={styles.spaceBetweenFields}></View>
-
-  <Text style={styles.dogInfoLabel}>Foder: <Text style={styles.dogInfoText}>{selectedDog?.feed}</Text></Text>
-  <Text style={styles.dogInfoLabel}>Eventuella foderintoleranser: <Text style={styles.dogInfoText}>{selectedDog?.possible_feed_intolerance}</Text></Text>
-</View>
-
+          <View style={styles.infoHeaderContainer}>
+            <Text style={styles.infoHeaderText}>Information</Text>
+            <TouchableOpacity
+              style={styles.editInformationButton}
+              onPress={() => navigation.navigate('DogDetailsScreen', { dogId: dogId })}
+            >
+              <FontAwesome name='arrow-right' size={20} color='#000' />
+            </TouchableOpacity>
+          </View>
+  
+          <Text style={styles.dogInfoLabel}>Stamtavlenamn: <Text style={styles.dogInfoText}>{selectedDog?.pedigree_name}</Text></Text>
+          <Text style={styles.dogInfoLabel}>Ras: <Text style={styles.dogInfoText}>{selectedDog?.breed}</Text></Text>
+          <Text style={styles.dogInfoLabel}>Födelsedag: <Text style={styles.dogInfoText}>{selectedDog?.birthday}</Text></Text>
+          <Text style={styles.dogInfoLabel}>Kön: <Text style={styles.dogInfoText}>{selectedDog?.sex}</Text></Text>
+          <Text style={styles.dogInfoLabel}>Färg: <Text style={styles.dogInfoText}>{selectedDog?.color}</Text></Text>
+  
+          <View style={styles.spaceBetweenFields}></View>
+  
+          <Text style={styles.dogInfoLabel}>ID-nummer: <Text style={styles.dogInfoText}>{selectedDog?.id_number}</Text></Text>
+          <Text style={styles.dogInfoLabel}>Registreringsnummer: <Text style={styles.dogInfoText}>{selectedDog?.registration_number}</Text></Text>
+          <Text style={styles.dogInfoLabel}>Passnummer: <Text style={styles.dogInfoText}>{selectedDog?.passport_number}</Text></Text>
+  
+          <View style={styles.spaceBetweenFields}></View>
+  
+          <Text style={styles.dogInfoLabel}>Försäkringsbolag: <Text style={styles.dogInfoText}>{selectedDog?.insurance_company}</Text></Text>
+          <Text style={styles.dogInfoLabel}>Försäkringsnummer: <Text style={styles.dogInfoText}>{selectedDog?.insurance_number}</Text></Text>
+  
+          <View style={styles.spaceBetweenFields}></View>
+  
+          <Text style={styles.dogInfoLabel}>Foder: <Text style={styles.dogInfoText}>{selectedDog?.feed}</Text></Text>
+          <Text style={styles.dogInfoLabel}>Eventuella foderintoleranser: <Text style={styles.dogInfoText}>{selectedDog?.possible_feed_intolerance}</Text></Text>
+        </View>
+  
         <View style={styles.headerContainer}>
           <Text style={styles.headerText}>Pågående vårdplaner</Text>
         </View>
         <View style={styles.carePlanListContainer}>
-          {healthIndexLatestRow && (
-            <>
-              <HealthIndexBanner 
-                batches_in_row={healthIndexLatestRow.batches_in_row}          // Only for displaying streak.
-                last_performed_date={healthIndexLatestRow.date_performed}     // Disables button if survey has been performed within 24h.
-                latest_batch = {healthIndexLatestRow.latest_run_batch_id}
-                navigation={navigation}
-                dog_id={dogId}
-              />
-            </>
-          )}
+          <HealthIndexBanner 
+            navigation={navigation}
+            dog_id={dogId}
+            batches_in_row={healthIndexLatestRow?.batches_in_row || 0}
+          />
+          <ToothbrushingBanner 
+            navigation={navigation}
+            dog_id={dogId}
+          />
         </View>
-
+  
         <View style={styles.taskListContainer}>
           <View style={styles.headerContainer}>
             <Text style={styles.headerText}>Dog's Tasks:</Text>
@@ -253,7 +284,7 @@ const DogMainScreen = ({ navigation, route }) => {
       </ScrollView>
       <Footer style={styles.footer} navigation={navigation} />
     </LinearGradient>
-  );
+  );  
 };
 
 const styles = StyleSheet.create({
@@ -333,7 +364,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   carePlanListContainer: {
-    height: 180,
+    height: 220,
     marginBottom: 25,
     alignItems: 'center',
   },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Footer from '../../components/common/Footer';
 
 const PolicyScreen = ({ navigation }) => {
@@ -9,10 +9,12 @@ const PolicyScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>Here you can find our policies.</Text>
-      <TouchableOpacity onPress={() => navigateToScreen('PolicyScreen')}>
-        <Text>Policy</Text>
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text>Here you can find our policies.</Text>
+        <TouchableOpacity onPress={() => navigateToScreen('PolicyScreen')}>
+          <Text>Policy</Text>
+        </TouchableOpacity>
+      </ScrollView>
       <Footer navigation={navigation} />
     </View>
   );
@@ -21,6 +23,9 @@ const PolicyScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

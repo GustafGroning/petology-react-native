@@ -5,11 +5,14 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Image,
+  Alert,
 } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';  // Import the image picker
+
 // APIs
 import createDog from '../api_calls/dog/createDog';
 import getAllBreeds from '../api_calls/breed/getAllBreeds';
@@ -21,7 +24,8 @@ const RegisterDogScreen = ({ navigation }) => {
   const [birthday, setBirthday] = useState(new Date());
   const [selectedSex, setSelectedSex] = useState('');
   const [breedData, setBreedData] = useState([]);
-  /**********************************************************************************/
+  const [image, setImage] = useState(null);  // State for selected image
+
   const sexValues = [
     { key: '1', value: 'Okastrerad hane' },
     { key: '2', value: 'Kastrerad hane' },
@@ -29,15 +33,26 @@ const RegisterDogScreen = ({ navigation }) => {
     { key: '4', value: 'Kastrerad tik' },
   ];
 
-  /**********************************************************************************/
   const handleCreateDog = async () => {
     // Ensure all fields are filled
-    if (!name || !selectedBreed || !birthday || !selectedSex) {
+    if (!name || !selectedBreed || !birthday || !selectedSex || !image) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('breed', selectedBreed);
+    formData.append('birthday', birthday.toISOString().split('T')[0]);
+    formData.append('sex', selectedSex);
+    formData.append('image', {
+      uri: image,
+      type: 'image/jpeg', // or the correct type for your image
+      name: 'dogImage.jpg',
+    });
+
     try {
-      const result = await createDog(name, selectedBreed, birthday, selectedSex);
+      const result = await createDog(formData);
 
       if (result.success) {
         navigation.navigate('DogSelection');
@@ -49,31 +64,47 @@ const RegisterDogScreen = ({ navigation }) => {
       Alert.alert('Error', 'An error occurred while creating the dog');
     }
   };
-  /**********************************************************************************/
+
   const fetchBreeds = useCallback(async () => {
     try {
       const query = await getAllBreeds();
 
-      if (query.success){
-        console.log('succeeded! ', query.data);
+      if (query.success) {
         setBreedData(query.data.breeds); // Update breedData with fetched breeds
-        console.log(breedData);
       }
     } catch (error) {
       console.error('Error fetching breeds', error);
     }
   }, []);
 
-
   useEffect(() => {
     fetchBreeds();
-    
   }, [fetchBreeds]);
-  /**********************************************************************************/
+
   const navigateToDogSelection = () => {
     navigation.navigate('DogSelection');
   };
-  /**********************************************************************************/
+
+  // Function to pick an image from the gallery
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      alert('Permission to access gallery is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -106,8 +137,6 @@ const RegisterDogScreen = ({ navigation }) => {
             <SelectList
               setSelected={setSelectedBreed}
               placeholder='Ras'
-              
-              // Transform array of objects to array of strings
               data={breedData.map(breed => breed.name)} 
               save='value'
               boxStyles={{
@@ -139,11 +168,21 @@ const RegisterDogScreen = ({ navigation }) => {
             onChange={(event, selectedDateTime) => {
               if (selectedDateTime) {
                 setBirthday(selectedDateTime);
-                console.log(birthday);
               }
             }}
             style={{marginBottom: 20}}
           />
+
+          {/* Image Picker Button */}
+          <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
+            <Text style={styles.imagePickerButtonText}>Välj bild</Text>
+          </TouchableOpacity>
+
+          {/* Display selected image */}
+          {image && (
+            <Image source={{ uri: image }} style={styles.image} />
+          )}
+
           <View style={styles.submitSection}>
             <Button
               mode='contained'
@@ -159,14 +198,12 @@ const RegisterDogScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-/**********************************************************************************/
   container: {
     flex: 1,
     paddingTop: 40,
     backgroundColor: '#92cdca',
   },
   scrollView: {},
-  /**********************************************************************************/
   headerSection: {
     flex: 1,
     alignItems: 'center',
@@ -178,7 +215,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Cochin',
     opacity: 0.7,
   },
-  /**********************************************************************************/
   section2: {
     height: 400,
     alignItems: 'center',
@@ -207,7 +243,6 @@ const styles = StyleSheet.create({
   submitSection: {
     height: 150,
     width: '75%',
-
     alignItems: 'center',
   },
   closeButton: {
@@ -223,11 +258,27 @@ const styles = StyleSheet.create({
   },
   closeButtonContainer: {
     position: 'absolute',
-    // backgroundColor: 'gold',
     top: 28,
     left: 320,
   },
-
+  imagePickerButton: {
+    backgroundColor: '#4a8483',
+    borderRadius: 90,
+    padding: 10,
+    marginVertical: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  imagePickerButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginVertical: 10,
+  },
 });
 
 export default RegisterDogScreen;

@@ -59,9 +59,23 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
 
     const calculateNewValues = async () => {
         try {
-            const latestRow = await getLatestHealthIndexRowForDog(dogId);
+            let latestRow = await getLatestHealthIndexRowForDog(dogId);
+    
+            if (!latestRow) {
+                latestRow = {
+                    batches_in_row: 1,
+                    latest_run_batch_id: 0,
+                    general_condition: 1,
+                    dental_health: 1,
+                    eyes: 1,
+                    skin_and_coat: 1,
+                    locomotor_system: 1,
+                    other: 1,
+                };
+            }
+    
             const newValues = { ...latestRow };
-
+    
             Object.values(responses).forEach(response => {
                 const category = response.slice(0, 2); // e.g., SC
                 const change = parseInt(response.slice(2)); // e.g., +1 or -1
@@ -88,10 +102,10 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                         break;
                 }
             });
-
+    
             // Prepare the new row data
             const newRow = {
-                latest_run_batch_id: latest_question_batch,
+                latest_run_batch_id: latest_question_batch || 0,
                 batches_in_row: latestRow.batches_in_row + 1,
                 date_performed: new Date().toISOString(),
                 general_condition: newValues.general_condition,
@@ -101,7 +115,8 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                 locomotor_system: newValues.locomotor_system,
                 other: newValues.other,
             };
-
+            console.log('newRow ', newRow);
+    
             // Save the new row data
             const result = await saveNewHealthIndexRow(dogId, newRow);
             if (result.success) {
@@ -113,12 +128,21 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
             console.error('Error calculating new values:', error);
         }
     };
+    
 
-    const handleCloseModal = () => {
-        calculateNewValues();
-        setShowModal(false);
-        navigation.navigate('DogMainScreen', { dogId: dogId });
+    const handleCloseModal = async () => {
+        try {
+            // Wait for the row to be written to the database
+            await calculateNewValues();
+        } catch (error) {
+            console.error('Error calculating and saving new values:', error);
+        } finally {
+            setShowModal(false);
+            // Navigate back only after the row is written
+            navigation.navigate('DogMainScreen', { dogId: dogId, refresh: true });
+        }
     };
+    
 
     const handleExitConfirmation = (confirm) => {
         if (confirm) {

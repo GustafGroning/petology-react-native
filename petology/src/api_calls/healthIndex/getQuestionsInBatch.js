@@ -12,7 +12,7 @@ const getQuestionsInBatch = async (batchId) => {
     if (response.ok) {
       return data;  // Assuming data is an array of questions with their responses
     } else {
-      console.error("Failed to fetch questions in batch");
+      console.log("Failed to fetch questions in batch");
       return null;
     }
   } catch (error) {

@@ -178,7 +178,7 @@ const DogDetailsScreen = ({ navigation, route }) => {
                   style={styles.editInformationButton}
                   onPress={() => navigation.navigate('UpdateDogDetailsScreen', { dogId: dogId })}
                 >
-                  <FontAwesome name='arrow-right' size={20} color='#000' />
+                  <FontAwesome name='pencil' size={24} color='#000' />
                 </TouchableOpacity>
               </View>
               <Text style={styles.dogInfoLabel}>Stamtavlenamn: <Text style={styles.dogInfoText}>{selectedDog?.pedigree_name}</Text></Text>
@@ -212,7 +212,7 @@ const DogDetailsScreen = ({ navigation, route }) => {
             <View style={styles.sectionHeaderContainer}>
               <Text style={styles.sectionHeader}>Vaccinationer</Text>
               <TouchableOpacity style={styles.sectionButton} onPress={() => navigation.navigate('CreateVaccinationScreen', { dogId: dogId })}>
-                <FontAwesome name='plus' size={24} color='#000' />
+                <FontAwesome name='pencil' size={24} color='#000' />
               </TouchableOpacity>
             </View>
           </View>
@@ -233,10 +233,13 @@ const DogDetailsScreen = ({ navigation, route }) => {
           ))}
   
           <View style={styles.sectionContainer}>
+            <View style={styles.sectionIconContainer}>
+              <FontAwesome name='eyedropper' size={58} color='#000' />
+            </View>
             <View style={styles.sectionHeaderContainer}>
               <Text style={styles.sectionHeader}>Mediciner</Text>
               <TouchableOpacity style={styles.sectionButton} onPress={() => navigation.navigate('CreateMedicationScreen', { dogId: dogId })}>
-                <FontAwesome name='plus' size={24} color='#000' />
+                <FontAwesome name='pencil' size={24} color='#000' />
               </TouchableOpacity>
             </View>
           </View>
@@ -260,10 +263,13 @@ const DogDetailsScreen = ({ navigation, route }) => {
           ))}
   
           <View style={styles.sectionContainer}>
+            <View style={styles.sectionIconContainer}>
+              <FontAwesome name='hospital-o' size={58} color='#000' />
+            </View>
             <View style={styles.sectionHeaderContainer}>
               <Text style={styles.sectionHeader}>Nuvarande sjukdomar</Text>
               <TouchableOpacity style={styles.sectionButton} onPress={() => navigation.navigate('CreateConditionScreen', { dogId: dogId })}>
-                <FontAwesome name='plus' size={24} color='#000' />
+                <FontAwesome name='pencil' size={24} color='#000' />
               </TouchableOpacity>
             </View>
           </View>
@@ -290,7 +296,7 @@ const DogDetailsScreen = ({ navigation, route }) => {
             <View style={styles.sectionHeaderContainer}>
               <Text style={styles.sectionHeader}>Tidigare sjukdomar</Text>
               <TouchableOpacity style={styles.sectionButton} onPress={() => navigation.navigate('PastConditionsScreen', { dogId: dogId })}>
-                <FontAwesome name='plus' size={24} color='#000' />
+                <FontAwesome name='pencil' size={24} color='#000' />
               </TouchableOpacity>
             </View>
           </View>

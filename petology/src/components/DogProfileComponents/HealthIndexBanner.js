@@ -64,7 +64,7 @@ const HealthIndexBanner = ({ navigation, dog_id, batches_in_row }) => {
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={isToday ? styles.finishedSurveyContainer : styles.unfinishedSurveyContainer}
       onPress={!isToday ? navigateToHealthIndexSurvey : null}
       disabled={isToday}
     >
@@ -87,11 +87,19 @@ const HealthIndexBanner = ({ navigation, dog_id, batches_in_row }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '90%',
+  unfinishedSurveyContainer: {
+    width: '88%',
     height: 95,
     borderRadius: 15,
     backgroundColor: '#9ecccb',
+    padding: 10,
+    marginVertical: 10,
+  },
+  finishedSurveyContainer: {
+    width: '88%',
+    height: 95,
+    borderRadius: 15,
+    backgroundColor: 'lightgreen',
     padding: 10,
     marginVertical: 10,
   },

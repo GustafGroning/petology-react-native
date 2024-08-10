@@ -24,7 +24,7 @@ const getLatestHealthIndexRowForDog = async (dogId) => {
         eyes: data.eyes,
         skin_and_coat: data.skin_and_coat,
         locomotor_system: data.locomotor_system,
-        other: data.other,
+        other: data.other, 
       };
       return dogLatestHealthRow;
     } else {

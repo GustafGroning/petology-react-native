@@ -9,7 +9,7 @@ const ToothbrushingBanner = ({ navigation, dog_id }) => {
   const [isToday, setIsToday] = useState(false);
   const [dogName, setDogName] = useState('');
   const [streak, setStreak] = useState(0);
-  const [lastPerformed, setLastPerformed] = useState(null); // Add this state variable
+  const [lastPerformed, setLastPerformed] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   const fetchDogData = async () => {
@@ -22,13 +22,10 @@ const ToothbrushingBanner = ({ navigation, dog_id }) => {
   const fetchToothbrushingData = async () => {
     const data = await getLatestToothbrushingForDog(dog_id);
     if (data) {
-      console.log('banner found toothbrush data ', data);
       const today = new Date();
       const lastPerformedDate = new Date(data.date_performed);
       const yesterday = new Date(today);
       yesterday.setDate(today.getDate() - 1);
-
-      console.log('yesterday and today ', yesterday, today);
 
       const isSameDay = (
         today.getFullYear() === lastPerformedDate.getFullYear() &&
@@ -42,16 +39,12 @@ const ToothbrushingBanner = ({ navigation, dog_id }) => {
         yesterday.getDate() === lastPerformedDate.getDate()
       );
 
-      console.log('isYesterday and isSameDay ', isYesterday, isSameDay);
-
       setIsToday(isSameDay);
-      // if last date was yesterday, show streak. 
-      // else (meaning there's been a gap), show 0
       setStreak(isYesterday || isSameDay ? data.streak : 0); 
-      setLastPerformed(lastPerformedDate); // Set the lastPerformed date
+      setLastPerformed(lastPerformedDate);
     } else {
       setStreak(1);
-      setLastPerformed(null); // Reset the lastPerformed date
+      setLastPerformed(null);
     }
   };
 
@@ -61,15 +54,12 @@ const ToothbrushingBanner = ({ navigation, dog_id }) => {
   }, [dog_id]);
 
   const handleToothbrushing = async () => {
-    console.log('inside handleToothbrushing');
-    const today = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
 
     const newToothbrushingData = {
       date_performed: today,
       streak: streak + 1,
     };
-
-    console.log("newToothbrushingData ", newToothbrushingData);
 
     const result = await saveToothbrushing(dog_id, newToothbrushingData);
     if (result.success) {
@@ -82,7 +72,7 @@ const ToothbrushingBanner = ({ navigation, dog_id }) => {
   return (
     <View>
       <TouchableOpacity
-        style={styles.container}
+        style={isToday ? styles.finishedSurveyContainer : styles.unfinishedSurveyContainer}
         onPress={!isToday ? () => setShowModal(true) : null}
         disabled={isToday}
       >
@@ -105,7 +95,7 @@ const ToothbrushingBanner = ({ navigation, dog_id }) => {
       <Modal
         visible={showModal}
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setShowModal(false)}
       >
         <View style={styles.modalContainer}>
@@ -127,11 +117,19 @@ const ToothbrushingBanner = ({ navigation, dog_id }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '90%',
+  unfinishedSurveyContainer: {
+    width: '100%',
     height: 95,
     borderRadius: 15,
     backgroundColor: '#9ecccb',
+    padding: 10,
+    marginVertical: 10,
+  },
+  finishedSurveyContainer: {
+    width: '100%',
+    height: 95,
+    borderRadius: 15,
+    backgroundColor: 'lightgreen',
     padding: 10,
     marginVertical: 10,
   },
@@ -174,6 +172,41 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1000,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
+  modalButton: {
+    backgroundColor: '#4a90e2',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginHorizontal: 10,
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

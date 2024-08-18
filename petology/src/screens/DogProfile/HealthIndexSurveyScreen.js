@@ -75,7 +75,6 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
             }
     
             const newValues = { ...latestRow };
-    
             Object.values(responses).forEach(response => {
                 const category = response.slice(0, 2); // e.g., SC
                 const change = parseInt(response.slice(2)); // e.g., +1 or -1
@@ -102,7 +101,7 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                         break;
                 }
             });
-    
+
             // Prepare the new row data
             const newRow = {
                 latest_run_batch_id: latest_question_batch || 0,
@@ -115,8 +114,7 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                 locomotor_system: newValues.locomotor_system,
                 other: newValues.other,
             };
-            console.log('newRow ', newRow);
-    
+
             // Save the new row data
             const result = await saveNewHealthIndexRow(dogId, newRow);
             if (result.success) {
@@ -128,7 +126,6 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
             console.error('Error calculating new values:', error);
         }
     };
-    
 
     const handleCloseModal = async () => {
         try {

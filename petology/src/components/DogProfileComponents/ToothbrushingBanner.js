@@ -118,37 +118,45 @@ const ToothbrushingBanner = ({ navigation, dog_id }) => {
 
 const styles = StyleSheet.create({
   unfinishedSurveyContainer: {
-    width: '100%',
+    width: '90%', // Consistent width for all banners
+    minWidth: 400,
     height: 95,
     borderRadius: 15,
     backgroundColor: '#9ecccb',
     padding: 10,
     marginVertical: 10,
+    alignSelf: 'center', // Ensure the banner is centered
   },
   finishedSurveyContainer: {
-    width: '100%',
+    width: '90%', // Consistent width for all banners
+    minWidth: 400,
     height: 95,
     borderRadius: 15,
     backgroundColor: 'lightgreen',
     padding: 10,
     marginVertical: 10,
+    alignSelf: 'center', // Ensure the banner is centered
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between', // Ensure equal spacing
   },
   headerText: {
-    width: "75%",
+    flex: 1,
     fontSize: 15,
     fontWeight: 'bold',
-    marginRight: 10,
+    marginRight: 5, // Add margin to prevent overlap with other elements
   },
   icon: {
-    marginRight: 10,
+    marginLeft: 10,
   },
   dogName: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginLeft: 10,
+    maxWidth: '30%', // Ensure the dog name doesn't push content out of bounds
+    textAlign: 'right', // Align text to the right to avoid overlap
   },
   daysContainer: {
     position: 'absolute',
@@ -160,13 +168,14 @@ const styles = StyleSheet.create({
   daysText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginRight: 5,
     color: '#E94F37',
+    textAlign: 'right',
   },
   messageContainer: {
-    top: 15,
-    right: 85,
-    alignItems: 'center',
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    alignItems: 'flex-end',
   },
   messageText: {
     color: 'blue',

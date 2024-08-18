@@ -17,7 +17,12 @@ import Header from "../components/common/Header";
 import Task from "../components/common/task/Task";
 import SubHeader from "../components/common/SubHeader";
 import getUserTasks from "../api_calls/task/getUserTasks";
+import getDogsForUser from "../api_calls/dog/getDogsForUser";
 import ArticleItem from "../components/ArticleComponents/ArticleItem";
+import HealthIndexBanner from '../components/DogProfileComponents/HealthIndexBanner';
+import ToothbrushingBanner from '../components/DogProfileComponents/ToothbrushingBanner';
+import getLatestHealthIndexRowForDog from '../api_calls/healthIndex/getLatestHealthIndexRowForDog';
+import getLatestToothbrushingForDog from '../api_calls/healthIndex/getLatestToothbrushingForDog';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -27,11 +32,37 @@ const LandingPage = ({ navigation }) => {
   const [allTasks, setAllTasks] = useState([]);
   const [tasksToday, setTasksToday] = useState([]);
   const [completedTasksToday, setCompletedTasksToday] = useState(0);
+  const [dogs, setDogs] = useState([]);
+  const [healthIndexData, setHealthIndexData] = useState({});
+  const [toothbrushingData, setToothbrushingData] = useState({});
+
   /**********************************************************************************/
   const getAllUserTasksHandler = async () => {
     const tasks = await getUserTasks();
     setAllTasks(tasks);
   };
+
+  const getUserDogsHandler = async () => {
+    try {
+      const userDogs = await getDogsForUser();  // Fetch user's dogs
+      setDogs(userDogs);
+
+      // Fetch health index and toothbrushing data for each dog
+      const healthIndex = {};
+      const toothbrushing = {};
+
+      for (let dog of userDogs) {
+        healthIndex[dog.id] = await getLatestHealthIndexRowForDog(dog.id);
+        toothbrushing[dog.id] = await getLatestToothbrushingForDog(dog.id);
+      }
+
+      setHealthIndexData(healthIndex);
+      setToothbrushingData(toothbrushing);
+    } catch (error) {
+      console.error("Error fetching user dogs:", error);
+    }
+  };
+
   /**********************************************************************************/
   const filterTasksForTodayAndOverdue = () => {
     const todayStart = new Date();
@@ -97,9 +128,11 @@ const LandingPage = ({ navigation }) => {
         .catch((error) => console.error("Error updating task:", error));
     }
   };
+
   /**********************************************************************************/
   useEffect(() => {
     getAllUserTasksHandler();
+    getUserDogsHandler();  // Fetch user's dogs and their data
   }, []);
 
   useEffect(() => {
@@ -114,6 +147,7 @@ const LandingPage = ({ navigation }) => {
     React.useCallback(() => {
       console.log("inside useFocusEffect");
       getAllUserTasksHandler();
+      getUserDogsHandler();  // Fetch user's dogs and their data on screen focus
     }, []),
   );
 
@@ -235,11 +269,30 @@ const LandingPage = ({ navigation }) => {
             Petology 1.0 har precis släppts!{" "}
           </Text>
         </View>
+
         <View style={styles.featuredArticlesContainer}>
           <SubHeader headerText={"Utvalda Artiklar"} />
           <ArticleItem articleId={1} navigation={navigation}/>
           <ArticleItem articleId={2} navigation={navigation}/>
         </View>
+
+        {/* Banners for each dog */}
+        <View style={styles.carePlanListContainer}>
+          {dogs.map(dog => (
+            <View key={dog.id}>
+              <HealthIndexBanner 
+                navigation={navigation}
+                dog_id={dog.id}
+                batches_in_row={healthIndexData[dog.id]?.batches_in_row || 0}
+              />
+              <ToothbrushingBanner 
+                navigation={navigation}
+                dog_id={dog.id}
+              />
+            </View>
+          ))}
+        </View>
+
         <View style={styles.emptyContainer}></View>
       </ScrollView>
       <Footer navigation={navigation} />
@@ -399,6 +452,10 @@ const styles = StyleSheet.create({
   newsContainer: {
     alignItems: "center",
     height: 80,
+  },
+  carePlanListContainer: {
+    padding: 10,
+    justifyContent: 'center',
   },
   emptyContainer: {
     height: 300,

@@ -4,7 +4,7 @@ const createDog = async (formData) => {
   try {
     const token = await AsyncStorage.getItem("userToken");
 
-    const response = await fetch("http://localhost:8000/api/dog/add/", {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/add/`, {
       method: "POST",
       headers: {
         Authorization: `JWT ${token}`,

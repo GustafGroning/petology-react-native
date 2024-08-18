@@ -88,37 +88,42 @@ const HealthIndexBanner = ({ navigation, dog_id, batches_in_row }) => {
 
 const styles = StyleSheet.create({
   unfinishedSurveyContainer: {
-    width: '88%',
+    width: '90%', // Use a consistent width for all banners
+    minWidth: 400,
     height: 95,
     borderRadius: 15,
     backgroundColor: '#9ecccb',
     padding: 10,
     marginVertical: 10,
+    alignSelf: 'center', // Ensure the banner is centered
   },
   finishedSurveyContainer: {
-    width: '88%',
+    width: '90%', // Use a consistent width for all banners
+    minWidth: 400,
     height: 95,
     borderRadius: 15,
     backgroundColor: 'lightgreen',
     padding: 10,
     marginVertical: 10,
+    alignSelf: 'center', // Ensure the banner is centered
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between', // Ensure equal spacing
   },
   headerText: {
-    width: "75%",
+    flex: 1, // Allow the text to take available space
     fontSize: 15,
     fontWeight: 'bold',
-    marginRight: 10,
   },
   icon: {
-    marginRight: 10,
+    marginLeft: 10,
   },
   dogName: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginLeft: 10, // Add margin to avoid overlapping
   },
   daysContainer: {
     position: 'absolute',
@@ -130,13 +135,13 @@ const styles = StyleSheet.create({
   daysText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginRight: 5,
     color: '#E94F37',
   },
   messageContainer: {
-    top: 15,
-    right: 85,
-    alignItems: 'center',
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    alignItems: 'flex-end',
   },
   messageText: {
     color: 'blue',
@@ -144,5 +149,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 
 export default HealthIndexBanner;

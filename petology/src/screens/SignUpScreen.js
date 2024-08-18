@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import signUpUser from '../api_calls/user/signUpUser';
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -9,52 +9,31 @@ const SignUpScreen = ({ navigation }) => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSignUp = async () => {
-    try {
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        setErrorMessage('Invalid email address');
-        return;
-      }
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage('Invalid email address');
+      return;
+    }
 
-      if (password.length < 8) {
-        setErrorMessage('Password must be at least 8 characters long');
-        return;
-      }
+    if (password.length < 8) {
+      setErrorMessage('Password must be at least 8 characters long');
+      return;
+    }
 
-      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]*$/;
-      if (!passwordRegex.test(password)) {
-        setErrorMessage('Password must contain at least one letter and one number');
-        return;
-      }
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]*$/;
+    if (!passwordRegex.test(password)) {
+      setErrorMessage('Password must contain at least one letter and one number');
+      return;
+    }
 
-      const response = await fetch(
-        'http://localhost:8000/api/users/register/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        },
-      );
-      const data = await response.json();
-      if (response.ok) {
-        console.log('Registration successful', data.token);
-        await AsyncStorage.setItem('userToken', data.token);
-        navigation.navigate('Login');
-      } else {
-        if (response.status === 400 && data.error === 'Email already in use') {
-          setErrorMessage('Email already in use');
-        } else {
-          setErrorMessage('Registration failed');
-        }
-      }
-    } catch (error) {
-      console.error('Network or server error', error);
+    const result = await signUpUser(email, password);  // Use the new API function
+
+    if (result.success) {
+      console.log('Registration successful', result.token);
+      navigation.navigate('Login');
+    } else {
+      setErrorMessage(result.message);
     }
   };
 
@@ -144,5 +123,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+
 
 export default SignUpScreen;

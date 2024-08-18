@@ -17,6 +17,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
+      console.log('trying api-token-auth');
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_DEV_URL}/api-token-auth/`,
         {
@@ -39,18 +40,19 @@ const LoginScreen = ({ navigation }) => {
 
         const basicInfo = await getUserFirstAndLastNames();
 
+        
         if (!basicInfo || !basicInfo.full_name) {
           navigation.navigate("InputUserBasicInfoScreen");
           return;
         }
-
-        const dogsResponse = await fetch("http://localhost:8000/api/dog/all/", {
+        console.log('do we get here?');
+        const dogsResponse = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/all/`, {
           method: "GET",
           headers: {
             Authorization: `JWT ${token}`,
           },
         });
-
+        console.log('do we get here? 111');
         const dogsData = await dogsResponse.json();
 
         if (dogsResponse.ok && dogsData.dogs && dogsData.dogs.length > 0) {

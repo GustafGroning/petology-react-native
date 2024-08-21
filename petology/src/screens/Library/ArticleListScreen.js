@@ -83,16 +83,11 @@ const ArticleListScreen = ({ navigation }) => {
           <Text style={styles.subHeaderText}>Artiklar</Text>
         </View>
         <View style={styles.articleContainer}>
-          {filteredArticles.length > 0 ? (
-            filteredArticles
-              // Exclude featured articles
-              .filter(articleId => !featuredArticles.includes(articleId))
-              .map((articleId, index) => (
-                <ArticleItem key={index} articleId={articleId} navigation={navigation}/>
-              ))
-          ) : (
-            <Text>No articles found</Text>
-          )}
+        {filteredArticles
+          .filter(articleId => !featuredArticles.includes(articleId))
+          .map(articleId => (
+            <ArticleItem key={articleId} articleId={articleId} navigation={navigation}/>
+          ))}
         </View>
       </ScrollView>
       <Footer navigation={navigation} />

@@ -6,6 +6,7 @@ import getLatestHealthIndexRowForDog from '../../api_calls/healthIndex/getLatest
 import saveNewHealthIndexRow from '../../api_calls/healthIndex/saveNewHealthIndexRow';
 import HealthIndexAnswer from '../../components/HealthIndexSurveyScreenComponents/HealthIndexAnswer';
 import Header from '../../components/common/Header';
+import ArticleItem from '../../components/ArticleComponents/ArticleItem';
 
 const HealthIndexSurveyScreen = ({ route, navigation }) => {
     const [questions, setQuestions] = useState([]);
@@ -175,6 +176,23 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                                     onPress={() => handleAnswerPress(currentQuestionIndex, response.value)}
                                 />
                             ))}
+    
+                            {/* Display related articles */}
+                            {questions[currentQuestionIndex].articles && questions[currentQuestionIndex].articles.length > 0 && (
+                                <View style={styles.articlesContainer}>
+                                    <Text style={styles.articleHeader}>Related Articles:</Text>
+                                    {questions[currentQuestionIndex].articles.map((article, idx) => (
+                                        // <TouchableOpacity key={idx} onPress={() => Linking.openURL(article.url)}>
+                                        //     <Text style={styles.articleLink}>{article.title}</Text>
+                                        // </TouchableOpacity>
+                                        <ArticleItem
+                                            key={idx}
+                                            navigation={navigation}
+                                            articleId={article.id}  // Pass the article ID to the ArticleItem component
+                                        /> 
+                                    ))} 
+                                </View>
+                            )}
                         </View>
                     )}
                 </View>
@@ -221,6 +239,7 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
             </ScrollView>
         </View>
     );
+    
 };
 
 const styles = StyleSheet.create({
@@ -306,6 +325,20 @@ const styles = StyleSheet.create({
     modalButtonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+    },
+    articlesContainer: {
+        marginTop: 20,
+    },
+    articleHeader: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    articleLink: {
+        fontSize: 16,
+        color: '#4a90e2',
+        textDecorationLine: 'underline',
+        marginBottom: 5,
     },
 });
 

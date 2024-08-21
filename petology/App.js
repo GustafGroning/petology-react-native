@@ -63,7 +63,17 @@ const App = () => {
           
           
           <Stack.Screen name='ArticleList' component={ArticleListScreen} />
-          <Stack.Screen name='ArticleScreen' component={ArticleScreen} />
+          <Stack.Screen 
+            name='ArticleScreen' 
+            component={ArticleScreen} 
+            options={{ 
+              headerShown: true, 
+              title: 'Article',  // You can customize the header title
+              headerBackTitleVisible: true,
+              headerBackTitle: 'Back',
+              headerTintColor: '#000',  // Optional: Customize back button color
+            }} 
+          />
           <Stack.Screen name='LibraryScreen' component={LibraryScreen} />
           <Stack.Screen name='FrequentlyAskedQuestionsScreen' component={FrequentlyAskedQuestionsScreen} />
           <Stack.Screen name='ContactUsScreen' component={ContactUsScreen} />

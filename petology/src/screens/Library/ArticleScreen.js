@@ -5,7 +5,7 @@ import Footer from '../../components/common/Footer';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const ArticleScreen = ({ route, navigation }) => {
-  const { article } = route.params;
+  const { article, source, currentQuestionIndex, responses } = route.params;  // Accept source, currentQuestionIndex, and responses
   const [articleData, setArticleData] = useState(null);
 
   const fetchArticle = async (id) => {
@@ -54,6 +54,19 @@ const ArticleScreen = ({ route, navigation }) => {
         );
       }
     });
+  };
+
+  const handleBackPress = () => {
+    if (source === 'survey') {
+      // Navigate back to the survey screen with preserved state
+      navigation.navigate('HealthIndexSurveyScreen', {
+        currentQuestionIndex,
+        responses
+      });
+    } else {
+      // Navigate back normally if coming from other sources
+      navigation.goBack();
+    }
   };
 
   return (

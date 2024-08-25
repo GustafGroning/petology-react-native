@@ -13,6 +13,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import getDogsForUser from '../api_calls/dog/getDogsForUser';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect hook
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { LinearGradient } from 'expo-linear-gradient';
 
 const DogSelectionScreen = ({ navigation }) => {
@@ -77,6 +78,7 @@ const DogSelectionScreen = ({ navigation }) => {
   return (
     <LinearGradient
       colors={['#86c8c5', '#e4f4f2']}
+      locations={[0.3, 0.8]}
       style={styles.container}
     >
       <View style={{ flex: 1 }}>
@@ -87,7 +89,7 @@ const DogSelectionScreen = ({ navigation }) => {
             style={styles.addButton}
             onPress={navigateToRegisterDog}
           >
-            <Text style={styles.addButtonText}>+</Text>
+            <FontAwesome name="plus-circle" size={28} style={{opacity: 0.7}} color="#000" />
           </TouchableOpacity>
         </View>
         <TextInput
@@ -167,9 +169,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 28,
     height: 28,
-    borderRadius: 14,
-    borderWidth: 1,
-    backgroundColor: '#92cdca',
     left: 30,
   },
   addButtonText: {

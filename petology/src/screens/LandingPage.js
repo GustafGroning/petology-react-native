@@ -27,8 +27,8 @@ import getLatestToothbrushingForDog from '../api_calls/healthIndex/getLatestToot
 import { LinearGradient } from 'expo-linear-gradient';
 
 const LandingPage = ({ navigation }) => {
-  const widthAndHeight = 120;
-  const sliceColor = ["#eff8f7", "#a55671"];
+  const widthAndHeight = 140;
+  const sliceColor = ["#eff8f7", "#a45672"];
   const [allTasks, setAllTasks] = useState([]);
   const [tasksToday, setTasksToday] = useState([]);
   const [completedTasksToday, setCompletedTasksToday] = useState(0);
@@ -154,6 +154,7 @@ const LandingPage = ({ navigation }) => {
   return (
     <LinearGradient
     colors={['#86c8c5', '#e4f4f2']}
+    locations={[0.3, 0.8]}
     style={styles.container}
     >
       <ScrollView style={styles.scrollView}>
@@ -177,7 +178,7 @@ const LandingPage = ({ navigation }) => {
                     completedTasksToday,
                   ]}
                   sliceColor={sliceColor}
-                  coverRadius={0.9}
+                  coverRadius={0.85}
                   coverFill={"#92cdca"}
                 />
               </View>
@@ -207,16 +208,8 @@ const LandingPage = ({ navigation }) => {
         </View>
 
         <View style={styles.motivationTextSection}>
-          <Text> God morgon! </Text>
-          <Text> Pepp Pepp Hurra </Text>
-        </View>
-        <View style={styles.activeDogPictureSection}>
-          <ImageBackground
-            source={DogImage}
-            resizeMode="cover"
-            style={styles.articleImageStyle}
-            imageStyle={{ borderRadius: 20 }}
-          />
+          <Text style={styles.motivationTextHeader}t> God morgon! </Text>
+          <Text style={styles.motivationText}> Insert peppande text här </Text>
         </View>
         <View style={styles.tasksListSection}>
           {tasksToday.length > 0 && (
@@ -329,7 +322,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   tasksDoneGraph: {
-    width: "46%",
+    width: "30%",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -343,6 +336,14 @@ const styles = StyleSheet.create({
     height: 90,
     justifyContent: "center",
     alignItems: "center",
+  },
+  motivationTextHeader: {
+    fontSize: 26,
+    color: '#3d3d3d',
+  },
+  motivationText: {
+    fontSize: 16,
+    color: '#3d3d3d',
   },
   /**********************************************************************************/
   activeDogPictureSection: {
@@ -366,10 +367,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   taskListBox: {
-    // backgroundColor: '#afe0de',
-    // minHeight: 200, // Set a minimum height to ensure it's visible
-    width: "90%",
-    // borderRadius: 2,
+    width: "100%",
   },
   taskListBoxHeader: {},
   taskItem: {

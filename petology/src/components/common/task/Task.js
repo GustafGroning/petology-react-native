@@ -82,16 +82,16 @@ const Task = ({
               <Icon
                 name="radio-button-checked"
                 type="material"
-                color="black"
-                size={30}
+                color="#5c6162"
+                size={34}
               />
             }
             uncheckedIcon={
               <Icon
                 name="radio-button-unchecked"
                 type="material"
-                color="black"
-                size={30}
+                color="#5c6162"
+                size={34}
               />
             }
             checked={check}
@@ -168,17 +168,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   taskName: {
-    fontSize: 15,
+    fontSize: 16,
     marginBottom: 5,
     top: 12,
   },
   taskNotes: {
     fontSize: 14,
     color: "#333",
-    top: 6,
+    top: 12,
   },
   checkBoxContainer: {
-    marginRight: 10,
   },
   textContainer: {
     flex: 1,

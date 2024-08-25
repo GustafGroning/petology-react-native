@@ -14,6 +14,7 @@ import Footer from "../components/common/Footer";
 import Task from "../components/common/task/Task";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Button } from "react-native-paper";
+import { LinearGradient } from 'expo-linear-gradient';
 
 import getUserTasks from "../api_calls/task/getUserTasks";
 
@@ -21,7 +22,7 @@ const CalendarScreen = ({ navigation }) => {
   const [currentSpanIndex, setCurrentSpanIndex] = useState(0);
   const timespans = ["dagens uppgifter", "veckans uppgifter"];
 
-  const [taskListHeader, setTaskListHeader] = useState(["idag"]);
+  const [taskListHeader, setTaskListHeader] = useState(["Dagens uppgifter"]);
   const [allTasks, setAllTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [selected, setSelected] = useState(0);
@@ -156,9 +157,9 @@ tasks for that specific date.
   /**********************************************************************************/
   const updateTaskListHeader = () => {
     if (selected === 0) {
-      setTaskListHeader("idag");
+      setTaskListHeader("Dagens uppgifter");
     } else if (selected === 1) {
-      setTaskListHeader("den här veckan");
+      setTaskListHeader("Den här veckan");
     } else {
       // Convert selected date to the desired format (e.g., dd-mm-yyyy)
       const selectedDate = new Date(selected);
@@ -209,7 +210,12 @@ tasks for that specific date.
   );
   /**********************************************************************************/
   return (
-    <View style={styles.outerContainer}>
+    // <View style={styles.outerContainer}>
+      <LinearGradient 
+        colors={['#86c8c5', '#e4f4f2']}
+        locations={[0.2, 0.8]}
+        style={styles.outerContainer}
+      >
       <View style={styles.container}>
         <Header />
         <View style={styles.calendarSection}>
@@ -217,14 +223,18 @@ tasks for that specific date.
             style={styles.addTaskButton}
             onPress={navigateToCreateTask}
           >
-            <Text style={styles.addTaskButtonText}>+</Text>
+            <FontAwesome name="plus-circle" size={28} style={{opacity: 0.7}} color="#000" />
+            {/* <Text style={styles.addTaskButtonText}>+</Text> */}
           </TouchableOpacity>
           <Calendar
             style={{
               height: 320,
               width: "100%",
               backgroundColor: "#92cdca",
+              opacity: 0.8,
+              borderRadius: 30,
             }}
+
             firstDay={1}
             theme={{
               backgroundColor: "#92cdca",
@@ -272,7 +282,7 @@ tasks for that specific date.
         </ScrollView>
       </View>
       <Footer navigation={navigation} />
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -298,8 +308,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 28,
     height: 28,
-    borderRadius: 14,
-    borderWidth: 1,
+    // borderRadius: 14,
+    // borderWidth: 1,
     backgroundColor: "#92cdca",
   },
 
@@ -334,7 +344,7 @@ const styles = StyleSheet.create({
   },
 
   taskHeaderText: {
-    fontSize: 20,
+    fontSize: 26,
   },
 
   taskSection: {

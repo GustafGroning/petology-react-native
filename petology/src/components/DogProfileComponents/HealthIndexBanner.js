@@ -77,11 +77,6 @@ const HealthIndexBanner = ({ navigation, dog_id, batches_in_row }) => {
         <FontAwesome name="fire" size={20} color="#E94F37" />
         <Text style={styles.daysText}>{displayBatchesInRow} dagar</Text>
       </View>
-      <View style={styles.messageContainer}>
-        <Text style={styles.messageText}>
-          {isToday ? 'genomförd idag!' : 'starta undersökningen'}
-        </Text>
-      </View>
     </TouchableOpacity>
   );
 };
@@ -109,21 +104,19 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between', // Ensure equal spacing
   },
   headerText: {
-    flex: 1, // Allow the text to take available space
+    // flex: 1, // Allow the text to take available space
     fontSize: 15,
     fontWeight: 'bold',
+    marginRight: 10,
   },
   icon: {
-    marginLeft: 10,
   },
   dogName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 10, // Add margin to avoid overlapping
+    marginLeft: 8, // Add margin to avoid overlapping
   },
   daysContainer: {
     position: 'absolute',

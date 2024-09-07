@@ -148,8 +148,8 @@ const CreateTaskScreen = ({ navigation }) => {
               selectedValue={value} // Pass the selected value to SelectList
               // Other SelectList props as needed
               boxStyles={{
-                borderRadius: 90,
-                backgroundColor: "#e8f5f5",
+                borderRadius: 10,
+                backgroundColor: "#b7dcd9",
                 marginBottom: 18,
                 width: "100%", // Adjust if necessary to match your design
               }}
@@ -160,6 +160,7 @@ const CreateTaskScreen = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Titel"
+              placeholderTextColor={'black'}
               value={taskName}
               onChangeText={setTaskName}
             />
@@ -168,31 +169,28 @@ const CreateTaskScreen = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Plats"
+              placeholderTextColor={'black'}
               value={location}
               onChangeText={setLocation}
             />
           </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Anteckningar"
+              placeholderTextColor={'black'}
+              value={notes}
+              onChangeText={setNotes}
+            />
+          </View>
           <View style={styles.datePickerContainer}>
+            <Text style={styles.datePickerHeader}t> Startar </Text>
             <PetologyDatePicker
               title={"Startar"}
               date={startDate}
               onDateTimeChange={(newDateTime) =>
                 handleDateTimeChange(newDateTime, setStartDate)
               }
-            />
-            {/* <DatePicker
-                    title={'end'}
-                    date={stopDate}
-                    onDateTimeChange={(newDateTime) => handleDateTimeChange(newDateTime, setStopDate, setStopTime)}
-                /> */}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Anteckningar"
-              value={notes}
-              onChangeText={setNotes}
             />
           </View>
         </View>
@@ -281,6 +279,10 @@ const styles = StyleSheet.create({
   },
   datePickerContainer: {
     width: "88%",
+  },
+  datePickerHeader: {
+    top: 25,
+    fontSize: 16,
   },
   addButtonStyle: {
     width: "50%", // Adjust the width as needed

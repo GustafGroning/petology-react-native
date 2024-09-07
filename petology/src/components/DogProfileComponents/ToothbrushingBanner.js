@@ -77,18 +77,13 @@ const ToothbrushingBanner = ({ navigation, dog_id }) => {
         disabled={isToday}
       >
         <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Toothbrushing</Text>
-          <FontAwesome name="heart" size={20} color="#000" style={styles.icon} />
+          <Text style={styles.headerText}>Tandbortstning</Text>
+          <FontAwesome name="magic" size={20} color="#000" style={styles.icon} />
           <Text style={styles.dogName}>{dogName}</Text>
         </View>
         <View style={styles.daysContainer}>
           <FontAwesome name="fire" size={20} color="#E94F37" />
           <Text style={styles.daysText}>{streak} dagar</Text>
-        </View>
-        <View style={styles.messageContainer}>
-          <Text style={styles.messageText}>
-            {isToday ? 'genomförd idag!' : 'starta tandborstning'}
-          </Text>
         </View>
       </TouchableOpacity>
 
@@ -139,24 +134,19 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between', // Ensure equal spacing
   },
   headerText: {
-    flex: 1,
+    // flex: 1, // Allow the text to take available space
     fontSize: 15,
     fontWeight: 'bold',
-    marginRight: 5, // Add margin to prevent overlap with other elements
+    marginRight: 10,
   },
   icon: {
-    marginLeft: 10,
   },
   dogName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 10,
-    maxWidth: '30%', // Ensure the dog name doesn't push content out of bounds
-    textAlign: 'right', // Align text to the right to avoid overlap
+    marginLeft: 8, // Add margin to avoid overlapping
   },
   daysContainer: {
     position: 'absolute',

@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PieChart from "react-native-pie-chart";
-import DogImage from "../../assets/doggo.jpg";
 import offeringImage from "../../assets/offering.jpg";
 import Footer from "../components/common/Footer";
 import Header from "../components/common/Header";
@@ -18,7 +17,7 @@ import Task from "../components/common/task/Task";
 import SubHeader from "../components/common/SubHeader";
 import getUserTasks from "../api_calls/task/getUserTasks";
 import getDogsForUser from "../api_calls/dog/getDogsForUser";
-import ArticleItem from "../components/ArticleComponents/ArticleItem";
+import LandingPageArticleItem from '../components/ArticleComponents/LandingPageArticleItem';
 import HealthIndexBanner from '../components/DogProfileComponents/HealthIndexBanner';
 import ToothbrushingBanner from '../components/DogProfileComponents/ToothbrushingBanner';
 import getLatestHealthIndexRowForDog from '../api_calls/healthIndex/getLatestHealthIndexRowForDog';
@@ -72,11 +71,11 @@ const LandingPage = ({ navigation }) => {
   
     const tasksForTodayAndOverdue = allTasks.filter((task) => {
       const taskStartTime = new Date(task.start_time);
-      return (taskStartTime >= todayStart && taskStartTime <= todayEnd) ||
-             (taskStartTime < todayStart && !task.completed);
+      return taskStartTime >= todayStart && taskStartTime <= todayEnd;
     });
     setTasksToday(tasksForTodayAndOverdue);
   };
+  
   
   /**********************************************************************************/
   const filterCompletedTasks = () => {
@@ -181,6 +180,11 @@ const LandingPage = ({ navigation }) => {
                   coverRadius={0.85}
                   coverFill={"#92cdca"}
                 />
+                <Text style={styles.percentageText}>
+                  {tasksToday.length > 0
+                    ? `${Math.round((completedTasksToday / tasksToday.length) * 100)}%`
+                    : "0%"}
+                </Text>
               </View>
 
               <View style={styles.tasksLeftToday}>
@@ -211,13 +215,14 @@ const LandingPage = ({ navigation }) => {
           <Text style={styles.motivationTextHeader}t> God morgon! </Text>
           <Text style={styles.motivationText}> Insert peppande text här </Text>
         </View>
-        <View style={styles.tasksListSection}>
+        <View style={styles.taskListContainer}>
           {tasksToday.length > 0 && (
             <>
               <View style={styles.taskListBoxHeader}>
+                
                 <SubHeader headerText={"Uppgifter"} />
               </View>
-              <View style={styles.taskListBox}>
+              <View>
                 {tasksToday.map((task) => (
                   <Task
                     key={task.id}
@@ -250,23 +255,29 @@ const LandingPage = ({ navigation }) => {
             style={styles.offeringImageStyle}
             imageStyle={{ borderRadius: 20 }}
           />
-          <SubHeader
-            style={styles.offeringHeaderStyle}
-            headerText={"Erbjudande"}
-          />
+          <View style={styles.offerTextContainer}>
+            <Text style={styles.offerTitle}>Erbjudande</Text>
+            <Text style={styles.offerSubtitle}>
+              15% rabatt på den här produkten för Petology användare
+            </Text>
+          </View>
         </TouchableOpacity>
 
         <View style={styles.newsContainer}>
           <SubHeader headerText={"Nyheter"} />
           <Text style={styles.motivationTextSection}>
-            Petology 1.0 har precis släppts!{" "}
+            Version 1.0 av Petology har precis släppts!{" "}
           </Text>
         </View>
-
+        
+        <SubHeader headerText={"Artiklar"} />
         <View style={styles.featuredArticlesContainer}>
-          <SubHeader headerText={"Utvalda Artiklar"} />
-          <ArticleItem articleId={1} navigation={navigation}/>
-          <ArticleItem articleId={2} navigation={navigation}/>
+        <View style={styles.featuredArticleItem}>
+          <LandingPageArticleItem articleId={1} navigation={navigation} />
+        </View>
+        <View style={styles.featuredArticleItem}>
+          <LandingPageArticleItem articleId={2} navigation={navigation} />
+        </View>
         </View>
 
         {/* Banners for each dog */}
@@ -362,18 +373,20 @@ const styles = StyleSheet.create({
   /**********************************************************************************/
   tasksListSection: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
     paddingBottom: 15,
   },
   taskListBox: {
     width: "100%",
   },
-  taskListBoxHeader: {},
+  taskListBoxHeader: {
+    paddingBottom: 5,
+  },
   taskItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 4,
+    
   },
   noTasksLeftTextLineOne: {
     position: "absolute",
@@ -398,28 +411,6 @@ const styles = StyleSheet.create({
   checkboxChecked: {
     backgroundColor: "black",
   },
-
-  /**********************************************************************************/
-  dogDetailsSection: {
-    flex: 1,
-    borderColor: "black",
-    borderWidth: 1,
-    padding: 10,
-    marginBottom: 10,
-    height: 100,
-  },
-  dogText: {
-    fontSize: 18,
-    color: "gray",
-  },
-  buttonSection: {
-    flex: 1,
-    borderColor: "black",
-    borderWidth: 1,
-    padding: 10,
-    marginBottom: 10,
-    height: 100,
-  },
   /**********************************************************************************/
   articlesContainer: {
     paddingTop: 40,
@@ -432,25 +423,49 @@ const styles = StyleSheet.create({
   },
   featuredArticlesContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'row',
+    marginVertical: 20,
+  },
+  featuredArticleItem: {
+    marginHorizontal: 20,  // Add horizontal spacing between items
   },
   offeringContainer: {
     height: 200,
     width: "90%",
-    borderWidth: 2,
+    // borderWidth: 2,
     left: 20,
     borderRadius: 20,
-    marginBottom: 30,
+    marginBottom: 60,
   },
   offeringImageStyle: {
     height: "100%",
     width: "100%",
   },
   offeringHeaderStyle: {},
+  offerTextContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.7)", // Semi-transparent background
+    padding: 10,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    bottom: 58,
+  },
+  offerTitle: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  offerSubtitle: {
+    color: "#fff",
+    fontSize: 14,
+    textAlign: "center",
+  },
+  
   newsContainer: {
     alignItems: "center",
     height: 80,
   },
+
   carePlanListContainer: {
     padding: 10,
     justifyContent: 'center',
@@ -458,6 +473,22 @@ const styles = StyleSheet.create({
   emptyContainer: {
     height: 300,
     // backgroundColor: 'gold',
+  },
+  percentageText: {
+    position: 'absolute',
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#3d3d3d',
+    textAlign: 'center',
+    top: '40%', // Adjust this based on your layout
+    left: '30%',
+  },  
+  taskListContainer: {
+    borderRadius: 20,
+    backgroundColor: '#e4f4f2',
+    marginHorizontal: 20,
+    padding: 10,
+    marginBottom: 30,
   },
 });
 

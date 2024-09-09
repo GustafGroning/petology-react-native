@@ -215,36 +215,32 @@ const LandingPage = ({ navigation }) => {
           <Text style={styles.motivationTextHeader}t> God morgon! </Text>
           <Text style={styles.motivationText}> Insert peppande text här </Text>
         </View>
-        <View style={styles.taskListContainer}>
-          {tasksToday.length > 0 && (
-            <>
-              <View style={styles.taskListBoxHeader}>
-                
-                <SubHeader headerText={"Uppgifter"} />
-              </View>
-              <View>
-                {tasksToday.map((task) => (
-                  <Task
-                    key={task.id}
-                    taskId={task.id}
-                    taskName={task.name}
-                    startTime={task.start_time}
-                    notes={task.notes}
-                    location={task.location}
-                    dogName={task.dog_name}
-                    isCompleted={task.completed}
-                    onCheckChange={(newCheckState) =>
-                      updateTaskCompletion(task.id, newCheckState)
-                    }
-                    onDeleteTask={handleDeleteTask}
-                    onUpdateTask={handleUpdateTask}
-                  />
-                ))}
-              </View>
-            </>
-          )}
-        </View>
-
+        {tasksToday.length > 0 && (
+          <View style={styles.taskListContainer}>
+            <View style={styles.taskListBoxHeader}>
+              <SubHeader headerText={"Uppgifter"} />
+            </View>
+            <View>
+              {tasksToday.map((task) => (
+                <Task
+                  key={task.id}
+                  taskId={task.id}
+                  taskName={task.name}
+                  startTime={task.start_time}
+                  notes={task.notes}
+                  location={task.location}
+                  dogName={task.dog_name}
+                  isCompleted={task.completed}
+                  onCheckChange={(newCheckState) =>
+                    updateTaskCompletion(task.id, newCheckState)
+                  }
+                  onDeleteTask={handleDeleteTask}
+                  onUpdateTask={handleUpdateTask}
+                />
+              ))}
+            </View>
+          </View>
+        )}
         <TouchableOpacity
           style={styles.offeringContainer}
           onPress={() => navigation.navigate("ArticleList")}

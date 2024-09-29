@@ -94,8 +94,6 @@ const DogDetailsScreen = ({ navigation, route }) => {
             return;
     }
 
-    console.log('Updated Data:', data); // Log the updated data to check its structure
-
     try {
         const updatedItem = await updateFunc(id, data);
         if (updatedItem) {
@@ -223,7 +221,8 @@ const DogDetailsScreen = ({ navigation, route }) => {
               data={{
                 id: vaccination.id,
                 name: vaccination.name,
-                vaccineName: vaccination.vaccineName,
+                vaccineName: vaccination.vaccination_detailed_name,
+                clinic_name: vaccination.clinic_name,
                 date: vaccination.vaccination_date,
                 nextDate: vaccination.next_vaccination_date,
               }} 

@@ -7,6 +7,8 @@ import saveNewHealthIndexRow from '../../api_calls/healthIndex/saveNewHealthInde
 import HealthIndexAnswer from '../../components/HealthIndexSurveyScreenComponents/HealthIndexAnswer';
 import Header from '../../components/common/Header';
 import ArticleItem from '../../components/ArticleComponents/ArticleItem';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 const HealthIndexSurveyScreen = ({ route, navigation }) => {
     const [questions, setQuestions] = useState([]);
@@ -150,94 +152,101 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <ScrollView style={styles.scrollView}>
-                <View style={styles.headerSection}>
-                    <Header />
-                    <View style={styles.closeButtonContainer}>
-                        <TouchableOpacity
-                            style={styles.closeButton}
-                            onPress={() => setShowExitConfirmationModal(true)}
-                        >
-                            <Text style={styles.closeButtonText}>X</Text>
-                        </TouchableOpacity>
+        <LinearGradient
+            colors={['#86c8c5', '#e4f4f2']}
+            locations={[0.3, 0.8]}
+            style={styles.container}
+        >
+        <ScrollView style={styles.scrollView}>
+
+            <View style={styles.headerSection}>
+                <Text style={styles.headerText}> Dagens undersökning </Text>
+            </View>
+
+
+
+            <View style={styles.section2}>
+                {questions.length > 0 && (
+                    <View style={styles.questionContainer}>
+                        <Text style={styles.questionTitle}>
+                            {questions[currentQuestionIndex].question_title}
+                        </Text>
+                        {questions[currentQuestionIndex].responses.map((response, idx) => (
+                            <HealthIndexAnswer
+                                key={idx}
+                                response={response}
+                                onPress={() => handleAnswerPress(currentQuestionIndex, response.value)}
+                            />
+                        ))}
+
+                        {/* Display related articles */}
+                        {questions[currentQuestionIndex].articles && questions[currentQuestionIndex].articles.length > 0 && (
+                            <View style={styles.articlesContainer}>
+                                <Text style={styles.articleHeader}>Related Articles:</Text>
+                                {questions[currentQuestionIndex].articles.map((article, idx) => (
+                                    // <TouchableOpacity key={idx} onPress={() => Linking.openURL(article.url)}>
+                                    //     <Text style={styles.articleLink}>{article.title}</Text>
+                                    // </TouchableOpacity>
+                                    <ArticleItem
+                                        key={idx}
+                                        navigation={navigation}
+                                        articleId={article.id}  // Pass the article ID to the ArticleItem component
+                                    /> 
+                                ))} 
+                            </View>
+                        )}
+                    </View>
+                )}
+            </View>
+            <View style={styles.skipButtonContainer}>
+                <Button mode="text" onPress={handleSkipPress} style={styles.skipButton}>
+                    Hoppa över
+                </Button>
+            </View>
+            <Modal
+                visible={showModal}
+                transparent={true}
+                animationType="slide"
+                onRequestClose={handleCloseModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>Undersökning klar!</Text>
+                        <Button mode='contained' onPress={handleCloseModal} buttonColor='#4a8483'>
+                            OK
+                        </Button>
                     </View>
                 </View>
-                <View style={styles.section2}>
-                    {questions.length > 0 && (
-                        <View style={styles.questionContainer}>
-                            <Text style={styles.questionTitle}>
-                                {questions[currentQuestionIndex].question_title}
-                            </Text>
-                            {questions[currentQuestionIndex].responses.map((response, idx) => (
-                                <HealthIndexAnswer
-                                    key={idx}
-                                    response={response}
-                                    onPress={() => handleAnswerPress(currentQuestionIndex, response.value)}
-                                />
-                            ))}
-    
-                            {/* Display related articles */}
-                            {questions[currentQuestionIndex].articles && questions[currentQuestionIndex].articles.length > 0 && (
-                                <View style={styles.articlesContainer}>
-                                    <Text style={styles.articleHeader}>Related Articles:</Text>
-                                    {questions[currentQuestionIndex].articles.map((article, idx) => (
-                                        // <TouchableOpacity key={idx} onPress={() => Linking.openURL(article.url)}>
-                                        //     <Text style={styles.articleLink}>{article.title}</Text>
-                                        // </TouchableOpacity>
-                                        <ArticleItem
-                                            key={idx}
-                                            navigation={navigation}
-                                            articleId={article.id}  // Pass the article ID to the ArticleItem component
-                                        /> 
-                                    ))} 
-                                </View>
-                            )}
-                        </View>
-                    )}
-                </View>
-                <View style={styles.skipButtonContainer}>
-                    <Button mode="text" onPress={handleSkipPress} style={styles.skipButton}>
-                        Hoppa över
-                    </Button>
-                </View>
-                <Modal
-                    visible={showModal}
-                    transparent={true}
-                    animationType="slide"
-                    onRequestClose={handleCloseModal}
-                >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                            <Text style={styles.modalText}>Undersökning klar!</Text>
-                            <Button mode='contained' onPress={handleCloseModal} buttonColor='#4a8483'>
-                                OK
+            </Modal>
+            <Modal
+                visible={showExitConfirmationModal}
+                transparent={true}
+                animationType="slide"
+                onRequestClose={() => setShowExitConfirmationModal(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>Vill du verkligen avsluta undersökningen?</Text>
+                        <View style={styles.modalButtonContainer}>
+                            <Button mode='contained' onPress={() => handleExitConfirmation(true)} buttonColor='#4a8483'>
+                                Ja
+                            </Button>
+                            <Button mode='contained' onPress={() => handleExitConfirmation(false)} buttonColor='#4a8483' style={{ marginLeft: 10 }}>
+                                Nej
                             </Button>
                         </View>
                     </View>
-                </Modal>
-                <Modal
-                    visible={showExitConfirmationModal}
-                    transparent={true}
-                    animationType="slide"
-                    onRequestClose={() => setShowExitConfirmationModal(false)}
-                >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                            <Text style={styles.modalText}>Vill du verkligen avsluta undersökningen?</Text>
-                            <View style={styles.modalButtonContainer}>
-                                <Button mode='contained' onPress={() => handleExitConfirmation(true)} buttonColor='#4a8483'>
-                                    Ja
-                                </Button>
-                                <Button mode='contained' onPress={() => handleExitConfirmation(false)} buttonColor='#4a8483' style={{ marginLeft: 10 }}>
-                                    Nej
-                                </Button>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-            </ScrollView>
-        </View>
+                </View>
+            </Modal>
+            <Button
+                mode="contained"
+                onPress={() => setShowExitConfirmationModal(true)}
+                style={styles.exitButtonStyle}
+            >
+                Avsluta
+            </Button>
+        </ScrollView>
+    </LinearGradient>
     );
     
 };
@@ -245,7 +254,7 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 40,
+        paddingTop: 160,
         backgroundColor: '#92cdca',
     },
     scrollView: {},
@@ -340,6 +349,13 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         marginBottom: 5,
     },
+    exitButtonStyle: {
+        width: "50%", // Adjust the width as needed
+        height: 50,
+        justifyContent: "center",
+        backgroundColor: "#4a8483",
+        // Add any other styling you want for the button
+      },
 });
 
 export default HealthIndexSurveyScreen;

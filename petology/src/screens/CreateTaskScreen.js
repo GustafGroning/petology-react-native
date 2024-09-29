@@ -184,7 +184,8 @@ const CreateTaskScreen = ({ navigation }) => {
             />
           </View>
           <View style={styles.datePickerContainer}>
-            <Text style={styles.datePickerHeader}t> Startar </Text>
+            {/* Used to say "startar but makes less sense without a stop date" */}
+            <Text style={styles.datePickerHeader}t> Datum </Text>
             <PetologyDatePicker
               title={"Startar"}
               date={startDate}

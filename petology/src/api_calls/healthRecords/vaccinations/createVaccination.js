@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const createVaccination = async (dogId, name, vaccinationDate, nextVaccinationDate, clinicName, notes) => {
+const createVaccination = async (dogId, name, vaccination_detailed_name, vaccinationDate, nextVaccinationDate, clinicName, notes) => {
   console.log('inside API call!');
   try {
     const token = await AsyncStorage.getItem("userToken");
@@ -16,6 +16,7 @@ const createVaccination = async (dogId, name, vaccinationDate, nextVaccinationDa
       body: JSON.stringify({
         dog: dogId,
         name: name,
+        vaccination_detailed_name: vaccination_detailed_name,
         vaccination_date: formattedVaccinationDate,
         next_vaccination_date: formattedNextVaccinationDate,
         clinic_name: clinicName,

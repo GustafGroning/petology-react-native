@@ -12,6 +12,7 @@ import { Button, Text } from 'react-native-paper';
 import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';  // Import the image picker
+import { LinearGradient } from 'expo-linear-gradient';
 
 // APIs
 import createDog from '../api_calls/dog/createDog';
@@ -107,7 +108,11 @@ const RegisterDogScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#86c8c5', '#e4f4f2']}
+      locations={[0.3, 0.8]}
+      style={styles.container}
+    >
       <ScrollView style={styles.scrollView}>
         <View style={styles.headerSection}>
           <Text variant='headlineLarge' style={styles.header}>
@@ -193,7 +198,7 @@ const RegisterDogScreen = ({ navigation }) => {
           </View>
         </View>  
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -244,6 +249,7 @@ const styles = StyleSheet.create({
     height: 150,
     width: '75%',
     alignItems: 'center',
+    top: 60,
   },
   closeButton: {
     alignItems: 'center',
@@ -263,10 +269,10 @@ const styles = StyleSheet.create({
   },
   imagePickerButton: {
     backgroundColor: '#4a8483',
-    borderRadius: 90,
+    borderRadius: 20,
     padding: 10,
     marginVertical: 10,
-    width: '80%',
+    width: '65%',
     alignItems: 'center',
   },
   imagePickerButtonText: {

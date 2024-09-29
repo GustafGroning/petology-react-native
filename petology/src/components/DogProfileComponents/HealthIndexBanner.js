@@ -42,7 +42,7 @@ const HealthIndexBanner = ({ navigation, dog_id, batches_in_row }) => {
       setDisplayBatchesInRow(isYesterday || isSameDay ? data.batches_in_row : 0);
       setLatestBatchId(data.latest_run_batch_id);
     } else {
-      setDisplayBatchesInRow(1);
+      setDisplayBatchesInRow(0);
       setLatestBatchId(1);
     }
   };

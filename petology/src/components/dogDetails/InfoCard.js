@@ -49,8 +49,6 @@ const InfoCard = ({ type, data, onUpdate, onDelete }) => {
         default:
             updatedData = { ...editedData };
     }
-
-    console.log('the stuff being passed to parent ', updatedData, type);
     onUpdate(updatedData, type); // Pass the entire updated data and type
     setIsModalVisible(false);
 };
@@ -64,16 +62,16 @@ const InfoCard = ({ type, data, onUpdate, onDelete }) => {
     onDelete(data.id);
     setIsModalVisible(false);
   };
-
   const renderContent = () => {
     switch (type) {
       case 'vaccination':
         return (
           <>
-            <Text style={styles.cardTitle}>{data.name}</Text>
+            <Text style={styles.cardTitle}>Vaccin mot - {data.name}</Text>
             <Text style={styles.cardSubTitle}>{data.vaccineName}</Text>
             <Text style={styles.cardText}>Datum: {data.date}</Text>
             <Text style={styles.cardText}>Nästa vaccination: {data.followUpDate}</Text>
+            <Text style={styles.cardText}>Klinik: {data.clinic_name}</Text>
           </>
         );
       case 'medication':

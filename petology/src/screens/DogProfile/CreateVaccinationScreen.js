@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const CreateVaccinationScreen = ({ navigation, route }) => {
   const { dogId } = route.params;
   const [vaccination, setVaccination] = useState('');
+  const [vaccination_detailed_name, setVaccination_detailed_name] = useState('');
   const [vaccinationDate, setVaccinationDate] = useState(new Date());
   const [showNextVaccinationDate, setShowNextVaccinationDate] = useState(false);
   const [nextVaccinationDate, setNextVaccinationDate] = useState(new Date());
@@ -40,6 +41,7 @@ const CreateVaccinationScreen = ({ navigation, route }) => {
       const response = await createVaccination(
         dogId,
         vaccination,
+        vaccination_detailed_name, 
         formattedVaccinationDate,
         formattedNextVaccinationDate,
         clinicName,
@@ -88,6 +90,11 @@ const CreateVaccinationScreen = ({ navigation, route }) => {
             </Text>
           </TouchableOpacity>
 
+          <PetologyTextInput
+            placeholder="Tekniskt namna"
+            value={vaccination_detailed_name}
+            onUpdateText={setVaccination_detailed_name}
+          />
           <Text style={styles.formLabel}>Datum</Text>
           <PetologyDatePicker
             date={vaccinationDate}

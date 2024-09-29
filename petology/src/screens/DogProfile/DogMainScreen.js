@@ -271,7 +271,7 @@ const DogMainScreen = ({ navigation, route }) => {
               startTime={task.start_time}
               notes={task.notes}
               location={task.location}
-              dogName={task.dog}
+              dogName={task.dog_name}
               isCompleted={task.completed}
               onCheckChange={(newCheckState) => handleTaskCompletion(task.id, newCheckState)}
               onDeleteTask={handleTaskDeletion}

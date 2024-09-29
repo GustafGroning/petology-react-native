@@ -94,7 +94,8 @@ const DogSelectionScreen = ({ navigation }) => {
         </View>
         <TextInput
           style={styles.searchInput}
-          placeholder='Search dogs...'
+          placeholder="Sök bland hundar..."
+          placeholderTextColor="black"
           value={searchQuery}
           onChangeText={handleSearch}
         />
@@ -142,6 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 40,
+    left: 44,
   },
   subHeaderText: {
     fontSize: 26,
@@ -177,11 +179,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   searchInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    margin: 10,
-    paddingHorizontal: 10,
+    width: '85%', // Adjust width as needed
+    height: 45,
+    backgroundColor: '#b7dcd9', // Similar color to other inputs
+    borderRadius: 10, // Rounded corners
+    marginBottom: 18,
+    paddingHorizontal: 15, // Padding for better alignment
+    alignSelf: 'center', // Center it in the screen
   },
 });
 

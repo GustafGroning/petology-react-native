@@ -79,13 +79,7 @@ const LandingPage = ({ navigation }) => {
   
   /**********************************************************************************/
   const filterCompletedTasks = () => {
-    console.log("********** inside filterCompletedTasks **********");
-    console.log(
-      "heres what tasksToday looks like inside filterCompletedTasks",
-      tasksToday,
-    );
     const completedToday = tasksToday.filter((task) => task.completed);
-    console.log("completedToday ", completedToday);
     setCompletedTasksToday(completedToday.length);
   };
   /**********************************************************************************/
@@ -104,7 +98,6 @@ const LandingPage = ({ navigation }) => {
   };
   /**********************************************************************************/
   const updateTaskCompletion = async (taskId, completed) => {
-    console.log("Received task completion state in LandingPage:", completed);
     const token = await AsyncStorage.getItem("userToken");
     if (token) {
       fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/patch/${taskId}/`, {
@@ -144,7 +137,6 @@ const LandingPage = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log("inside useFocusEffect");
       getAllUserTasksHandler();
       getUserDogsHandler();  // Fetch user's dogs and their data on screen focus
     }, []),

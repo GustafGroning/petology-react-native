@@ -86,7 +86,6 @@ const CreateTaskScreen = ({ navigation }) => {
   /**********************************************************************************/
   // TODO: remove everything relating to TIME from API call, just do dates for now.
   const handleCreateTask = async () => {
-    console.log("value (should be dog_id) ", value);
     try {
       const token = await AsyncStorage.getItem("userToken");
       // Format the startDate to exclude the time component

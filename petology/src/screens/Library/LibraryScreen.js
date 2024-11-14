@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, ScrollView, ImageBackground,
 import Footer from '../../components/common/Footer';
 import offeringImage from '../../../assets/offering.jpg';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const LibraryScreen = ({ navigation }) => {
 /**********************************************************************************/
@@ -16,7 +17,11 @@ const LibraryScreen = ({ navigation }) => {
     
 
     
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#86c8c5', '#e4f4f2']}
+      locations={[0.3, 0.8]}
+      style={styles.container}
+    >
       <TouchableOpacity />
       <ScrollView style={styles.scrollView}>
         <View style={styles.headerSection}>
@@ -115,22 +120,22 @@ const LibraryScreen = ({ navigation }) => {
           <Text style={styles.miscSectionHeader}>Petology</Text>
           <TouchableOpacity onPress={() => 
             navigateToScreen('FrequentlyAskedQuestionsScreen')}>
-            <Text> FaQ </Text>
+            <Text style={styles.miscSectionText}> FaQ </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigateToScreen('ContactUsScreen')}>
-            <Text> Contact Us </Text>
+            <Text style={styles.miscSectionText}> Kontakta oss </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigateToScreen('AboutUsScreen')}>
-            <Text> About Petology </Text>
+            <Text style={styles.miscSectionText}> Om Petology </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigateToScreen('PolicyScreen')}>
-            <Text> Policy </Text>
+            <Text style={styles.miscSectionText}> Integritetspolicy & användarvilkor </Text>
           </TouchableOpacity>
           {/* Add TouchableOpacity for navigating to additional links */}
         </View>
       </ScrollView>
       <Footer navigation={navigation} />
-    </View>
+    </LinearGradient>
   );
 };
 /**********************************************************************************/
@@ -168,9 +173,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Cochin',
   },
   miscSectionHeader: {
-    // right: 140,
+    left: 142,
     fontSize: 26,
+    paddingBottom: 25,
     fontFamily: 'Cochin',
+  },
+  miscSectionText: {
+    fontSize: 16,
+    paddingBottom: 12,
   },
   disabledSectionHeader: {
     right: 140,

@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const createVaccination = async (dogId, name, vaccination_detailed_name, vaccinationDate, nextVaccinationDate, clinicName, notes) => {
-  console.log('inside API call!');
   try {
     const token = await AsyncStorage.getItem("userToken");
     const formattedVaccinationDate = vaccinationDate;  // Use already formatted date

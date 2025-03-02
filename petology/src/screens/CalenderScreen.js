@@ -13,7 +13,7 @@ import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 import Task from "../components/common/task/Task";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { Button } from "react-native-paper";
+import updateTaskStatus from "../api_calls/task/updateTaskStatus";
 import { LinearGradient } from 'expo-linear-gradient';
 
 import getUserTasks from "../api_calls/task/getUserTasks";
@@ -169,28 +169,7 @@ tasks for that specific date.
   };
   /**********************************************************************************/
   const updateTaskCompletion = async (taskId, completed) => {
-    console.log("Received task completion state in LandingPage:", completed);
-    const token = await AsyncStorage.getItem("userToken");
-    if (token) {
-      fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/patch/${taskId}/`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `JWT ${token}`,
-        },
-        body: JSON.stringify({ completed }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          getAllUserTasksHandler();
-        })
-        .catch((error) => console.error("Error updating task:", error));
-    }
+    await updateTaskStatus(taskId, completed, getAllUserTasksHandler);
   };
   /**********************************************************************************/
   useEffect(() => {

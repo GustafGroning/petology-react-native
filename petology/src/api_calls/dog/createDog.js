@@ -7,7 +7,8 @@ const createDog = async (formData) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/add/`, {
       method: "POST",
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: formData,
     });

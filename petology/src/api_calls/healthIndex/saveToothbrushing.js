@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const saveToothbrushing = async (dogId, newToothbrushingData) => {
-  console.log('inside save?');
   try {
     const token = await AsyncStorage.getItem("userToken");
 
@@ -10,8 +9,8 @@ const saveToothbrushing = async (dogId, newToothbrushingData) => {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `JWT ${token}`,
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(newToothbrushingData),
       }

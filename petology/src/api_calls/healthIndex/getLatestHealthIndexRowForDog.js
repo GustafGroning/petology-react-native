@@ -7,7 +7,8 @@ const getLatestHealthIndexRowForDog = async (dogId) => {
       `${process.env.EXPO_PUBLIC_DEV_URL}/api/health-index/dog/get/${dogId}/`,
       {
         headers: {
-          Authorization: `JWT ${token}`,
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       },
     );

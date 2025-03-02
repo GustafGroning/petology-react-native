@@ -7,7 +7,8 @@ const deleteDog = async (dogId) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/delete/${dogId}/`, {
       method: "DELETE",
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 

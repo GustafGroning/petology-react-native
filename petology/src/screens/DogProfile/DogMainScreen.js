@@ -13,6 +13,7 @@ import Footer from '../../components/common/Footer';
 import Task from '../../components/common/task/Task';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { LinearGradient } from 'expo-linear-gradient';
+import updateTaskStatus from '../../api_calls/task/updateTaskStatus';
 
 const screenWidth = Dimensions.get('window').width;
 const labels = [
@@ -124,7 +125,7 @@ const DogMainScreen = ({ navigation, route }) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `JWT ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ completed }),
         });
@@ -134,6 +135,9 @@ const DogMainScreen = ({ navigation, route }) => {
       console.error('Error updating task completion:', error);
     }
   };
+  // const handleTaskCompletion = async (taskId, completed) => {
+  //   await updateTaskStatus(taskId, completed, getAllUserTasksHandler);
+  // };
 
   const handleTaskDeletion = async (taskId) => {
     if (isDeleting) return;

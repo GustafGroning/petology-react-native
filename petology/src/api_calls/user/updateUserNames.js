@@ -9,7 +9,7 @@ const updateUserNames = async (firstName, lastName) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/users/update/`, {
       method: 'PUT',
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ firstName, lastName }), // Send first name and last name in the request body

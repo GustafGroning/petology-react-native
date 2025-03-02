@@ -5,7 +5,8 @@ const getVaccinationsForDog = async (dogId) => {
     const token = await AsyncStorage.getItem("userToken");
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/vaccinations/dog/${dogId}/`, {
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 

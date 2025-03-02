@@ -11,7 +11,7 @@ const deleteTask = async (taskId) => {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `JWT ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
   

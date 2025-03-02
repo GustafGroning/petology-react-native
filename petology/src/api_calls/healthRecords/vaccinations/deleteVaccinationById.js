@@ -6,7 +6,8 @@ const deleteVaccinationById = async (vaccinationId) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/vaccinations/${vaccinationId}/delete/`, {
       method: "DELETE",
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 

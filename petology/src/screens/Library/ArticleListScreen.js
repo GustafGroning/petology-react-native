@@ -19,7 +19,8 @@ const ArticleListScreen = ({ navigation }) => {
           {
             method: 'GET',
             headers: {
-              Authorization: `JWT ${token}`,
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
             },
           },
         );

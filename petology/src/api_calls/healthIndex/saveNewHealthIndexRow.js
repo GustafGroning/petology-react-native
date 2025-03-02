@@ -11,8 +11,8 @@ const saveNewHealthIndexRow = async (dogId, newRow) => {
     const response = await fetch(`http://localhost:8000/api/health-index/dog/${dogId}/add/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(newRow),
     });

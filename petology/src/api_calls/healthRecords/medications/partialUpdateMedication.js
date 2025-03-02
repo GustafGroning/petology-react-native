@@ -6,8 +6,8 @@ const partialUpdateMedication = async (medicationId, updatedData) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/medications/${medicationId}/partial_update/`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(updatedData),
     });

@@ -9,7 +9,7 @@ const updateUserTask = async (task_id, data, method) => {
       const response = await fetch(`${API_URL}${task_id}/`, {
         method: method,
         headers: {
-          Authorization: `JWT ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),

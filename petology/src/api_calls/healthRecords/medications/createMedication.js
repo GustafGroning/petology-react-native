@@ -23,8 +23,8 @@ const createMedication = async (medicationData) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/medications/create/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(formattedMedicationData),
     });

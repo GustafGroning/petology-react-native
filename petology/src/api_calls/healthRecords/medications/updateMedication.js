@@ -6,8 +6,8 @@ const updateMedication = async (medicationId, updatedData) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/medications/${medicationId}/update/`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(updatedData),
     });

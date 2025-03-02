@@ -224,7 +224,7 @@ const InfoCard = ({ type, data, onUpdate, onDelete }) => {
             />
             <CheckBox
               center
-              title="Healed"
+              title="Sjukdomen/skadan har läkt"
               checkedIcon="check-square-o"
               uncheckedIcon="square-o"
               checked={healed}
@@ -246,11 +246,11 @@ const InfoCard = ({ type, data, onUpdate, onDelete }) => {
       <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContainer}>
           {renderModalContent()}
-          <Button title="Save" onPress={handleSave} />
+          <Button title="Spara" onPress={handleSave} />
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-            <Text style={styles.deleteButtonText}>Delete</Text>
+            <Text style={styles.deleteButtonText}>Ta bort</Text>
           </TouchableOpacity>
-          <Button title="Cancel" onPress={toggleModal} />
+          <Button title="Avbryt" onPress={toggleModal} />
         </View>
       </Modal>
     </View>

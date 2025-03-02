@@ -17,7 +17,9 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      console.log('trying api-token-auth');
+      console.log("trying api-token-auth");
+      console.log(".env var EXPO_PUBLIC_DEV_URL", process.env.EXPO_PUBLIC_DEV_URL);
+  
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_DEV_URL}/api-token-auth/`,
         {
@@ -29,45 +31,59 @@ const LoginScreen = ({ navigation }) => {
             username: email,
             password: password,
           }),
-        },
+        }
       );
-
+  
       const data = await response.json();
-
+  
+      // Check if the response is OK
       if (response.ok) {
-        const { token } = data;
-        await AsyncStorage.setItem("userToken", token); // Store the token
-
+        const { access, refresh } = data;
+  
+        if (!access || !refresh) {
+          console.error("Access or refresh token missing in response:", data);
+          return;
+        }
+  
+        // Store the tokens in AsyncStorage
+        await AsyncStorage.setItem("userToken", access);
+        await AsyncStorage.setItem("refreshToken", refresh);
+  
         const basicInfo = await getUserFirstAndLastNames();
-
-        
+  
         if (!basicInfo || !basicInfo.full_name) {
           navigation.navigate("InputUserBasicInfoScreen");
           return;
         }
-        console.log('do we get here?');
-        const dogsResponse = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/all/`, {
-          method: "GET",
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
-        });
-        console.log('do we get here? 111');
+  
+        // Fetch dogs data
+        const dogsResponse = await fetch(
+          `${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/all/`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${access}`,
+            },
+          }
+        );
+  
         const dogsData = await dogsResponse.json();
-
+  
+        // Navigate based on dogs data
         if (dogsResponse.ok && dogsData.dogs && dogsData.dogs.length > 0) {
-          // DEMO PURPOSE HUR DUR
           navigation.navigate("Landing");
         } else {
           navigation.navigate("DogIntroduction");
         }
       } else {
         console.log("Login failed");
+        console.log("Response:", data); // Log response for debugging
       }
     } catch (error) {
-      console.error(error);
+      console.error("Login error:", error);
     }
   };
+  
 
   return (
     <LinearGradient

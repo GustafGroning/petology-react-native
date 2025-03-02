@@ -34,37 +34,44 @@ const RegisterDogScreen = ({ navigation }) => {
     { key: '4', value: 'Kastrerad tik' },
   ];
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleCreateDog = async () => {
-    // Ensure all fields are filled
-    if (!name || !selectedBreed || !birthday || !selectedSex || !image) {
-      Alert.alert('Error', 'Please fill in all fields');
+    if (!name || !selectedBreed || !birthday || !selectedSex) {
+      Alert.alert("Fel", "Vänligen fyll i alla fält");
+      return;
+    } else if (!image) {
+      Alert.alert("Fel", "Välj en bild");
       return;
     }
-
+  
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('breed', selectedBreed);
-    formData.append('birthday', birthday.toISOString().split('T')[0]);
-    formData.append('sex', selectedSex);
-    formData.append('image', {
+    formData.append("name", name);
+    formData.append("breed", selectedBreed);
+    formData.append("birthday", birthday.toISOString().split("T")[0]);
+    formData.append("sex", selectedSex);
+    formData.append("image", {
       uri: image,
-      type: 'image/jpeg', // or the correct type for your image
-      name: 'dogImage.jpg',
+      type: "image/jpeg",
+      name: "dogImage.jpg",
     });
-
+  
     try {
       const result = await createDog(formData);
-
+  
       if (result.success) {
-        navigation.navigate('DogSelection');
+        navigation.navigate("DogSelection");
       } else {
-        Alert.alert('Error', result.message || 'Failed to create dog');
+        Alert.alert("Fel", result.message || "Misslyckades med att skapa hund");
       }
     } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'An error occurred while creating the dog');
+      console.error("Error:", error);
+      Alert.alert("Fel", "Ett fel uppstod vid skapandet av hunden");
     }
   };
+  
+  
+  
 
   const fetchBreeds = useCallback(async () => {
     try {
@@ -89,19 +96,18 @@ const RegisterDogScreen = ({ navigation }) => {
   // Function to pick an image from the gallery
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
     if (!permissionResult.granted) {
       alert('Permission to access gallery is required!');
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-
+    
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -113,7 +119,7 @@ const RegisterDogScreen = ({ navigation }) => {
       locations={[0.3, 0.8]}
       style={styles.container}
     >
-      <ScrollView style={styles.scrollView}>
+      <View style={styles.scrollView} keyboardShouldPersistTaps="handled">
         <View style={styles.headerSection}>
           <Text variant='headlineLarge' style={styles.header}>
             Petology
@@ -177,7 +183,6 @@ const RegisterDogScreen = ({ navigation }) => {
             }}
             style={{marginBottom: 20}}
           />
-
           {/* Image Picker Button */}
           <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
             <Text style={styles.imagePickerButtonText}>Välj bild</Text>
@@ -188,16 +193,18 @@ const RegisterDogScreen = ({ navigation }) => {
             <Image source={{ uri: image }} style={styles.image} />
           )}
 
-          <View style={styles.submitSection}>
-            <Button
-              mode='contained'
-              onPress={handleCreateDog}
-              style={{ width: '80%', height: '30%' }}
-              buttonColor='#4a8483'
-            > Skapa hund </Button>
+          <View style={styles.submitSection} pointerEvents='box-none'>
+          <TouchableOpacity
+            style={styles.createDogButton}
+            onPress={() => {
+            handleCreateDog();
+            }}
+          >
+            <Text style={styles.createDogButtonText}>Spara hund</Text>
+          </TouchableOpacity>
           </View>
         </View>  
-      </ScrollView>
+      </View>
     </LinearGradient>
   );
 };
@@ -285,6 +292,20 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginVertical: 10,
   },
+  createDogButton: {
+    backgroundColor: "#4a8483",
+    borderRadius: 20,
+    padding: 15,
+    marginVertical: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  
+  createDogButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },  
 });
 
 export default RegisterDogScreen;

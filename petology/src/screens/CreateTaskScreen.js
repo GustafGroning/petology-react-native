@@ -58,7 +58,7 @@ const CreateTaskScreen = ({ navigation }) => {
         `${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/all/`,
         {
           headers: {
-            Authorization: `JWT ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
@@ -95,7 +95,7 @@ const CreateTaskScreen = ({ navigation }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `JWT ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           dog: value, // Use the selected dog ID directly

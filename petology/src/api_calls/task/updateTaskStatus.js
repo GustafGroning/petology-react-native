@@ -10,7 +10,7 @@ const updateTaskStatus = async (taskId, completed, fetchAndUpdateTasks) => {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `JWT ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ completed }),
         },

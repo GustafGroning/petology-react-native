@@ -294,7 +294,7 @@ const DogDetailsScreen = ({ navigation, route }) => {
           <View style={styles.sectionContainer}>
             <View style={styles.sectionHeaderContainer}>
               <Text style={styles.sectionHeader}>Tidigare sjukdomar</Text>
-              <TouchableOpacity style={styles.sectionButton} onPress={() => navigation.navigate('PastConditionsScreen', { dogId: dogId })}>
+              <TouchableOpacity style={styles.sectionButton} onPress={() => navigation.navigate('CreateConditionScreen', { dogId: dogId })}>
                 <FontAwesome name='pencil' size={24} color='#000' />
               </TouchableOpacity>
             </View>

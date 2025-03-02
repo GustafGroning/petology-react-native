@@ -6,7 +6,8 @@ const deleteCondition = async (conditionId) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/conditions/${conditionId}/delete/`, {
       method: "DELETE",
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 

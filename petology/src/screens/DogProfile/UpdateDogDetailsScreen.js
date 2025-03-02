@@ -73,7 +73,8 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
       const response = await fetch('http://localhost:8000/api/dog/breeds/', {
         method: 'GET',
         headers: {
-          Authorization: `JWT ${token}`,
+          Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
         },
       });
       const data = await response.json();

@@ -5,7 +5,8 @@ const getMedicationById = async (medicationId) => {
     const token = await AsyncStorage.getItem("userToken");
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/medications/${medicationId}/`, {
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
     const data = await response.json();

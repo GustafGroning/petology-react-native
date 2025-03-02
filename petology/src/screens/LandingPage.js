@@ -22,6 +22,7 @@ import HealthIndexBanner from '../components/DogProfileComponents/HealthIndexBan
 import ToothbrushingBanner from '../components/DogProfileComponents/ToothbrushingBanner';
 import getLatestHealthIndexRowForDog from '../api_calls/healthIndex/getLatestHealthIndexRowForDog';
 import getLatestToothbrushingForDog from '../api_calls/healthIndex/getLatestToothbrushingForDog';
+import updateTaskStatus from "../api_calls/task/updateTaskStatus";
 
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -35,7 +36,6 @@ const LandingPage = ({ navigation }) => {
   const [healthIndexData, setHealthIndexData] = useState({});
   const [toothbrushingData, setToothbrushingData] = useState({});
 
-  /**********************************************************************************/
   const getAllUserTasksHandler = async () => {
     const tasks = await getUserTasks();
     setAllTasks(tasks);
@@ -62,7 +62,6 @@ const LandingPage = ({ navigation }) => {
     }
   };
 
-  /**********************************************************************************/
   const filterTasksForTodayAndOverdue = () => {
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
@@ -76,17 +75,15 @@ const LandingPage = ({ navigation }) => {
     setTasksToday(tasksForTodayAndOverdue);
   };
   
-  
-  /**********************************************************************************/
   const filterCompletedTasks = () => {
     const completedToday = tasksToday.filter((task) => task.completed);
     setCompletedTasksToday(completedToday.length);
   };
-  /**********************************************************************************/
+
   const handleDeleteTask = (taskId) => {
     setAllTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
-  /**********************************************************************************/
+
   const handleUpdateTask = async (taskId, updatedTask) => {
     try {
       setAllTasks((prevTasks) =>
@@ -96,32 +93,11 @@ const LandingPage = ({ navigation }) => {
       console.error("Error updating task:", error);
     }
   };
-  /**********************************************************************************/
+
   const updateTaskCompletion = async (taskId, completed) => {
-    const token = await AsyncStorage.getItem("userToken");
-    if (token) {
-      fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/patch/${taskId}/`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `JWT ${token}`,
-        },
-        body: JSON.stringify({ completed }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          getAllUserTasksHandler();
-        })
-        .catch((error) => console.error("Error updating task:", error));
-    }
+    await updateTaskStatus(taskId, completed, getAllUserTasksHandler);
   };
 
-  /**********************************************************************************/
   useEffect(() => {
     getAllUserTasksHandler();
     getUserDogsHandler();  // Fetch user's dogs and their data
@@ -293,6 +269,7 @@ const LandingPage = ({ navigation }) => {
 };
 
 /**********************************************************************************/
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -344,7 +321,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#3d3d3d',
   },
+  
   /**********************************************************************************/
+
   activeDogPictureSection: {
     alignContent: "center",
     borderRadius: 20,
@@ -358,7 +337,9 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 20,
   },
+
   /**********************************************************************************/
+  
   tasksListSection: {
     flex: 1,
     // justifyContent: "center",
@@ -384,8 +365,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 70,
   },
+
   /**********************************************************************************/
-  // CHECKBOX STYLES
+  
   checkboxBase: {
     width: 20,
     height: 20,
@@ -399,7 +381,9 @@ const styles = StyleSheet.create({
   checkboxChecked: {
     backgroundColor: "black",
   },
+
   /**********************************************************************************/
+
   articlesContainer: {
     paddingTop: 40,
     height: 200,

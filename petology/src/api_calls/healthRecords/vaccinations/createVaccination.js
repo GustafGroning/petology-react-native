@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const createVaccination = async (dogId, name, vaccination_detailed_name, vaccinationDate, nextVaccinationDate, clinicName, notes) => {
+  console.log('input ', dogId, name, vaccination_detailed_name, vaccinationDate, nextVaccinationDate, clinicName, notes);
   try {
     const token = await AsyncStorage.getItem("userToken");
     const formattedVaccinationDate = vaccinationDate;  // Use already formatted date
@@ -9,8 +10,8 @@ const createVaccination = async (dogId, name, vaccination_detailed_name, vaccina
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-records/vaccinations/create/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         dog: dogId,

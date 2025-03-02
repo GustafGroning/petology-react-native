@@ -15,7 +15,8 @@ const ArticleScreen = ({ route, navigation }) => {
         const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/articles/get/${id}/`, {
           method: 'GET',
           headers: {
-            Authorization: `JWT ${token}`,
+            Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
           },
         });
 

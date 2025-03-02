@@ -7,7 +7,8 @@ const getDogsForUser = async () => {
       `${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/all/`,
       {
         headers: {
-          Authorization: `JWT ${token}`,
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       }
     );

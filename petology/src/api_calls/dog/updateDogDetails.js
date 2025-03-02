@@ -6,8 +6,8 @@ const updateDog = async (dogId, updatedFields) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/update/${dogId}/`, {
       method: 'PUT', // Use PUT method to update all fields
       headers: {
-        Authorization: `JWT ${token}`,
-        'Content-Type': 'application/json', // Specify the content type as JSON
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(updatedFields), // Send the updated fields as JSON string
     });
@@ -31,7 +31,7 @@ const partialUpdateDog = async (dogId, updatedFields) => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/dog/partial-update/${dogId}/`, {
       method: 'PATCH', // Use PATCH method to partially update specific fields
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json', // Specify the content type as JSON
       },
       body: JSON.stringify(updatedFields), // Send the updated fields as JSON string

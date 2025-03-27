@@ -8,7 +8,7 @@ const saveNewHealthIndexRow = async (dogId, newRow) => {
     // Ensure the date_performed is in the correct format
     newRow.date_performed = new Date().toISOString().split('T')[0]; // Converts to YYYY-MM-DD
 
-    const response = await fetch(`http://localhost:8000/api/health-index/dog/${dogId}/add/`, {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/health-index/dog/${dogId}/add/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

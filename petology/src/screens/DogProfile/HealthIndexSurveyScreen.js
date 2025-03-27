@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Modal, ScrollView, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
-import getQuestionsInBatch from '../../api_calls/healthIndex/getQuestionsInBatch';
+import getSurveyQuestions from '../../api_calls/healthIndex/getSurveyQuestions';
 import getLatestHealthIndexRowForDog from '../../api_calls/healthIndex/getLatestHealthIndexRowForDog';
 import saveNewHealthIndexRow from '../../api_calls/healthIndex/saveNewHealthIndexRow';
 import HealthIndexAnswer from '../../components/HealthIndexSurveyScreenComponents/HealthIndexAnswer';
-import Header from '../../components/common/Header';
 import ArticleItem from '../../components/ArticleComponents/ArticleItem';
 import { LinearGradient } from 'expo-linear-gradient';
-
 
 const HealthIndexSurveyScreen = ({ route, navigation }) => {
     const [questions, setQuestions] = useState([]);
@@ -17,9 +15,8 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
     const [showModal, setShowModal] = useState(false);
     const [showExitConfirmationModal, setShowExitConfirmationModal] = useState(false);
 
-    const { latest_question_batch, dogId } = route.params;
+    const { dogId } = route.params;
     console.log('dogId:', dogId);
-    console.log('latest_question_batch inside HealthIndexSurveyScreen:', latest_question_batch);
 
     useEffect(() => {
         fetchQuestions();
@@ -27,22 +24,21 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
 
     const fetchQuestions = async () => {
         try {
-            const batchId = latest_question_batch + 1; // Example logic to get the next batch ID
-            let query = await getQuestionsInBatch(batchId);
-            if (!query) {
-                query = await getQuestionsInBatch(1); // Loop back to batch 1 if no next batch found
+            let query = await getSurveyQuestions();
+            if (query) {
+                setQuestions(query);
+            } else {
+                console.error("No questions received");
             }
-            console.log('query:', query);
-            setQuestions(query.questions);
         } catch (error) {
-            console.error('Error fetching questions:', error);
+            console.error('Error fetching random questions:', error);
         }
     };
 
     const handleAnswerPress = (questionIndex, value) => {
         setResponses(prevResponses => ({
             ...prevResponses,
-            [questionIndex]: value,
+            [questions[questionIndex].category]: value, // Store response by category
         }));
 
         if (currentQuestionIndex < questions.length - 1) {
@@ -63,11 +59,10 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
     const calculateNewValues = async () => {
         try {
             let latestRow = await getLatestHealthIndexRowForDog(dogId);
-    
+            
+            // TODO: det här är inte toppen, om anropet inte funkar så kommer den utgå från att det är nytt och ska startas om.
             if (!latestRow) {
                 latestRow = {
-                    batches_in_row: 1,
-                    latest_run_batch_id: 0,
                     general_condition: 1,
                     dental_health: 1,
                     eyes: 1,
@@ -78,26 +73,25 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
             }
     
             const newValues = { ...latestRow };
-            Object.values(responses).forEach(response => {
-                const category = response.slice(0, 2); // e.g., SC
-                const change = parseInt(response.slice(2)); // e.g., +1 or -1
+            Object.entries(responses).forEach(([category, value]) => {
+                const change = parseInt(value.slice(2)); // Extract change value
                 switch (category) {
-                    case 'GC':
+                    case 'general_condition':
                         newValues.general_condition += change;
                         break;
-                    case 'DH':
+                    case 'dental_health':
                         newValues.dental_health += change;
                         break;
-                    case 'E':
+                    case 'eyes':
                         newValues.eyes += change;
                         break;
-                    case 'SC':
+                    case 'skin_and_coat':
                         newValues.skin_and_coat += change;
                         break;
-                    case 'LS':
+                    case 'locomotor_system':
                         newValues.locomotor_system += change;
                         break;
-                    case 'O':
+                    case 'other':
                         newValues.other += change;
                         break;
                     default:
@@ -105,20 +99,11 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                 }
             });
 
-            // Prepare the new row data
             const newRow = {
-                latest_run_batch_id: latest_question_batch || 0,
-                batches_in_row: latestRow.batches_in_row + 1,
                 date_performed: new Date().toISOString(),
-                general_condition: newValues.general_condition,
-                dental_health: newValues.dental_health,
-                eyes: newValues.eyes,
-                skin_and_coat: newValues.skin_and_coat,
-                locomotor_system: newValues.locomotor_system,
-                other: newValues.other,
+                ...newValues,
             };
 
-            // Save the new row data
             const result = await saveNewHealthIndexRow(dogId, newRow);
             if (result.success) {
                 console.log('New DogHealthIndex row saved:', result.data);
@@ -132,17 +117,14 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
 
     const handleCloseModal = async () => {
         try {
-            // Wait for the row to be written to the database
             await calculateNewValues();
         } catch (error) {
             console.error('Error calculating and saving new values:', error);
         } finally {
             setShowModal(false);
-            // Navigate back only after the row is written
             navigation.navigate('DogMainScreen', { dogId: dogId, refresh: true });
         }
     };
-    
 
     const handleExitConfirmation = (confirm) => {
         if (confirm) {
@@ -158,12 +140,9 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
             style={styles.container}
         >
         <ScrollView style={styles.scrollView}>
-
             <View style={styles.headerSection}>
                 <Text style={styles.headerText}> Dagens undersökning </Text>
             </View>
-
-
 
             <View style={styles.section2}>
                 {questions.length > 0 && (
@@ -179,20 +158,16 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                             />
                         ))}
 
-                        {/* Display related articles */}
-                        {questions[currentQuestionIndex].articles && questions[currentQuestionIndex].articles.length > 0 && (
+                        {questions[currentQuestionIndex].articles?.length > 0 && (
                             <View style={styles.articlesContainer}>
-                                <Text style={styles.articleHeader}>Related Articles:</Text>
+                                <Text style={styles.articleHeader}>Relaterade artiklar:</Text>
                                 {questions[currentQuestionIndex].articles.map((article, idx) => (
-                                    // <TouchableOpacity key={idx} onPress={() => Linking.openURL(article.url)}>
-                                    //     <Text style={styles.articleLink}>{article.title}</Text>
-                                    // </TouchableOpacity>
                                     <ArticleItem
                                         key={idx}
                                         navigation={navigation}
-                                        articleId={article.id}  // Pass the article ID to the ArticleItem component
+                                        articleId={article.id}
                                     /> 
-                                ))} 
+                                ))}
                             </View>
                         )}
                     </View>
@@ -203,12 +178,7 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                     Hoppa över
                 </Button>
             </View>
-            <Modal
-                visible={showModal}
-                transparent={true}
-                animationType="slide"
-                onRequestClose={handleCloseModal}
-            >
+            <Modal visible={showModal} transparent={true} animationType="slide">
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalText}>Undersökning klar!</Text>
@@ -218,38 +188,22 @@ const HealthIndexSurveyScreen = ({ route, navigation }) => {
                     </View>
                 </View>
             </Modal>
-            <Modal
-                visible={showExitConfirmationModal}
-                transparent={true}
-                animationType="slide"
-                onRequestClose={() => setShowExitConfirmationModal(false)}
-            >
+            <Modal visible={showExitConfirmationModal} transparent={true} animationType="slide">
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <Text style={styles.modalText}>Vill du verkligen avsluta undersökningen?</Text>
+                        <Text style={styles.modalText}>Vill du verkligen avsluta?</Text>
                         <View style={styles.modalButtonContainer}>
-                            <Button mode='contained' onPress={() => handleExitConfirmation(true)} buttonColor='#4a8483'>
-                                Ja
-                            </Button>
-                            <Button mode='contained' onPress={() => handleExitConfirmation(false)} buttonColor='#4a8483' style={{ marginLeft: 10 }}>
-                                Nej
-                            </Button>
+                            <Button mode='contained' onPress={() => handleExitConfirmation(true)}>Ja</Button>
+                            <Button mode='contained' onPress={() => handleExitConfirmation(false)}>Nej</Button>
                         </View>
                     </View>
                 </View>
             </Modal>
-            <Button
-                mode="contained"
-                onPress={() => setShowExitConfirmationModal(true)}
-                style={styles.exitButtonStyle}
-            >
-                Avsluta
-            </Button>
         </ScrollView>
     </LinearGradient>
     );
-    
 };
+
 
 const styles = StyleSheet.create({
     container: {

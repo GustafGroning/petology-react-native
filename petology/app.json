@@ -2,6 +2,7 @@
   "expo": {
     "name": "petology",
     "slug": "petology",
+    "owner": "petology",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

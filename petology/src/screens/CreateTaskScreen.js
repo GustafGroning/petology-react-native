@@ -91,7 +91,7 @@ const CreateTaskScreen = ({ navigation }) => {
       // Format the startDate to exclude the time component
       const startDateWithoutTime = startDate.toISOString().split("T")[0];
       console.log(value, taskName, location, startDateWithoutTime, notes);
-      const response = await fetch(`http://localhost:8000/api/tasks/add/`, {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_DEV_URL}/api/tasks/add/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

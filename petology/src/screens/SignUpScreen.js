@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TextInput } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import signUpUser from '../api_calls/user/signUpUser';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -17,13 +18,13 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     if (password.length < 8) {
-      setErrorMessage('Password must be at least 8 characters long');
+      setErrorMessage('Lösenordet måste vara minst 8 tecken ');
       return;
     }
 
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]*$/;
     if (!passwordRegex.test(password)) {
-      setErrorMessage('Password must contain at least one letter and one number');
+      setErrorMessage('Lösenordet måste innehålla minst en bokstav och en siffra');
       return;
     }
 
@@ -38,10 +39,13 @@ const SignUpScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#86c8c5', '#e4f4f2']}
+      style={styles.container}
+    >
       <View style={styles.headerBox}>
         <View style={styles.headerContainer}>
-          <Text variant='headlineMedium'>Create account </Text>
+          <Text variant='headlineMedium'> Skapa konto </Text>
         </View>
       </View>
       <View style={styles.inputBox}>
@@ -55,45 +59,46 @@ const SignUpScreen = ({ navigation }) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Password'
+          placeholder='Lösenord'
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           autoCapitalize='none'
           textAlign={'center'}
         />
+        <Text style={styles.errorTextStatic}>
+          Lösenordet måste vara minst 8 tecken och innehålla minst en bokstav och en siffra
+        </Text>
         {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
         <Button
           mode='contained'
           style={{ borderRadius: 2, width: '85%' }}
           onPress={handleSignUp}
         >
-          Create account
+          Skapa konto
         </Button>
-        <View style={{ flexDirection: 'row', alignItems: 'center', 
-          justifyContent: 'center' }}>
-          <Text> Already have an account?</Text>
-          <Button 
-            onPress={() => navigation.navigate('Login')}> 
-            Login
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+          <Text> Har du redan ett konto?</Text>
+          <Button onPress={() => navigation.navigate('Login')}>
+            Logga in
           </Button>
         </View>
       </View>
       <View style={styles.boxFour}></View>
-    </View>
-  );
+    </LinearGradient>
+  );  
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#92cdca',
+    // backgroundColor: '#92cdca',
     flex: 1,
     justifyContent: 'space-around',
     paddingTop: 40,
   },
   headerBox: {
     flex: 1,
-    backgroundColor: '#92cdca',
+    // backgroundColor: '#92cdca',
     alignItems: 'center',
     padding: 10,
   },
@@ -118,9 +123,14 @@ const styles = StyleSheet.create({
     flex: 3,
     padding: 10,
   },
+  errorTextStatic: {
+    marginBottom: 10,
+    textAlign: 'center',
+  },
   errorText: {
     color: 'red',
     marginBottom: 10,
+    textAlign: 'center',
   },
 });
 

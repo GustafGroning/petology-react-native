@@ -140,19 +140,14 @@ const CreateTaskScreen = ({ navigation }) => {
         </View>
         <View style={styles.inputSection}>
           <View style={styles.dogList}>
-            <SelectList
-              placeholder="Välj hund"
-              data={dogList}
-              setSelected={setValue} // Use the function that updates the state with the selected item
-              selectedValue={value} // Pass the selected value to SelectList
-              // Other SelectList props as needed
-              boxStyles={{
-                borderRadius: 10,
-                backgroundColor: "#b7dcd9",
-                marginBottom: 18,
-                width: "100%", // Adjust if necessary to match your design
-              }}
-            />
+          <SelectList
+            placeholder="Välj hund"
+            data={dogList}
+            setSelected={setValue}
+            selectedValue={value}
+            boxStyles={styles.selectDogBox}
+            dropdownStyles={styles.dropdownList}
+          />
           </View>
 
           <View style={styles.inputContainer}>
@@ -239,8 +234,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dogList: {
-    width: "40%",
-  },
+    width: 200, // Same width as the button
+    alignItems: 'center', // Center the dropdown inside the box
+    marginBottom: 18,
+  },  
   inputContainer: {
     borderBottomWidth: 1, // Only underline
     borderColor: "gray", // Color of the underline
@@ -295,6 +292,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 80,
   },
+  selectDogBox: {
+    borderRadius: 20,
+    backgroundColor: 'white',
+    height: 45,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    borderColor: '#4a8483',
+    borderWidth: 1,
+    width: 150,
+  },
+  dropdownList: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginTop: 5,
+    width: 150,
+    alignSelf: 'center',
+  },
+  
+  
 });
 
 export default CreateTaskScreen;

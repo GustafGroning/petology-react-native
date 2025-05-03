@@ -133,6 +133,9 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
       colors={['#86c8c5', '#e4f4f2']}
       style={styles.container}
     >
+      <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
+        <Text style={styles.closeButtonText}>✕</Text>
+      </TouchableOpacity>
       <ScrollView style={styles.scrollContent}>
         <View style={styles.formContainer}>
           <Text style={styles.formLabel}>Stamtavlenamn</Text>
@@ -211,7 +214,7 @@ const UpdateDogDetailsScreen = ({ route, navigation }) => {
           style={styles.submitButton}
           onPress={handleSubmit}
         >
-          <Text style={styles.submitButtonText}>Submit</Text>
+          <Text style={styles.submitButtonText}>Uppdatera</Text>
         </TouchableOpacity>
       </ScrollView>
     </LinearGradient>
@@ -249,6 +252,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
+  closeButton: {
+    position: 'absolute',
+    top: 50, // Adjust if needed depending on device (iPhone notch etc.)
+    left: 20,
+    zIndex: 10,
+  },
+  closeButtonText: {
+    fontSize: 28,
+    color: '#333',
+  },
+  
 });
 
 export default UpdateDogDetailsScreen;

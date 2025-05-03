@@ -4,10 +4,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, Text } from "react-native-paper";
 import { LinearGradient } from 'expo-linear-gradient';
 import getUserFirstAndLastNames from "../api_calls/user/getUserFirstAndLastNames";
+import { IconButton } from 'react-native-paper';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const navigateToSignUp = () => {
     setEmail("");
@@ -104,25 +106,35 @@ const LoginScreen = ({ navigation }) => {
           autoCapitalize="none"
           textAlign={"center"}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoCapitalize="none"
-          textAlign={"center"}
-        />
+        <View style={styles.passwordInputContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Lösenord"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!passwordVisible}
+            autoCapitalize="none"
+            textAlign="center"
+          />
+          <IconButton
+            icon={passwordVisible ? "eye-off" : "eye"}
+            size={20}
+            onPress={() => setPasswordVisible(!passwordVisible)}
+            style={styles.eyeButton}
+          />
+        </View>
+
+
         <Button
           mode="contained"
           style={{ borderRadius: 2, width: "85%" }}
           onPress={handleLogin}
         >
-          Sign in
+          Logga in
         </Button>
         <View style={styles.signUpBox}>
-          <Text> Don't have an account?</Text>
-          <Button onPress={navigateToSignUp}>Sign up</Button>
+          <Text> Har du inget konto?</Text>
+          <Button onPress={navigateToSignUp}>Skapa konto</Button>
         </View>
       </View>
       <View style={styles.boxFour}></View>
@@ -167,6 +179,24 @@ const styles = StyleSheet.create({
     flex: 3,
     padding: 10,
   },
+  passwordInputContainer: {
+    width: '85%',
+    marginBottom: 14,
+    position: 'relative',
+  },
+  passwordInput: {
+    width: '100%',
+    height: 45,
+    backgroundColor: 'white',
+    textAlign: 'center',
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: 10,
+    // top: 5,
+  },
+  
+  
 });
 
 export default LoginScreen;

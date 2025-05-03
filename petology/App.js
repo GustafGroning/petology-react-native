@@ -17,7 +17,7 @@ import DogDetailsScreen from './src/screens/DogProfile/DogDetailsScreen';
 import UpdateDogDetailsScreen from './src/screens/DogProfile/UpdateDogDetailsScreen';
 import InputUserBasicInfoScreen from './src/screens/InputUserBasicInfoScreen';
 import HealthIndexSurveyScreen from './src/screens/DogProfile/HealthIndexSurveyScreen';
-import PulseMonitorScreen from './src/screens/PulseMonitorScreen';
+import BreathMonitorScreen from './src/screens/BreathMonitorScreen';
 import AddTreatmentScreen from './src/screens/AddTreatmentScreen';
 import CreateVaccinationScreen from './src/screens/DogProfile/CreateVaccinationScreen';
 import CreateConditionScreen from './src/screens/DogProfile/CreateConditionScreen';
@@ -55,7 +55,7 @@ const App = () => {
           <Stack.Screen name='UpdateDogDetailsScreen' component={UpdateDogDetailsScreen} />
           <Stack.Screen name='InputUserBasicInfoScreen' component={InputUserBasicInfoScreen} />
           <Stack.Screen name='HealthIndexSurveyScreen' component={HealthIndexSurveyScreen} />
-          <Stack.Screen name='PulseMonitorScreen' component={PulseMonitorScreen} />
+          <Stack.Screen name='BreathMonitorScreen' component={BreathMonitorScreen} />
           <Stack.Screen name='AddTreatmentScreen' component={AddTreatmentScreen} />
           <Stack.Screen name='CreateVaccinationScreen' component={CreateVaccinationScreen} />
           <Stack.Screen name='CreateConditionScreen' component={CreateConditionScreen} />
